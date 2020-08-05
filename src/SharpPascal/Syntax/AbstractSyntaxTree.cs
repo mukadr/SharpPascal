@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpPascal.Syntax
 {
@@ -77,6 +78,6 @@ namespace SharpPascal.Syntax
         public override bool Equals(object obj)
             => obj is CallExpression call &&
                call.Name == Name &&
-               call.Expressions.Equals(Expressions);
+               call.Expressions.SequenceEqual(Expressions);
     }
 }
