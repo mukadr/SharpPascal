@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace spc
+namespace SharpPascal
 {
     internal class Program
     {
