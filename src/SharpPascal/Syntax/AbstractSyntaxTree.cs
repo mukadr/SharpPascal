@@ -5,22 +5,17 @@ namespace SharpPascal.Syntax
 {
     public abstract class AbstractSyntaxTree
     {
-        public Location Location { get; }
+        public Location? Location { get; }
 
-        public AbstractSyntaxTree(Location location)
+        public AbstractSyntaxTree(Location? location = default)
         {
             Location = location;
-        }
-
-        public override int GetHashCode()
-        {
-            return Location.GetHashCode();
         }
     }
 
     public abstract class Expression : AbstractSyntaxTree
     {
-        public Expression(Location location)
+        public Expression(Location? location = default)
             : base(location)
         { }
     }
@@ -29,14 +24,14 @@ namespace SharpPascal.Syntax
     {
         public int Value { get; }
 
-        public IntegerExpression(int value, Location location)
+        public IntegerExpression(int value, Location? location = default)
             : base(location)
         {
             Value = value;
         }
 
         public override int GetHashCode()
-            => base.GetHashCode() ^ Value;
+            => Value;
 
         public override bool Equals(object obj)
             => obj is IntegerExpression @int &&
@@ -49,7 +44,7 @@ namespace SharpPascal.Syntax
         public string Operator { get; }
         public Expression Right { get; }
 
-        public BinaryExpression(Expression left, string @operator, Expression right, Location location)
+        public BinaryExpression(Expression left, string @operator, Expression right, Location? location = default)
             : base(location)
         {
             Left = left;
@@ -58,7 +53,7 @@ namespace SharpPascal.Syntax
         }
 
         public override int GetHashCode()
-            => base.GetHashCode() ^ Left.GetHashCode() ^ Operator.GetHashCode() ^ Right.GetHashCode();
+            => Left.GetHashCode() ^ Operator.GetHashCode() ^ Right.GetHashCode();
 
         public override bool Equals(object obj)
             => obj is BinaryExpression bin &&
@@ -69,14 +64,14 @@ namespace SharpPascal.Syntax
 
     public sealed class AddExpression : BinaryExpression
     {
-        public AddExpression(Expression left, Expression right, Location location)
+        public AddExpression(Expression left, Expression right, Location? location = default)
             : base(left, "+", right, location)
         { }
     }
 
     public sealed class SubExpression : BinaryExpression
     {
-        public SubExpression(Expression left, Expression right, Location location)
+        public SubExpression(Expression left, Expression right, Location? location = default)
             : base(left, "-", right, location)
         { }
     }
@@ -86,7 +81,7 @@ namespace SharpPascal.Syntax
         public string Name { get; }
         public IReadOnlyCollection<Expression> Expressions { get; }
 
-        public CallExpression(string name, IReadOnlyCollection<Expression> expressions, Location location)
+        public CallExpression(string name, IReadOnlyCollection<Expression> expressions, Location? location = default)
             : base(location)
         {
             Name = name;
@@ -94,7 +89,7 @@ namespace SharpPascal.Syntax
         }
 
         public override int GetHashCode()
-            => base.GetHashCode() ^ Name.GetHashCode() ^ Expressions.GetHashCode();
+            => Name.GetHashCode() ^ Expressions.GetHashCode();
 
         public override bool Equals(object obj)
             => obj is CallExpression call &&

@@ -48,9 +48,9 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source).Tree;
 
-            Assert.IsNotNull(tree);
-            Assert.AreEqual(2, tree?.Location.Line);
-            Assert.AreEqual(new IntegerExpression(150, new Location(2)), tree);
+            Assert.IsNotNull(tree?.Location);
+            Assert.AreEqual(2, tree?.Location?.Line);
+            Assert.AreEqual(new IntegerExpression(150), tree);
         }
     }
 }
