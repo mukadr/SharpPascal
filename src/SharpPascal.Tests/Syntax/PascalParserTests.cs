@@ -50,8 +50,7 @@ namespace SharpPascal.Tests.Syntax
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(2, tree?.Location.Line);
-            Assert.IsInstanceOfType(tree, typeof(IntegerExpression));
-            Assert.AreEqual(150, ((IntegerExpression?)tree)?.Value);
+            Assert.AreEqual(new IntegerExpression(150, new Location(2)), tree);
         }
     }
 }
