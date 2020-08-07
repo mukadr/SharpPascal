@@ -1,6 +1,5 @@
 ﻿using SharpPascal.Syntax.Parsing;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using static SharpPascal.Syntax.Parsing.ParserFactory;
 
@@ -8,7 +7,7 @@ namespace SharpPascal.Syntax
 {
     public static class PascalParser
     {
-        public static (AbstractSyntaxTree? Tree, int Line) Parse(Source source)
+        public static (AbstractSyntaxTree? Tree, int Line) Parse(string source)
         {
             var currentLine = 1;
 
@@ -109,9 +108,9 @@ namespace SharpPascal.Syntax
                 addExpression;
 
             var program =
-                Maybe(skipWhite).And(expression);
+                Maybe(skipWhite).And(Maybe(expression));
 
-            return (program.Parse(source)?.Value, currentLine);
+            return (program.ParseString(source), currentLine);
         }
     }
 }

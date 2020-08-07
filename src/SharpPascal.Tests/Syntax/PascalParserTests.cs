@@ -10,17 +10,17 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void SkipWhiteTest()
         {
-            var source = new Source("\t\t\n\n\r\r     \r\r\n\r    \t \t \n");
+            var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n";
 
             var (tree, line) = PascalParser.Parse(source);
 
             Assert.IsNull(tree);
             Assert.AreEqual(5, line);
 
-            source = new Source(@"
+            source = @"
                 {
                     Hello World!
-                }");
+                }";
 
             (tree, line) = PascalParser.Parse(source);
 
@@ -31,10 +31,10 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void UnterminatedCommentTest()
         {
-            var source = new Source(@"
+            var source = @"
                 {
                     Hello World!
-                ");
+            ";
 
             Assert.ThrowsException<ParseException>(() => PascalParser.Parse(source));
         }
@@ -42,9 +42,9 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void ParseNumberTest()
         {
-            var source = new Source(@"
+            var source = @"
                 150
-            ");
+            ";
 
             var tree = PascalParser.Parse(source).Tree;
 
@@ -56,9 +56,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void ParseBinaryExpressionTest()
         {
-            var source = new Source(@"
-                20 + 15 * 18
-            ");
+            var source = @"20 + 15 * 18";
 
             var expected = new AddExpression(
                 new IntegerExpression(20),

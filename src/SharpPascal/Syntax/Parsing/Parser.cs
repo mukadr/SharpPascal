@@ -12,6 +12,22 @@ namespace SharpPascal.Syntax.Parsing
             Parse = parse;
         }
 
+        public T ParseString(string s)
+        {
+            var result = Parse(new Source(s));
+            if (result == null)
+            {
+                throw new ParseException("Parse error at position 0");
+            }
+
+            if (result.Source.Position != s.Length)
+            {
+                throw new ParseException("Parse error at position " + result.Source.Position);
+            }
+
+            return result.Value;
+        }
+
         // Tries another parser if this fails
         public Parser<T> Or(Parser<T> other)
             => new Parser<T>(source =>
