@@ -34,7 +34,7 @@ namespace SharpPascal.Syntax
                     return Constant(text);
                 });
 
-            var skipWhite =
+            var blank =
                 OneOrMore(whitespace.Or(multilineComment));
 
             var letter =
@@ -49,35 +49,35 @@ namespace SharpPascal.Syntax
                 => Text(text)
                    .And(Not(letter.Or(digit)))
                    .And(Constant(text))
-                   .Consume(skipWhite);
+                   .Consume(blank);
 
             var add =
                 Text("+")
-                .Consume(whitespace);
+                .Consume(blank);
 
             var sub =
                 Text("-")
-                .Consume(whitespace);
+                .Consume(blank);
 
             var mul =
                 Text("*")
-                .Consume(whitespace);
+                .Consume(blank);
 
             var div =
                 parseKeyword("div");
 
             var lparen =
                 Text("(")
-                .Consume(whitespace);
+                .Consume(blank);
 
             var rparen =
                 Text(")")
-                .Consume(whitespace);
+                .Consume(blank);
 
             var integer =
                 OneOrMore(digit)
                 .Map<Expression>(value => new IntegerExpression(int.Parse(value), new Location(currentLine)))
-                .Consume(whitespace);
+                .Consume(blank);
 
             var expression =
                 Forward<Expression>();
@@ -120,7 +120,7 @@ namespace SharpPascal.Syntax
                 addExpression.Parse;
 
             var program =
-                Maybe(skipWhite).And(Maybe(expression));
+                Maybe(blank).And(Maybe(expression));
 
             return (program.ParseString(source), currentLine);
         }
