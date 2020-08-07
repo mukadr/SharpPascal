@@ -38,6 +38,24 @@ namespace SharpPascal.Syntax
                @int.Value == Value;
     }
 
+    public sealed class VarExpression : Expression
+    {
+        public string Name { get; }
+
+        public VarExpression(string name, Location? location = default)
+            : base(location)
+        {
+            Name = name;
+        }
+
+        public override int GetHashCode()
+            => Name.GetHashCode();
+
+        public override bool Equals(object obj)
+            => obj is VarExpression @var &&
+               @var.Name == Name;
+    }
+
     public class BinaryExpression : Expression
     {
         public Expression Left { get; }

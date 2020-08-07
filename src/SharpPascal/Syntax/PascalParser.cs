@@ -66,6 +66,15 @@ namespace SharpPascal.Syntax
             var div =
                 parseKeyword("div");
 
+            var keyword =
+                div;
+
+            var id =
+                Not(keyword)
+                .And(letter.Bind(l =>
+                    ZeroOrMore(letter.Or(digit)).Bind(ld =>
+                        Constant(l + ld))));
+
             var lparen =
                 Text("(")
                 .Consume(blank);
@@ -79,11 +88,17 @@ namespace SharpPascal.Syntax
                 .Map<Expression>(value => new IntegerExpression(int.Parse(value), new Location(currentLine)))
                 .Consume(blank);
 
+            var variable =
+                id
+                .Map<Expression>(name => new VarExpression(name, new Location(currentLine)))
+                .Consume(blank);
+
             var expression =
                 Forward<Expression>();
 
             var factor =
                 integer
+                .Or(variable)
                 .Or(lparen.And(expression).Bind(e => rparen.And(Constant(e))));
 
             var mulExpression =

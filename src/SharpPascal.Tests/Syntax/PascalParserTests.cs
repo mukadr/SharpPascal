@@ -54,14 +54,28 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
+        public void ParseIdTest()
+        {
+            var source = @"
+                division
+            ";
+
+            var tree = PascalParser.Parse(source).Tree;
+
+            Assert.IsNotNull(tree?.Location);
+            Assert.AreEqual(2, tree?.Location?.Line);
+            Assert.AreEqual(new VarExpression("division"), tree);
+        }
+
+        [TestMethod]
         public void ParseBinaryExpressionTest()
         {
-            var source = @"20 + 15 * 18";
+            var source = @"20 + alpha * 18";
 
             var expected = new AddExpression(
                 new IntegerExpression(20),
                 new MulExpression(
-                    new IntegerExpression(15),
+                    new VarExpression("alpha"),
                     new IntegerExpression(18)
                 )
             );
@@ -74,12 +88,12 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void ParseParenthesesExpressionTest()
         {
-            var source = @"(20 + 15) * 18";
+            var source = @"(20 + alpha) * 18";
 
             var expected = new MulExpression(
                 new AddExpression(
                     new IntegerExpression(20),
-                    new IntegerExpression(15)
+                    new VarExpression("alpha")
                 ),
                 new IntegerExpression(18)
             );
