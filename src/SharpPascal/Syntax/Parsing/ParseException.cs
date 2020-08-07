@@ -5,7 +5,7 @@ namespace SharpPascal.Syntax.Parsing
     public class ParseException : Exception
     {
         public ParseException(string message)
-            : base("Parse error: " + message + ".")
+            : base("Parse error: " + message)
         { }
     }
 }
