@@ -38,7 +38,7 @@ namespace SharpPascal.Syntax
                @int.Value == Value;
     }
 
-    public abstract class BinaryExpression : Expression
+    public class BinaryExpression : Expression
     {
         public Expression Left { get; }
         public string Operator { get; }
@@ -73,6 +73,20 @@ namespace SharpPascal.Syntax
     {
         public SubExpression(Expression left, Expression right, Location? location = default)
             : base(left, "-", right, location)
+        { }
+    }
+
+    public sealed class MulExpression : BinaryExpression
+    {
+        public MulExpression(Expression left, Expression right, Location? location = default)
+            : base(left, "*", right, location)
+        { }
+    }
+
+    public sealed class DivExpression : BinaryExpression
+    {
+        public DivExpression(Expression left, Expression right, Location? location = default)
+            : base(left, "div", right, location)
         { }
     }
 

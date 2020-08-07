@@ -52,5 +52,25 @@ namespace SharpPascal.Tests.Syntax
             Assert.AreEqual(2, tree?.Location?.Line);
             Assert.AreEqual(new IntegerExpression(150), tree);
         }
+
+        [TestMethod]
+        public void ParseBinaryExpressionTest()
+        {
+            var source = new Source(@"
+                20 + 15 * 18
+            ");
+
+            var expected = new AddExpression(
+                new IntegerExpression(20),
+                new MulExpression(
+                    new IntegerExpression(15),
+                    new IntegerExpression(18)
+                )
+            );
+
+            var tree = PascalParser.Parse(source).Tree;
+
+            Assert.AreEqual(expected, tree);
+        }
     }
 }
