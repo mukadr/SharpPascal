@@ -7,7 +7,7 @@ namespace SharpPascal.Syntax
 {
     public static class PascalParser
     {
-        public static (AbstractSyntaxTree? Tree, int Line) Parse(string source)
+        public static AbstractSyntaxTree? Parse(string source)
         {
             var currentLine = 1;
 
@@ -137,7 +137,7 @@ namespace SharpPascal.Syntax
             var program =
                 Maybe(blank).And(Maybe(expression));
 
-            return (program.ParseString(source), currentLine);
+            return program.ParseString(source);
         }
     }
 }

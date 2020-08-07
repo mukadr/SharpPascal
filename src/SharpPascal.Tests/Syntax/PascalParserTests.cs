@@ -10,22 +10,24 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void SkipWhiteTest()
         {
-            var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n";
+            var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n end";
 
-            var (tree, line) = PascalParser.Parse(source);
+            var tree = PascalParser.Parse(source);
 
-            Assert.IsNull(tree);
-            Assert.AreEqual(5, line);
+            var expected = new VarExpression("end");
+
+            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(5, tree?.Location?.Line);
 
             source = @"
                 {
                     Hello World!
-                }";
+                } end";
 
-            (tree, line) = PascalParser.Parse(source);
+            tree = PascalParser.Parse(source);
 
-            Assert.IsNull(tree);
-            Assert.AreEqual(4, line);
+            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(4, tree?.Location?.Line);
         }
 
         [TestMethod]
@@ -46,7 +48,7 @@ namespace SharpPascal.Tests.Syntax
                 150
             ";
 
-            var tree = PascalParser.Parse(source).Tree;
+            var tree = PascalParser.Parse(source);
 
             Assert.IsNotNull(tree?.Location);
             Assert.AreEqual(2, tree?.Location?.Line);
@@ -60,7 +62,7 @@ namespace SharpPascal.Tests.Syntax
                 division
             ";
 
-            var tree = PascalParser.Parse(source).Tree;
+            var tree = PascalParser.Parse(source);
 
             Assert.IsNotNull(tree?.Location);
             Assert.AreEqual(2, tree?.Location?.Line);
@@ -80,7 +82,7 @@ namespace SharpPascal.Tests.Syntax
                 )
             );
 
-            var tree = PascalParser.Parse(source).Tree;
+            var tree = PascalParser.Parse(source);
 
             Assert.AreEqual(expected, tree);
         }
@@ -98,7 +100,7 @@ namespace SharpPascal.Tests.Syntax
                 new IntegerExpression(18)
             );
 
-            var tree = PascalParser.Parse(source).Tree;
+            var tree = PascalParser.Parse(source);
 
             Assert.AreEqual(expected, tree);
         }
