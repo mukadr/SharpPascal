@@ -45,11 +45,11 @@ namespace SharpPascal.Syntax
             var digit =
                 Symbol('0', '9');
 
-            Func<string, Parser<string>> parseKeyword = (text)
-                => Text(text)
-                   .And(Not(letter.Or(digit)))
-                   .And(Constant(text))
-                   .Consume(blank);
+            Func<string, Parser<string>> parseKeyword = (text) =>
+                Text(text)
+                .And(Not(letter.Or(digit)))
+                .And(Constant(text))
+                .Consume(blank);
 
             var add =
                 Text("+")
