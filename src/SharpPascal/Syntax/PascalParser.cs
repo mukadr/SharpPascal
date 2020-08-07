@@ -53,18 +53,22 @@ namespace SharpPascal.Syntax
 
             var add =
                 Text("+")
+                .Map(_ => typeof(AddExpression))
                 .Consume(blank);
 
             var sub =
                 Text("-")
+                .Map(_ => typeof(SubExpression))
                 .Consume(blank);
 
             var mul =
                 Text("*")
+                .Map(_ => typeof(MulExpression))
                 .Consume(blank);
 
             var div =
-                parseKeyword("div");
+                parseKeyword("div")
+                .Map(_ => typeof(DivExpression));
 
             var keyword =
                 div;
@@ -103,33 +107,15 @@ namespace SharpPascal.Syntax
 
             var mulExpression =
                 factor.Bind(first =>
-                    ZeroOrMore(mul.Or(div).Bind(op => factor.Bind(right => Constant((op, right))))).Bind(terms =>
-                    {
-                        Expression left = first;
-
-                        foreach (var term in terms)
-                        {
-                            left = new BinaryExpression(left, term.op, term.right, new Location(currentLine));
-                        }
-
-                        return Constant(left);
-                    })
-                );
+                    ZeroOrMore(mul.Or(div).Bind(op => factor.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
+                        Constant(operatorTerms.Aggregate(first, (left, ot) =>
+                            (Expression)Activator.CreateInstance(ot.op, left, ot.right, new Location(currentLine))))));
 
             var addExpression =
                 mulExpression.Bind(first =>
-                    ZeroOrMore(add.Or(sub).Bind(op => mulExpression.Bind(right => Constant((op, right))))).Bind(terms =>
-                    {
-                        Expression left = first;
-
-                        foreach (var term in terms)
-                        {
-                            left = new BinaryExpression(left, term.op, term.right, new Location(currentLine));
-                        }
-
-                        return Constant(left);
-                    })
-                );
+                    ZeroOrMore(add.Or(sub).Bind(op => mulExpression.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
+                        Constant(operatorTerms.Aggregate(first, (left, ot) =>
+                            (Expression)Activator.CreateInstance(ot.op, left, ot.right, new Location(currentLine))))));
 
             expression.Parse =
                 addExpression.Parse;
