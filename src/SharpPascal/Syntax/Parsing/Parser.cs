@@ -65,7 +65,7 @@ namespace SharpPascal.Syntax.Parsing
             => Bind(value => Constant(map(value)));
 
         // Executes next parser, ignoring its result
-        public Parser<T> Consume<U>(Parser<U> next)
+        public Parser<T> Skip<U>(Parser<U> next)
             => new Parser<T>(source =>
             {
                 var result = Parse(source);

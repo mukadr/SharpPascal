@@ -49,22 +49,22 @@ namespace SharpPascal.Syntax
                 Text(text)
                 .And(Not(letter.Or(digit)))
                 .And(Constant(text))
-                .Consume(blank);
+                .Skip(blank);
 
             var add =
                 Text("+")
                 .Map(_ => typeof(AddExpression))
-                .Consume(blank);
+                .Skip(blank);
 
             var sub =
                 Text("-")
                 .Map(_ => typeof(SubExpression))
-                .Consume(blank);
+                .Skip(blank);
 
             var mul =
                 Text("*")
                 .Map(_ => typeof(MulExpression))
-                .Consume(blank);
+                .Skip(blank);
 
             var div =
                 parseKeyword("div")
@@ -81,21 +81,21 @@ namespace SharpPascal.Syntax
 
             var lparen =
                 Text("(")
-                .Consume(blank);
+                .Skip(blank);
 
             var rparen =
                 Text(")")
-                .Consume(blank);
+                .Skip(blank);
 
             var integer =
                 OneOrMore(digit)
                 .Map<Expression>(value => new IntegerExpression(int.Parse(value), new Location(currentLine)))
-                .Consume(blank);
+                .Skip(blank);
 
             var variable =
                 id
                 .Map<Expression>(name => new VarExpression(name, new Location(currentLine)))
-                .Consume(blank);
+                .Skip(blank);
 
             var expression =
                 Forward<Expression>();
