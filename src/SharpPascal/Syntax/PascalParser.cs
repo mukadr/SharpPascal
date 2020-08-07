@@ -53,22 +53,18 @@ namespace SharpPascal.Syntax
 
             var add =
                 Text("+")
-                .Map(_ => typeof(AddExpression))
                 .Skip(blank);
 
             var sub =
                 Text("-")
-                .Map(_ => typeof(SubExpression))
                 .Skip(blank);
 
             var mul =
                 Text("*")
-                .Map(_ => typeof(MulExpression))
                 .Skip(blank);
 
             var div =
-                parseKeyword("div")
-                .Map(_ => typeof(DivExpression));
+                parseKeyword("div");
 
             var keyword =
                 div;
@@ -109,13 +105,13 @@ namespace SharpPascal.Syntax
                 factor.Bind(first =>
                     ZeroOrMore(mul.Or(div).Bind(op => factor.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
                         Constant(operatorTerms.Aggregate(first, (left, ot) =>
-                            (Expression)Activator.CreateInstance(ot.op, left, ot.right, new Location(currentLine))))));
+                            (Expression)Activator.CreateInstance(typeof(BinaryExpression), left, ot.op, ot.right, new Location(currentLine))))));
 
             var addExpression =
                 mulExpression.Bind(first =>
                     ZeroOrMore(add.Or(sub).Bind(op => mulExpression.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
                         Constant(operatorTerms.Aggregate(first, (left, ot) =>
-                            (Expression)Activator.CreateInstance(ot.op, left, ot.right, new Location(currentLine))))));
+                            (Expression)Activator.CreateInstance(typeof(BinaryExpression), left, ot.op, ot.right, new Location(currentLine))))));
 
             expression.Parse =
                 addExpression.Parse;
