@@ -70,5 +70,23 @@ namespace SharpPascal.Tests.Syntax
 
             Assert.AreEqual(expected, tree);
         }
+
+        [TestMethod]
+        public void ParseParenthesesExpressionTest()
+        {
+            var source = @"(20 + 15) * 18";
+
+            var expected = new MulExpression(
+                new AddExpression(
+                    new IntegerExpression(20),
+                    new IntegerExpression(15)
+                ),
+                new IntegerExpression(18)
+            );
+
+            var tree = PascalParser.Parse(source).Tree;
+
+            Assert.AreEqual(expected, tree);
+        }
     }
 }

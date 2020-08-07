@@ -66,13 +66,25 @@ namespace SharpPascal.Syntax
             var div =
                 parseKeyword("div");
 
-            var integer =
-                OneOrMore(digit)
-                .Map(value => new IntegerExpression(int.Parse(value), new Location(currentLine)))
+            var lparen =
+                Text("(")
                 .Consume(whitespace);
 
+            var rparen =
+                Text(")")
+                .Consume(whitespace);
+
+            var integer =
+                OneOrMore(digit)
+                .Map<Expression>(value => new IntegerExpression(int.Parse(value), new Location(currentLine)))
+                .Consume(whitespace);
+
+            var expression =
+                Forward<Expression>();
+
             var factor =
-                integer;
+                integer
+                .Or(lparen.And(expression).Bind(e => rparen.And(Constant(e))));
 
             var mulExpression =
                 factor.Bind(first =>
@@ -104,8 +116,8 @@ namespace SharpPascal.Syntax
                     })
                 );
 
-            var expression =
-                addExpression;
+            expression.Parse =
+                addExpression.Parse;
 
             var program =
                 Maybe(skipWhite).And(Maybe(expression));

@@ -5,7 +5,7 @@ namespace SharpPascal.Syntax.Parsing
 {
     public class Parser<T>
     {
-        public Func<Source, ParseResult<T>?> Parse { get; }
+        public Func<Source, ParseResult<T>?> Parse { get; set; }
 
         public Parser(Func<Source, ParseResult<T>?> parse)
         {

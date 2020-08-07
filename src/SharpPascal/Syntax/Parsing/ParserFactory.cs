@@ -9,6 +9,12 @@ namespace SharpPascal.Syntax.Parsing
         public static Parser<T> Constant<T>(T value)
             => new Parser<T>(source => new ParseResult<T>(value, source));
 
+        // A dummy Parser when forward declaration is necessary
+        public static Parser<T> Forward<T>()
+#pragma warning disable CS8604 // Possible null reference argument.
+            => Not(Constant<T>(default)).OrError("Forward: Must implement Parse()");
+#pragma warning restore CS8604 // Possible null reference argument.
+
         // A Parser that matches a single character
         public static Parser<char> Symbol(char c)
             => new Parser<char>(source => source.Match(c));
