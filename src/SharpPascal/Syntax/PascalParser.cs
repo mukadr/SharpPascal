@@ -45,7 +45,7 @@ namespace SharpPascal.Syntax
                 .Map(value => new IntegerExpression(int.Parse(value), new Location(currentLine)));
 
             var program =
-                skipWhite.Anyway(integer);
+                Maybe(skipWhite).And(integer);
 
             return (program.Parse(source)?.Value, currentLine);
         }

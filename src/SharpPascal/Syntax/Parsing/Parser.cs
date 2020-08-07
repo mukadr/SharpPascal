@@ -48,18 +48,6 @@ namespace SharpPascal.Syntax.Parsing
         public Parser<U> Map<U>(Func<T, U> map)
             => Bind(value => Constant(map(value)));
 
-        // Always execute next parser
-        public Parser<U> Anyway<U>(Parser<U> next)
-            => new Parser<U>(source =>
-            {
-                var result = Parse(source);
-                if (result != null)
-                {
-                    source = result.Source;
-                }
-                return next.Parse(source);
-            });
-
         // Executes next parser, ignoring its result
         public Parser<T> Consume<U>(Parser<U> next)
             => new Parser<T>(source =>

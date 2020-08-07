@@ -135,5 +135,11 @@ namespace SharpPascal.Syntax.Parsing
                 }
                 return null;
             });
+
+        // A Parser that optionally accept the rule
+        public static Parser<T> Maybe<T>(Parser<T> parser)
+#pragma warning disable CS8604 // Possible null reference argument.
+            => parser.Or(Constant<T>(default));
+#pragma warning restore CS8604 // Possible null reference argument.
     }
 }
