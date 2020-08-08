@@ -34,44 +34,14 @@ namespace SharpPascal.Syntax.Parsing
         // A Parser that matches zero or more occurences
         public static Parser<List<T>> ZeroOrMore<T>(Parser<T> parser)
             => new Parser<List<T>>(source =>
-            {
-                var results = new List<T>();
-
-                while (true)
-                {
-                    var result = parser.Parse(source);
-                    if (result == null)
-                    {
-                        break;
-                    }
-                    results.Add(result.Value);
-                    source = result.Source;
-                }
-
-                return new ParseResult<List<T>>(results, source);
-            });
+                OneOrMore(parser).Parse(source)
+                    ?? new ParseResult<List<T>>(new List<T>(), source));
 
         // A Parser that matches zero or more occurences
-        // Specialization for char parsers
         public static Parser<string> ZeroOrMore(Parser<char> parser)
             => new Parser<string>(source =>
-            {
-                var sb = new StringBuilder();
-
-                while (true)
-                {
-                    var result = parser.Parse(source);
-                    if (result == null)
-                    {
-                        break;
-                    }
-
-                    sb.Append(result.Value);
-                    source = result.Source;
-                }
-
-                return new ParseResult<string>(sb.ToString(), source);
-            });
+                OneOrMore(parser).Parse(source)
+                    ?? new ParseResult<string>("", source));
 
         // A Parser that matches at least one occurence
         public static Parser<List<T>> OneOrMore<T>(Parser<T> parser)
@@ -101,7 +71,6 @@ namespace SharpPascal.Syntax.Parsing
             });
 
         // A Parser that matches at least one occurence
-        // Specialization for char parsers
         public static Parser<string> OneOrMore(Parser<char> parser)
             => new Parser<string>(source =>
             {
