@@ -105,13 +105,13 @@ namespace SharpPascal.Syntax
                 factor.Bind(first =>
                     ZeroOrMore(mul.Or(div).Bind(op => factor.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
                         Constant(operatorTerms.Aggregate(first, (left, ot) =>
-                            (Expression)Activator.CreateInstance(typeof(BinaryExpression), left, ot.op, ot.right, new Location(currentLine))))));
+                            BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(currentLine))))));
 
             var addExpression =
                 mulExpression.Bind(first =>
                     ZeroOrMore(add.Or(sub).Bind(op => mulExpression.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
                         Constant(operatorTerms.Aggregate(first, (left, ot) =>
-                            (Expression)Activator.CreateInstance(typeof(BinaryExpression), left, ot.op, ot.right, new Location(currentLine))))));
+                            BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(currentLine))))));
 
             expression.Parse =
                 addExpression.Parse;

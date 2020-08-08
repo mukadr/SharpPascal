@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpPascal.Syntax
@@ -56,18 +57,30 @@ namespace SharpPascal.Syntax
                @var.Name == Name;
     }
 
-    public class BinaryExpression : Expression
+    public abstract class BinaryExpression : Expression
     {
         public Expression Left { get; }
         public string Operator { get; }
         public Expression Right { get; }
 
-        public BinaryExpression(Expression left, string @operator, Expression right, Location? location = default)
+        protected BinaryExpression(Expression left, string @operator, Expression right, Location? location = default)
             : base(location)
         {
             Left = left;
             Operator = @operator;
             Right = right;
+        }
+
+        public static BinaryExpression CreateInstance(Expression left, string @operator, Expression right, Location? location = default)
+        {
+            switch (@operator)
+            {
+                case "+": return new AddExpression(left, right, location);
+                case "-": return new SubExpression(left, right, location);
+                case "*": return new MulExpression(left, right, location);
+                case "div": return new DivExpression(left, right, location);
+                default: throw new ArgumentException("Bad operator for BinaryExpression", nameof(@operator));
+            }
         }
 
         public override int GetHashCode()
