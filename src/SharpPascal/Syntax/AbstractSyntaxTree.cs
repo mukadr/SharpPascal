@@ -8,7 +8,7 @@ namespace SharpPascal.Syntax
     {
         public Location? Location { get; }
 
-        public AbstractSyntaxTree(Location? location = default)
+        protected AbstractSyntaxTree(Location? location = default)
         {
             Location = location;
         }
@@ -16,7 +16,7 @@ namespace SharpPascal.Syntax
 
     public abstract class Expression : AbstractSyntaxTree
     {
-        public Expression(Location? location = default)
+        protected Expression(Location? location = default)
             : base(location)
         { }
     }
