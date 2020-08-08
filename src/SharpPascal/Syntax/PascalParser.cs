@@ -1,5 +1,4 @@
 ﻿using SharpPascal.Syntax.Parsing;
-using System;
 using System.Linq;
 using static SharpPascal.Syntax.Parsing.ParserFactory;
 
@@ -7,33 +6,18 @@ namespace SharpPascal.Syntax
 {
     public static class PascalParser
     {
-        public static AbstractSyntaxTree? Parse(string source)
+        public static AbstractSyntaxTree? Parse(string text)
         {
-            var currentLine = 1;
-
-            string report(string message)
-                => string.Format("%d: %s", currentLine, message);
-
             var whitespace =
                 OneOrMore(
                     Symbol(' ')
                     .Or(Symbol('\t'))
-                    .Or(Symbol('\n').Bind(c =>
-                    {
-                        currentLine++;
-                        return Constant(c);
-                    }))
-                    .Or(Symbol('\r'))
-                );
+                    .Or(Symbol('\n'))
+                    .Or(Symbol('\r')));
 
             var multilineComment =
                 Symbol('{')
-                .And(Until('}').OrError(report("Expected '}' before end of source")))
-                .Bind(text =>
-                {
-                    currentLine += text.Count(c => c == '\n');
-                    return Constant(text);
-                });
+                .And(Until('}').OrError("expected '}' before end of source"));
 
             var blank =
                 OneOrMore(whitespace.Or(multilineComment));
@@ -73,8 +57,8 @@ namespace SharpPascal.Syntax
             var id =
                 Not(keyword)
                 .And(letter.Bind(l =>
-                    ZeroOrMore(letter.Or(digit)).Bind(ld =>
-                        Constant(l + ld))));
+                    ZeroOrMore(letter.Or(digit)).Map(ld =>
+                        l + ld)));
 
             var lparen =
                 Text("(")
@@ -85,13 +69,13 @@ namespace SharpPascal.Syntax
                 .Skip(blank);
 
             var integer =
-                OneOrMore(digit)
-                .Map<Expression>(value => new IntegerExpression(int.Parse(value), new Location(currentLine)))
+                OneOrMore(digit).Map<Expression>((value, line) =>
+                    new IntegerExpression(int.Parse(value), new Location(line)))
                 .Skip(blank);
 
             var variable =
-                id
-                .Map<Expression>(name => new VarExpression(name, new Location(currentLine)))
+                id.Map<Expression>((name, line) =>
+                    (Expression)new VarExpression(name, new Location(line)))
                 .Skip(blank);
 
             var expression =
@@ -104,15 +88,19 @@ namespace SharpPascal.Syntax
 
             var mulExpression =
                 factor.Bind(first =>
-                    ZeroOrMore(mul.Or(div).Bind(op => factor.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
-                        Constant(operatorTerms.Aggregate(first, (left, ot) =>
-                            BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(currentLine))))));
+                    ZeroOrMore(mul.Or(div).Bind((op, line) =>
+                        factor.Map(right =>
+                            (op, right, line)))).Map(operatorTerms =>
+                                operatorTerms.Aggregate(first, (left, ot) =>
+                                    BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(ot.line)))));
 
             var addExpression =
                 mulExpression.Bind(first =>
-                    ZeroOrMore(add.Or(sub).Bind(op => mulExpression.Bind(right => Constant((op, right))))).Bind(operatorTerms =>
-                        Constant(operatorTerms.Aggregate(first, (left, ot) =>
-                            BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(currentLine))))));
+                    ZeroOrMore(add.Or(sub).Bind((op, line) =>
+                        mulExpression.Map(right =>
+                            (op, right, line)))).Map(operatorTerms =>
+                                operatorTerms.Aggregate(first, (left, ot) =>
+                                    BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(ot.line)))));
 
             expression.Parse =
                 addExpression.Parse;
@@ -120,7 +108,7 @@ namespace SharpPascal.Syntax
             var program =
                 Maybe(blank).And(Maybe(expression));
 
-            return program.ParseString(source);
+            return program.ParseToCompletion(text);
         }
     }
 }

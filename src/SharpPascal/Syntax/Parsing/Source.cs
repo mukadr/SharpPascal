@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace SharpPascal.Syntax.Parsing
 {
     public class Source
@@ -8,10 +10,14 @@ namespace SharpPascal.Syntax.Parsing
         // Current position to parse next grammar rule
         public int Position { get; }
 
-        public Source(string text, int position = 0)
+        // Current line number
+        public int Line { get; }
+
+        public Source(string text, int position = 0, int line = 1)
         {
             Text = text;
             Position = position;
+            Line = line;
         }
 
         // Matches the character c
@@ -21,7 +27,8 @@ namespace SharpPascal.Syntax.Parsing
                 Text[Position] == c)
             {
                 var position = Position + 1;
-                return new ParseResult<char>(Text[Position], new Source(Text, position));
+                var line = Line + (Text[Position] == '\n' ? 1 : 0);
+                return new ParseResult<char>(Text[Position], new Source(Text, position, line));
             }
 
             return null;
@@ -35,7 +42,8 @@ namespace SharpPascal.Syntax.Parsing
                 Text[Position] <= end)
             {
                 var position = Position + 1;
-                return new ParseResult<char>(Text[Position], new Source(Text, position));
+                var line = Line + (Text[Position] == '\n' ? 1 : 0);
+                return new ParseResult<char>(Text[Position], new Source(Text, position, line));
             }
 
             return null;
@@ -50,7 +58,9 @@ namespace SharpPascal.Syntax.Parsing
                 if (index > -1)
                 {
                     var position = index + 1;
-                    return new ParseResult<string>(Text.Substring(Position, position - Position), new Source(Text, position));
+                    var s = Text.Substring(Position, position - Position);
+                    var line = Line + s.Count(c => c == '\n');
+                    return new ParseResult<string>(s, new Source(Text, position, line));
                 }
             }
             return null;
@@ -63,7 +73,8 @@ namespace SharpPascal.Syntax.Parsing
                 Text.Substring(Position, s.Length) == s)
             {
                 var position = Position + s.Length;
-                return new ParseResult<string>(s, new Source(Text, position));
+                var line = Line + s.Count(c => c == '\n');
+                return new ParseResult<string>(s, new Source(Text, position, line));
             }
 
             return null;

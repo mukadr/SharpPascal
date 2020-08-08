@@ -12,20 +12,30 @@ namespace SharpPascal.Syntax.Parsing
             Parse = parse;
         }
 
-        public T ParseString(string s)
+        public T ParseToCompletion(string text)
+            => ParseToCompletion(new Source(text));
+
+        public T ParseToCompletion(Source source)
         {
-            var result = Parse(new Source(s));
-            if (result == null)
-            {
-                throw new ParseException("Parse error at position 0");
-            }
+            ParseResult<T>? result = null;
 
-            if (result.Source.Position != s.Length)
+            try
             {
-                throw new ParseException("Parse error at position " + result.Source.Position);
-            }
+                result = Parse(source);
 
-            return result.Value;
+                if (result == null ||
+                    result.Source.Position != source.Text.Length)
+                {
+                    throw new ParseException("Parse Error: expected end of source");
+                }
+
+                return result.Value;
+            }
+            catch (ParseException ex)
+            {
+                var line = (result != null ? result.Source.Line : 1);
+                throw new ParseException(line + ": " + ex.Message);
+            }
         }
 
         // Tries another parser if this fails
@@ -44,7 +54,7 @@ namespace SharpPascal.Syntax.Parsing
         public Parser<T> OrError(string message)
             => Or(new Parser<T>(_ => throw new ParseException(message)));
 
-        // Calls the next callback passing the parsed value if this succeeds
+        // Calls the next callback passing the parsed value
         public Parser<U> Bind<U>(Func<T, Parser<U>> next)
             => new Parser<U>(source =>
             {
@@ -56,6 +66,18 @@ namespace SharpPascal.Syntax.Parsing
                 return null;
             });
 
+        // Calls the next callback passing the parsed value and line number
+        public Parser<U> Bind<U>(Func<T, int, Parser<U>> next)
+            => new Parser<U>(source =>
+            {
+                var result = Parse(source);
+                if (result != null)
+                {
+                    return next(result.Value, result.Source.Line).Parse(result.Source);
+                }
+                return null;
+            });
+
         // Tries another parser if this succeeds
         public Parser<U> And<U>(Parser<U> other)
             => Bind(_ => other);
@@ -63,6 +85,10 @@ namespace SharpPascal.Syntax.Parsing
         // Maps the parsed value with the map function
         public Parser<U> Map<U>(Func<T, U> map)
             => Bind(value => Constant(map(value)));
+
+        // Maps the parsed value and line number with the map function
+        public Parser<U> Map<U>(Func<T, int, U> map)
+            => Bind((value, line) => Constant(map(value, line)));
 
         // Executes next parser, ignoring its result
         public Parser<T> Skip<U>(Parser<U> next)
