@@ -11,7 +11,8 @@ namespace SharpPascal.Syntax
         {
             var currentLine = 1;
 
-            Func<string, string> report = (error) => string.Format("%d: %s", currentLine, error);
+            string report(string message)
+                => string.Format("%d: %s", currentLine, message);
 
             var whitespace =
                 OneOrMore(
