@@ -72,39 +72,28 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void ParseBinaryExpressionTest()
         {
-            var source = @"20 + alpha * 18";
-
-            var expected = new AddExpression(
-                new IntegerExpression(20),
-                new MulExpression(
-                    new VarExpression("alpha"),
-                    new IntegerExpression(18)
-                )
-            );
-
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
-        }
-
-        [TestMethod]
-        public void ParseParenthesesExpressionTest()
-        {
             var source = @"
                 (
                     20
                     +
-                    alpha
+                    func(15, 18 * 2)
                 )
                 div
-                18";
+                beta";
 
             var expected = new DivExpression(
                 new AddExpression(
                     new IntegerExpression(20),
-                    new VarExpression("alpha")
+                    new CallExpression("func", new Expression[]
+                    {
+                        new IntegerExpression(15),
+                        new MulExpression(
+                            new IntegerExpression(18),
+                            new IntegerExpression(2)
+                        )
+                    })
                 ),
-                new IntegerExpression(18)
+                new VarExpression("beta")
             );
 
             var tree = PascalParser.Parse(source);

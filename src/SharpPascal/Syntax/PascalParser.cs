@@ -1,4 +1,5 @@
 ﻿using SharpPascal.Syntax.Parsing;
+using System.Collections.Generic;
 using System.Linq;
 using static SharpPascal.Syntax.Parsing.ParserFactory;
 
@@ -58,12 +59,18 @@ namespace SharpPascal.Syntax
             var rparen =
                 parseOperator(")");
 
+            var comma =
+                parseOperator(",");
+
             var keyword =
                 div;
 
             var id =
                 Not(keyword)
-                .And(letter.Bind(l => ZeroOrMore(letter.Or(digit)).Map(ld => l + ld)));
+                .And(letter.Bind(l =>
+                    ZeroOrMore(letter.Or(digit)).Map((ld, line) =>
+                        (text: l + ld, location: new Location(line)))))
+                .Skip(blank);
 
             var integer =
                 OneOrMore(digit)
@@ -71,15 +78,28 @@ namespace SharpPascal.Syntax
                 .Skip(blank);
 
             var variable =
-                id
-                .Map<Expression>((name, line) => new VarExpression(name, new Location(line)))
-                .Skip(blank);
+                id.Map<Expression>(id => new VarExpression(id.text, id.location));
 
             var expression =
                 Forward<Expression>();
 
+            var args =
+                expression.Bind(arg =>
+                    ZeroOrMore(comma.And(expression)).Map(args =>
+                    {
+                        args.Insert(0, arg);
+                        return args;
+                    }))
+                .Or(Constant(new List<Expression>()));
+
+            var call =
+                id.Bind(id =>
+                    lparen.And(args.Bind(args =>
+                        rparen.Map<Expression>(_ => new CallExpression(id.text, args, id.location)))));
+
             var factor =
                 integer
+                .Or(call)
                 .Or(variable)
                 .Or(lparen.And(expression).Bind(e => rparen.And(Constant(e))));
 
