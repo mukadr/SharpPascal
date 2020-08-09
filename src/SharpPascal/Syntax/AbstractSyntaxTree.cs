@@ -124,21 +124,21 @@ namespace SharpPascal.Syntax
     public sealed class CallExpression : Expression
     {
         public string Name { get; }
-        public IReadOnlyCollection<Expression> Expressions { get; }
+        public IReadOnlyCollection<Expression> Arguments { get; }
 
-        public CallExpression(string name, IReadOnlyCollection<Expression> expressions, Location? location = default)
+        public CallExpression(string name, IReadOnlyCollection<Expression> arguments, Location? location = default)
             : base(location)
         {
             Name = name;
-            Expressions = expressions;
+            Arguments = arguments;
         }
 
         public override int GetHashCode()
-            => Name.GetHashCode() ^ Expressions.GetHashCode();
+            => Name.GetHashCode() ^ Arguments.GetHashCode();
 
         public override bool Equals(object obj)
             => obj is CallExpression call &&
                call.Name == Name &&
-               call.Expressions.SequenceEqual(Expressions);
+               call.Arguments.SequenceEqual(Arguments);
     }
 }
