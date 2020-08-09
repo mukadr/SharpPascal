@@ -16,8 +16,7 @@ namespace SharpPascal.Syntax
                     .Or(Symbol('\r')));
 
             var multilineComment =
-                Symbol('{')
-                .And(Until('}').OrError("expected '}' before end of source"));
+                Symbol('{').And(Until('}').OrError("expected '}' before end of source"));
 
             var blank =
                 OneOrMore(whitespace.Or(multilineComment));
@@ -30,52 +29,50 @@ namespace SharpPascal.Syntax
             var digit =
                 Symbol('0', '9');
 
-            Parser<string> parseKeyword(string text)
+            Parser<(string text, Location location)> parseOperator(string text)
+                => Text(text)
+                   .Map((_, line) => (text, new Location(line)))
+                   .Skip(blank);
+
+            Parser<(string text, Location location)> parseKeyword(string text)
                 => Text(text)
                    .And(Not(letter.Or(digit)))
-                   .And(Constant(text))
+                   .Map((_, line) => (text, new Location(line)))
                    .Skip(blank);
 
             var add =
-                Text("+")
-                .Skip(blank);
+                parseOperator("+");
 
             var sub =
-                Text("-")
-                .Skip(blank);
+                parseOperator("-");
 
             var mul =
-                Text("*")
-                .Skip(blank);
+                parseOperator("*");
 
             var div =
                 parseKeyword("div");
+
+            var lparen =
+                parseOperator("(");
+
+            var rparen =
+                parseOperator(")");
 
             var keyword =
                 div;
 
             var id =
                 Not(keyword)
-                .And(letter.Bind(l =>
-                    ZeroOrMore(letter.Or(digit)).Map(ld =>
-                        l + ld)));
-
-            var lparen =
-                Text("(")
-                .Skip(blank);
-
-            var rparen =
-                Text(")")
-                .Skip(blank);
+                .And(letter.Bind(l => ZeroOrMore(letter.Or(digit)).Map(ld => l + ld)));
 
             var integer =
-                OneOrMore(digit).Map<Expression>((value, line) =>
-                    new IntegerExpression(int.Parse(value), new Location(line)))
+                OneOrMore(digit)
+                .Map<Expression>((value, line) => new IntegerExpression(int.Parse(value), new Location(line)))
                 .Skip(blank);
 
             var variable =
-                id.Map<Expression>((name, line) =>
-                    (Expression)new VarExpression(name, new Location(line)))
+                id
+                .Map<Expression>((name, line) => new VarExpression(name, new Location(line)))
                 .Skip(blank);
 
             var expression =
@@ -88,19 +85,19 @@ namespace SharpPascal.Syntax
 
             var mulExpression =
                 factor.Bind(first =>
-                    ZeroOrMore(mul.Or(div).Bind((op, line) =>
+                    ZeroOrMore(mul.Or(div).Bind(op =>
                         factor.Map(right =>
-                            (op, right, line)))).Map(operatorTerms =>
+                            (op, right)))).Map(operatorTerms =>
                                 operatorTerms.Aggregate(first, (left, ot) =>
-                                    BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(ot.line)))));
+                                    BinaryExpression.CreateInstance(left, ot.op.text, ot.right, ot.op.location))));
 
             var addExpression =
                 mulExpression.Bind(first =>
-                    ZeroOrMore(add.Or(sub).Bind((op, line) =>
+                    ZeroOrMore(add.Or(sub).Bind(op =>
                         mulExpression.Map(right =>
-                            (op, right, line)))).Map(operatorTerms =>
+                            (op, right)))).Map(operatorTerms =>
                                 operatorTerms.Aggregate(first, (left, ot) =>
-                                    BinaryExpression.CreateInstance(left, ot.op, ot.right, new Location(ot.line)))));
+                                    BinaryExpression.CreateInstance(left, ot.op.text, ot.right, ot.op.location))));
 
             expression.Parse =
                 addExpression.Parse;

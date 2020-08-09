@@ -90,9 +90,16 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void ParseParenthesesExpressionTest()
         {
-            var source = @"(20 + alpha) * 18";
+            var source = @"
+                (
+                    20
+                    +
+                    alpha
+                )
+                div
+                18";
 
-            var expected = new MulExpression(
+            var expected = new DivExpression(
                 new AddExpression(
                     new IntegerExpression(20),
                     new VarExpression("alpha")
@@ -103,6 +110,17 @@ namespace SharpPascal.Tests.Syntax
             var tree = PascalParser.Parse(source);
 
             Assert.AreEqual(expected, tree);
+
+            if (tree != null)
+            {
+                dynamic dt = tree;
+
+                Assert.AreEqual(7, dt.Location.Line);
+                Assert.AreEqual(4, dt.Left.Location.Line);
+                Assert.AreEqual(8, dt.Right.Location.Line);
+                Assert.AreEqual(3, dt.Left.Left.Location.Line);
+                Assert.AreEqual(5, dt.Left.Right.Location.Line);
+            }
         }
     }
 }
