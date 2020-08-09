@@ -83,21 +83,19 @@ namespace SharpPascal.Syntax
                 .Or(variable)
                 .Or(lparen.And(expression).Bind(e => rparen.And(Constant(e))));
 
-            var mulExpression =
-                factor.Bind(first =>
-                    ZeroOrMore(mul.Or(div).Bind(op =>
-                        factor.Map(right =>
+            Parser<Expression> parseBinaryExpression(Parser<Expression> expr, Parser<(string text, Location location)> op) =>
+                expr.Bind(first =>
+                    ZeroOrMore(op.Bind(op =>
+                        expr.Map(right =>
                             (op, right)))).Map(operatorTerms =>
                                 operatorTerms.Aggregate(first, (left, ot) =>
                                     BinaryExpression.CreateInstance(left, ot.op.text, ot.right, ot.op.location))));
 
+            var mulExpression =
+                parseBinaryExpression(factor, mul.Or(div));
+
             var addExpression =
-                mulExpression.Bind(first =>
-                    ZeroOrMore(add.Or(sub).Bind(op =>
-                        mulExpression.Map(right =>
-                            (op, right)))).Map(operatorTerms =>
-                                operatorTerms.Aggregate(first, (left, ot) =>
-                                    BinaryExpression.CreateInstance(left, ot.op.text, ot.right, ot.op.location))));
+                parseBinaryExpression(mulExpression, add.Or(sub));
 
             expression.Parse =
                 addExpression.Parse;
