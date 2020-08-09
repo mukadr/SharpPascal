@@ -29,16 +29,16 @@ namespace SharpPascal.Syntax
             var digit =
                 Symbol('0', '9');
 
-            Parser<(string text, Location location)> parseOperator(string text)
-                => Text(text)
-                   .Map((_, line) => (text, new Location(line)))
-                   .Skip(blank);
+            Parser<(string text, Location location)> parseOperator(string text) =>
+                Text(text)
+                .Map((_, line) => (text, new Location(line)))
+                .Skip(blank);
 
-            Parser<(string text, Location location)> parseKeyword(string text)
-                => Text(text)
-                   .And(Not(letter.Or(digit)))
-                   .Map((_, line) => (text, new Location(line)))
-                   .Skip(blank);
+            Parser<(string text, Location location)> parseKeyword(string text) =>
+                Text(text)
+                .And(Not(letter.Or(digit)))
+                .Map((_, line) => (text, new Location(line)))
+                .Skip(blank);
 
             var add =
                 parseOperator("+");
