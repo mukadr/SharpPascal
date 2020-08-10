@@ -62,8 +62,19 @@ namespace SharpPascal.Syntax
             var comma =
                 parseOperator(",");
 
+            var dot =
+                parseOperator(".");
+
+            var begin =
+                parseKeyword("begin");
+
+            var end =
+                parseKeyword("end");
+
             var keyword =
-                div;
+                begin
+                .Or(end)
+                .Or(div);
 
             var id =
                 Not(keyword)
@@ -121,7 +132,9 @@ namespace SharpPascal.Syntax
                 addExpression.Parse;
 
             var program =
-                Maybe(blank).And(Maybe(expression));
+                Maybe(blank).And(
+                    begin.And(Maybe(expression))).Bind(expr =>
+                        end.And(dot).Map(_ => expr));
 
             return program.ParseToCompletion(text);
         }

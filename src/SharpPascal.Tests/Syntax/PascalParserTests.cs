@@ -10,24 +10,17 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void SkipWhiteTest()
         {
-            var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n end";
+            var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
 
-            var tree = PascalParser.Parse(source);
-
-            var expected = new VarExpression("end");
-
-            Assert.AreEqual(expected, tree);
-            Assert.AreEqual(5, tree?.Location?.Line);
+            PascalParser.Parse(source);
 
             source = @"
+                begin
                 {
                     Hello World!
-                } end";
+                } end.";
 
-            tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
-            Assert.AreEqual(4, tree?.Location?.Line);
+            PascalParser.Parse(source);
         }
 
         [TestMethod]
@@ -45,13 +38,15 @@ namespace SharpPascal.Tests.Syntax
         public void ParseNumberTest()
         {
             var source = @"
-                150
+                begin
+                    150
+                end.
             ";
 
             var tree = PascalParser.Parse(source);
 
             Assert.IsNotNull(tree?.Location);
-            Assert.AreEqual(2, tree?.Location?.Line);
+            Assert.AreEqual(3, tree?.Location?.Line);
             Assert.AreEqual(new IntegerExpression(150), tree);
         }
 
@@ -59,13 +54,15 @@ namespace SharpPascal.Tests.Syntax
         public void ParseIdTest()
         {
             var source = @"
-                division
+                begin
+                    division
+                end.
             ";
 
             var tree = PascalParser.Parse(source);
 
             Assert.IsNotNull(tree?.Location);
-            Assert.AreEqual(2, tree?.Location?.Line);
+            Assert.AreEqual(3, tree?.Location?.Line);
             Assert.AreEqual(new VarExpression("division"), tree);
         }
 
@@ -73,13 +70,16 @@ namespace SharpPascal.Tests.Syntax
         public void ParseBinaryExpressionTest()
         {
             var source = @"
-                (
-                    20
-                    +
-                    func(15, 18 * 2)
-                )
-                div
-                beta";
+                begin
+                    (
+                        20
+                        +
+                        func(15, 18 * 2)
+                    )
+                    div
+                    beta
+                end.
+            ";
 
             var expected = new DivExpression(
                 new AddExpression(
@@ -104,11 +104,11 @@ namespace SharpPascal.Tests.Syntax
             {
                 dynamic dt = tree;
 
-                Assert.AreEqual(7, dt.Location.Line);
-                Assert.AreEqual(4, dt.Left.Location.Line);
-                Assert.AreEqual(8, dt.Right.Location.Line);
-                Assert.AreEqual(3, dt.Left.Left.Location.Line);
-                Assert.AreEqual(5, dt.Left.Right.Location.Line);
+                Assert.AreEqual(8, dt.Location.Line);
+                Assert.AreEqual(5, dt.Left.Location.Line);
+                Assert.AreEqual(9, dt.Right.Location.Line);
+                Assert.AreEqual(4, dt.Left.Left.Location.Line);
+                Assert.AreEqual(6, dt.Left.Right.Location.Line);
             }
         }
     }
