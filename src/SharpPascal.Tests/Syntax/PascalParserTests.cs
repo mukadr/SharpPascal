@@ -27,6 +27,7 @@ namespace SharpPascal.Tests.Syntax
         public void UnterminatedCommentTest()
         {
             var source = @"
+                begin end.
                 {
                     Hello World!
             ";
@@ -39,15 +40,17 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    150
+                    150;
                 end.
             ";
 
             var tree = PascalParser.Parse(source);
 
+            var expected = new ExpressionStatement(new IntegerExpression(150));
+
             Assert.IsNotNull(tree?.Location);
             Assert.AreEqual(3, tree?.Location?.Line);
-            Assert.AreEqual(new IntegerExpression(150), tree);
+            Assert.AreEqual(expected, tree);
         }
 
         [TestMethod]
@@ -55,15 +58,17 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    division
+                    division;
                 end.
             ";
 
             var tree = PascalParser.Parse(source);
 
+            var expected = new ExpressionStatement(new VarExpression("division"));
+
             Assert.IsNotNull(tree?.Location);
             Assert.AreEqual(3, tree?.Location?.Line);
-            Assert.AreEqual(new VarExpression("division"), tree);
+            Assert.AreEqual(expected, tree);
         }
 
         [TestMethod]
@@ -77,11 +82,11 @@ namespace SharpPascal.Tests.Syntax
                         func(15, 18 * 2)
                     )
                     div
-                    beta
+                    beta;
                 end.
             ";
 
-            var expected = new DivExpression(
+            var expected = new ExpressionStatement(new DivExpression(
                 new AddExpression(
                     new IntegerExpression(20),
                     new CallExpression("func", new Expression[]
@@ -94,7 +99,7 @@ namespace SharpPascal.Tests.Syntax
                     })
                 ),
                 new VarExpression("beta")
-            );
+            ));
 
             var tree = PascalParser.Parse(source);
 
@@ -104,11 +109,11 @@ namespace SharpPascal.Tests.Syntax
             {
                 dynamic dt = tree;
 
-                Assert.AreEqual(8, dt.Location.Line);
-                Assert.AreEqual(5, dt.Left.Location.Line);
-                Assert.AreEqual(9, dt.Right.Location.Line);
-                Assert.AreEqual(4, dt.Left.Left.Location.Line);
-                Assert.AreEqual(6, dt.Left.Right.Location.Line);
+                Assert.AreEqual(8, dt.Expression.Location.Line);
+                Assert.AreEqual(5, dt.Expression.Left.Location.Line);
+                Assert.AreEqual(9, dt.Expression.Right.Location.Line);
+                Assert.AreEqual(4, dt.Expression.Left.Left.Location.Line);
+                Assert.AreEqual(6, dt.Expression.Left.Right.Location.Line);
             }
         }
     }

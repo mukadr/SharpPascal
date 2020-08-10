@@ -141,4 +141,29 @@ namespace SharpPascal.Syntax
                call.Name == Name &&
                call.Arguments.SequenceEqual(Arguments);
     }
+
+    public abstract class Statement : AbstractSyntaxTree
+    {
+        protected Statement(Location? location = default)
+            : base(location)
+        { }
+    }
+
+    public sealed class ExpressionStatement : Statement
+    {
+        public Expression Expression { get; }
+
+        public ExpressionStatement(Expression expression, Location? location = default)
+            : base(location)
+        {
+            Expression = expression;
+        }
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
+
+        public override bool Equals(object obj)
+            => obj is ExpressionStatement stmt &&
+               stmt.Expression.Equals(Expression);
+    }
 }

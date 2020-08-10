@@ -65,6 +65,9 @@ namespace SharpPascal.Syntax
             var dot =
                 parseOperator(".");
 
+            var semi =
+                parseOperator(";");
+
             var begin =
                 parseKeyword("begin");
 
@@ -131,10 +134,16 @@ namespace SharpPascal.Syntax
             expression.Parse =
                 addExpression.Parse;
 
+            var expressionStatement =
+                expression.Bind(expr => semi.And(Constant<Statement>(new ExpressionStatement(expr, expr.Location))));
+
+            var statement =
+                expressionStatement;
+
             var program =
                 Maybe(blank).And(
-                    begin.And(Maybe(expression))).Bind(expr =>
-                        end.And(dot).Map(_ => expr));
+                    begin.And(Maybe(statement))).Bind(stmt =>
+                        end.And(dot).Map(_ => stmt));
 
             return program.ParseToCompletion(text);
         }
