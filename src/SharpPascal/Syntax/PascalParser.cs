@@ -115,7 +115,7 @@ namespace SharpPascal.Syntax
                 integer
                 .Or(call)
                 .Or(variable)
-                .Or(lparen.And(expression).Bind(e => rparen.And(Constant(e))));
+                .Or(lparen.And(expression).Bind(expr => rparen.And(Constant(expr))));
 
             Parser<Expression> parseBinaryExpression(Parser<Expression> expr, Parser<(string text, Location location)> op) =>
                 expr.Bind(first =>
