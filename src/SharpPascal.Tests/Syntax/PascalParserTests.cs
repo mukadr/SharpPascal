@@ -27,12 +27,22 @@ namespace SharpPascal.Tests.Syntax
         public void UnterminatedCommentTest()
         {
             var source = @"
-                begin end.
                 {
                     Hello World!
             ";
 
-            Assert.ThrowsException<ParseException>(() => PascalParser.Parse(source));
+            ParseException? parseException = null;
+            try
+            {
+                PascalParser.Parse(source);
+            }
+            catch (ParseException ex)
+            {
+                parseException = ex;
+            }
+
+            Assert.IsNotNull(parseException);
+            Assert.IsTrue(parseException?.Message?.Contains("expected '}' before end of source") == true);
         }
 
         [TestMethod]
