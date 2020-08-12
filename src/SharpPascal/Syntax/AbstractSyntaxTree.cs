@@ -197,6 +197,31 @@ namespace SharpPascal.Syntax
         { }
     }
 
+    public sealed class IfStatement : Statement
+    {
+        public Expression Expression { get; }
+        public Statement TrueStatement { get; }
+        public Statement? FalseStatement { get; }
+
+        public IfStatement(Expression expression, Statement trueStatement, Statement? falseStatement = null, Location? location = default)
+            : base(location)
+        {
+            Expression = expression;
+            TrueStatement = trueStatement;
+            FalseStatement = falseStatement;
+        }
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
+
+        public override bool Equals(object obj)
+            => obj is IfStatement @if &&
+               @if.Expression.Equals(Expression) &&
+               @if.TrueStatement.Equals(TrueStatement) &&
+               (@if.FalseStatement is null && FalseStatement is null ||
+                (@if.FalseStatement != null && @if.FalseStatement.Equals(FalseStatement)));
+    }
+
     public sealed class ExpressionStatement : Statement
     {
         public Expression Expression { get; }

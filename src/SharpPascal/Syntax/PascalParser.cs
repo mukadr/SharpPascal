@@ -92,10 +92,22 @@ namespace SharpPascal.Syntax
             var end =
                 parseKeyword("end");
 
+            var @if =
+                parseKeyword("if");
+
+            var then =
+                parseKeyword("then");
+
+            var @else =
+                parseKeyword("else");
+
             var keyword =
                 begin
+                .Or(div)
+                .Or(@else)
                 .Or(end)
-                .Or(div);
+                .Or(@if)
+                .Or(then);
 
             var id =
                 Not(keyword)
@@ -158,11 +170,23 @@ namespace SharpPascal.Syntax
             expression.Parse =
                 eqExpression.Parse;
 
+            var statement =
+                Forward<Statement>();
+
+            var ifStatement =
+                @if.Bind(@if =>
+                    expression.Bind(expr =>
+                        then.And(statement.Bind(trueStmt =>
+                            Maybe(@else.And(statement)).Map<Statement>(falseStmt =>
+                                new IfStatement(expr, trueStmt, falseStmt, @if.location))))));
+
             var expressionStatement =
                 expression.Bind(expr => semi.And(Constant<Statement>(new ExpressionStatement(expr, expr.Location))));
 
-            var statement =
-                expressionStatement;
+            statement.Parse =
+                ifStatement
+                .Or(expressionStatement)
+                .Parse;
 
             var program =
                 Maybe(blank).And(

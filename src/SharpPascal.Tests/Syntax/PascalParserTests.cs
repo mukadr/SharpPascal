@@ -138,5 +138,35 @@ namespace SharpPascal.Tests.Syntax
                 Assert.AreEqual(6, dt.Expression.Left.Left.Left.Right.Location.Line);
             }
         }
+
+        [TestMethod]
+        public void ParseIfStatementTest()
+        {
+            var source = @"
+                begin
+                    if 100 > 50 then
+                        if 15 = 15 then
+                            20;
+                        else
+                            15;
+                end.
+            ";
+
+            var expected =
+                new IfStatement(
+                    new GreaterThanExpression(
+                        new IntegerExpression(100),
+                        new IntegerExpression(50)),
+                    new IfStatement(
+                        new EqualExpression(
+                            new IntegerExpression(15),
+                            new IntegerExpression(15)),
+                        new ExpressionStatement(new IntegerExpression(20)),
+                        new ExpressionStatement(new IntegerExpression(15))));
+
+            var tree = PascalParser.Parse(source);
+
+            Assert.AreEqual(expected, tree);
+        }
     }
 }
