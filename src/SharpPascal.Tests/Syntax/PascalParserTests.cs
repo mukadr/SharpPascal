@@ -92,24 +92,31 @@ namespace SharpPascal.Tests.Syntax
                         func(15, 18 * 2)
                     )
                     div
-                    beta;
+                    beta
+
+                    <>
+
+                    1;
                 end.
             ";
 
-            var expected = new ExpressionStatement(new DivExpression(
-                new AddExpression(
-                    new IntegerExpression(20),
-                    new CallExpression("func", new Expression[]
-                    {
-                        new IntegerExpression(15),
-                        new MulExpression(
-                            new IntegerExpression(18),
-                            new IntegerExpression(2)
-                        )
-                    })
-                ),
-                new VarExpression("beta")
-            ));
+            var expected =
+                new ExpressionStatement(
+                    new NotEqualExpression(
+                        new DivExpression(
+                            new AddExpression(
+                                new IntegerExpression(20),
+                                new CallExpression("func", new Expression[]
+                                {
+                                    new IntegerExpression(15),
+                                    new MulExpression(
+                                        new IntegerExpression(18),
+                                        new IntegerExpression(2)
+                                    )
+                                })
+                            ),
+                            new VarExpression("beta")),
+                        new IntegerExpression(1)));
 
             var tree = PascalParser.Parse(source);
 
@@ -119,11 +126,11 @@ namespace SharpPascal.Tests.Syntax
             {
                 dynamic dt = tree;
 
-                Assert.AreEqual(8, dt.Expression.Location.Line);
-                Assert.AreEqual(5, dt.Expression.Left.Location.Line);
-                Assert.AreEqual(9, dt.Expression.Right.Location.Line);
-                Assert.AreEqual(4, dt.Expression.Left.Left.Location.Line);
-                Assert.AreEqual(6, dt.Expression.Left.Right.Location.Line);
+                Assert.AreEqual(8, dt.Expression.Left.Location.Line);
+                Assert.AreEqual(5, dt.Expression.Left.Left.Location.Line);
+                Assert.AreEqual(9, dt.Expression.Left.Right.Location.Line);
+                Assert.AreEqual(4, dt.Expression.Left.Left.Left.Location.Line);
+                Assert.AreEqual(6, dt.Expression.Left.Left.Right.Location.Line);
             }
         }
     }

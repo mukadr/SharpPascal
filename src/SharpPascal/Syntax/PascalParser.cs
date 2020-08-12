@@ -53,6 +53,12 @@ namespace SharpPascal.Syntax
             var div =
                 parseKeyword("div");
 
+            var eq =
+                parseOperator("=");
+
+            var ne =
+                parseOperator("<>");
+
             var lparen =
                 parseOperator("(");
 
@@ -131,8 +137,11 @@ namespace SharpPascal.Syntax
             var addExpression =
                 parseBinaryExpression(mulExpression, add.Or(sub));
 
+            var eqExpression =
+                parseBinaryExpression(addExpression, eq.Or(ne));
+
             expression.Parse =
-                addExpression.Parse;
+                eqExpression.Parse;
 
             var expressionStatement =
                 expression.Bind(expr => semi.And(Constant<Statement>(new ExpressionStatement(expr, expr.Location))));

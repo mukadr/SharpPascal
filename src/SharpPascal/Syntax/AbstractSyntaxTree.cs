@@ -79,6 +79,8 @@ namespace SharpPascal.Syntax
                 case "-": return new SubExpression(left, right, location);
                 case "*": return new MulExpression(left, right, location);
                 case "div": return new DivExpression(left, right, location);
+                case "=": return new EqualExpression(left, right, location);
+                case "<>": return new NotEqualExpression(left, right, location);
                 default: throw new ArgumentException("Bad operator for BinaryExpression", nameof(@operator));
             }
         }
@@ -118,6 +120,20 @@ namespace SharpPascal.Syntax
     {
         public DivExpression(Expression left, Expression right, Location? location = default)
             : base(left, "div", right, location)
+        { }
+    }
+
+    public sealed class EqualExpression : BinaryExpression
+    {
+        public EqualExpression(Expression left, Expression right, Location? location = default)
+            : base(left, "=", right, location)
+        { }
+    }
+
+    public sealed class NotEqualExpression : BinaryExpression
+    {
+        public NotEqualExpression(Expression left, Expression right, Location? location = default)
+            : base(left, "<>", right, location)
         { }
     }
 
