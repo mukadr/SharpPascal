@@ -93,30 +93,35 @@ namespace SharpPascal.Tests.Syntax
                     )
                     div
                     beta
+                    < 12
 
                     <>
 
-                    1;
+                    1 >= 2;
                 end.
             ";
 
             var expected =
                 new ExpressionStatement(
                     new NotEqualExpression(
-                        new DivExpression(
-                            new AddExpression(
-                                new IntegerExpression(20),
-                                new CallExpression("func", new Expression[]
-                                {
-                                    new IntegerExpression(15),
-                                    new MulExpression(
-                                        new IntegerExpression(18),
-                                        new IntegerExpression(2)
-                                    )
-                                })
-                            ),
-                            new VarExpression("beta")),
-                        new IntegerExpression(1)));
+                        new LessThanExpression(
+                            new DivExpression(
+                                new AddExpression(
+                                    new IntegerExpression(20),
+                                    new CallExpression("func", new Expression[]
+                                    {
+                                        new IntegerExpression(15),
+                                        new MulExpression(
+                                            new IntegerExpression(18),
+                                            new IntegerExpression(2)
+                                        )
+                                    })
+                                ),
+                                new VarExpression("beta")),
+                            new IntegerExpression(12)),
+                        new GreaterOrEqualExpression(
+                            new IntegerExpression(1),
+                            new IntegerExpression(2))));
 
             var tree = PascalParser.Parse(source);
 
@@ -126,11 +131,11 @@ namespace SharpPascal.Tests.Syntax
             {
                 dynamic dt = tree;
 
-                Assert.AreEqual(8, dt.Expression.Left.Location.Line);
-                Assert.AreEqual(5, dt.Expression.Left.Left.Location.Line);
-                Assert.AreEqual(9, dt.Expression.Left.Right.Location.Line);
-                Assert.AreEqual(4, dt.Expression.Left.Left.Left.Location.Line);
-                Assert.AreEqual(6, dt.Expression.Left.Left.Right.Location.Line);
+                Assert.AreEqual(8, dt.Expression.Left.Left.Location.Line);
+                Assert.AreEqual(5, dt.Expression.Left.Left.Left.Location.Line);
+                Assert.AreEqual(9, dt.Expression.Left.Left.Right.Location.Line);
+                Assert.AreEqual(4, dt.Expression.Left.Left.Left.Left.Location.Line);
+                Assert.AreEqual(6, dt.Expression.Left.Left.Left.Right.Location.Line);
             }
         }
     }

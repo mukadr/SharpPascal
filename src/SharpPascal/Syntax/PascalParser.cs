@@ -59,6 +59,18 @@ namespace SharpPascal.Syntax
             var ne =
                 parseOperator("<>");
 
+            var lt =
+                parseOperator("<");
+
+            var gt =
+                parseOperator(">");
+
+            var le =
+                parseOperator("<=");
+
+            var ge =
+                parseOperator(">=");
+
             var lparen =
                 parseOperator("(");
 
@@ -137,8 +149,11 @@ namespace SharpPascal.Syntax
             var addExpression =
                 parseBinaryExpression(mulExpression, add.Or(sub));
 
+            var ltExpression =
+                parseBinaryExpression(addExpression, le.Or(ge).Or(lt).Or(gt));
+
             var eqExpression =
-                parseBinaryExpression(addExpression, eq.Or(ne));
+                parseBinaryExpression(ltExpression, eq.Or(ne));
 
             expression.Parse =
                 eqExpression.Parse;

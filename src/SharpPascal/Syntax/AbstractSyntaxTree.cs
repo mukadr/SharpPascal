@@ -81,6 +81,10 @@ namespace SharpPascal.Syntax
                 case "div": return new DivExpression(left, right, location);
                 case "=": return new EqualExpression(left, right, location);
                 case "<>": return new NotEqualExpression(left, right, location);
+                case "<": return new LessThanExpression(left, right, location);
+                case ">": return new GreaterThanExpression(left, right, location);
+                case "<=": return new LessOrEqualExpression(left, right, location);
+                case ">=": return new GreaterOrEqualExpression(left, right, location);
                 default: throw new ArgumentException("Bad operator for BinaryExpression", nameof(@operator));
             }
         }
@@ -134,6 +138,34 @@ namespace SharpPascal.Syntax
     {
         public NotEqualExpression(Expression left, Expression right, Location? location = default)
             : base(left, "<>", right, location)
+        { }
+    }
+
+    public sealed class LessThanExpression : BinaryExpression
+    {
+        public LessThanExpression(Expression left, Expression right, Location? location = default)
+            : base(left, "<", right, location)
+        { }
+    }
+
+    public sealed class GreaterThanExpression : BinaryExpression
+    {
+        public GreaterThanExpression(Expression left, Expression right, Location? location = default)
+            : base(left, ">", right, location)
+        { }
+    }
+
+    public sealed class LessOrEqualExpression : BinaryExpression
+    {
+        public LessOrEqualExpression(Expression left, Expression right, Location? location = default)
+            : base(left, "<=", right, location)
+        { }
+    }
+
+    public sealed class GreaterOrEqualExpression : BinaryExpression
+    {
+        public GreaterOrEqualExpression(Expression left, Expression right, Location? location = default)
+            : base(left, ">=", right, location)
         { }
     }
 
