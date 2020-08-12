@@ -50,13 +50,13 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    150;
+                    x := 150;
                 end.
             ";
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new ExpressionStatement(new IntegerExpression(150));
+            var expected = new AssignmentStatement("x", new IntegerExpression(150));
 
             Assert.IsNotNull(tree?.Location);
             Assert.AreEqual(3, tree?.Location?.Line);
@@ -68,13 +68,13 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    division;
+                    division := 15;
                 end.
             ";
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new ExpressionStatement(new VarExpression("division"));
+            var expected = new AssignmentStatement("division", new IntegerExpression(15));
 
             Assert.IsNotNull(tree?.Location);
             Assert.AreEqual(3, tree?.Location?.Line);
@@ -86,6 +86,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
+                    result :=
                     (
                         20
                         +
@@ -102,7 +103,8 @@ namespace SharpPascal.Tests.Syntax
             ";
 
             var expected =
-                new ExpressionStatement(
+                new AssignmentStatement(
+                    "result",
                     new NotEqualExpression(
                         new LessThanExpression(
                             new DivExpression(
@@ -131,11 +133,11 @@ namespace SharpPascal.Tests.Syntax
             {
                 dynamic dt = tree;
 
-                Assert.AreEqual(8, dt.Expression.Left.Left.Location.Line);
-                Assert.AreEqual(5, dt.Expression.Left.Left.Left.Location.Line);
-                Assert.AreEqual(9, dt.Expression.Left.Left.Right.Location.Line);
-                Assert.AreEqual(4, dt.Expression.Left.Left.Left.Left.Location.Line);
-                Assert.AreEqual(6, dt.Expression.Left.Left.Left.Right.Location.Line);
+                Assert.AreEqual(9, dt.Expression.Left.Left.Location.Line);
+                Assert.AreEqual(6, dt.Expression.Left.Left.Left.Location.Line);
+                Assert.AreEqual(10, dt.Expression.Left.Left.Right.Location.Line);
+                Assert.AreEqual(5, dt.Expression.Left.Left.Left.Left.Location.Line);
+                Assert.AreEqual(7, dt.Expression.Left.Left.Left.Right.Location.Line);
             }
         }
 
@@ -146,9 +148,9 @@ namespace SharpPascal.Tests.Syntax
                 begin
                     if 100 > 50 then
                         if 15 = 15 then
-                            20;
+                            x := 20;
                         else
-                            15;
+                            x := 15;
                 end.
             ";
 
@@ -161,8 +163,8 @@ namespace SharpPascal.Tests.Syntax
                         new EqualExpression(
                             new IntegerExpression(15),
                             new IntegerExpression(15)),
-                        new ExpressionStatement(new IntegerExpression(20)),
-                        new ExpressionStatement(new IntegerExpression(15))));
+                        new AssignmentStatement("x", new IntegerExpression(20)),
+                        new AssignmentStatement("x", new IntegerExpression(15))));
 
             var tree = PascalParser.Parse(source);
 

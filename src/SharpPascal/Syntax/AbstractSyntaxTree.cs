@@ -222,13 +222,15 @@ namespace SharpPascal.Syntax
                 (@if.FalseStatement != null && @if.FalseStatement.Equals(FalseStatement)));
     }
 
-    public sealed class ExpressionStatement : Statement
+    public sealed class AssignmentStatement : Statement
     {
+        public string Name { get; }
         public Expression Expression { get; }
 
-        public ExpressionStatement(Expression expression, Location? location = default)
+        public AssignmentStatement(string name, Expression expression, Location? location = default)
             : base(location)
         {
+            Name = name;
             Expression = expression;
         }
 
@@ -236,7 +238,8 @@ namespace SharpPascal.Syntax
             => Expression.GetHashCode();
 
         public override bool Equals(object obj)
-            => obj is ExpressionStatement stmt &&
-               stmt.Expression.Equals(Expression);
+            => obj is AssignmentStatement assign &&
+               assign.Name == Name &&
+               assign.Expression.Equals(Expression);
     }
 }

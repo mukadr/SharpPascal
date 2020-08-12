@@ -71,6 +71,9 @@ namespace SharpPascal.Syntax
             var ge =
                 parseOperator(">=");
 
+            var assign =
+                parseOperator(":=");
+
             var lparen =
                 parseOperator("(");
 
@@ -180,12 +183,14 @@ namespace SharpPascal.Syntax
                             Maybe(@else.And(statement)).Map<Statement>(falseStmt =>
                                 new IfStatement(expr, trueStmt, falseStmt, @if.location))))));
 
-            var expressionStatement =
-                expression.Bind(expr => semi.And(Constant<Statement>(new ExpressionStatement(expr, expr.Location))));
+            var assignmentStatement =
+                id.Bind(id =>
+                    assign.And(expression.Bind(expr =>
+                        semi.And(Constant<Statement>(new AssignmentStatement(id.text, expr, id.location))))));
 
             statement.Parse =
                 ifStatement
-                .Or(expressionStatement)
+                .Or(assignmentStatement)
                 .Parse;
 
             var program =
