@@ -8,7 +8,7 @@ namespace SharpPascal.Tests.Syntax
     public class PascalParserTests
     {
         [TestMethod]
-        public void SkipWhiteTest()
+        public void Skip_Whitespace_Succeeds()
         {
             var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
 
@@ -16,7 +16,7 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
-        public void SkipCommentTest()
+        public void Skip_MultilineComment_Succeeds()
         {
             var source = @"
                 begin
@@ -28,7 +28,7 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
-        public void UnterminatedCommentTest()
+        public void Skip_UnterminatedMultilineComment_ThrowsParseException()
         {
             var source = @"
                 {
@@ -50,7 +50,7 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
-        public void ParseNumberTest()
+        public void Parse_IntegerExpression_Succeeds()
         {
             var source = @"
                 begin
@@ -68,7 +68,7 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
-        public void ParseIdTest()
+        public void Parse_VarExpression_Succeeds()
         {
             var source = @"
                 begin
@@ -86,7 +86,7 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
-        public void ParseBinaryExpressionTest()
+        public void Parse_BinaryExpression_Succeeds()
         {
             var source = @"
                 begin
@@ -146,7 +146,7 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
-        public void ParseIfStatementTest()
+        public void Parse_IfStatement_Succeeds()
         {
             var source = @"
                 begin
