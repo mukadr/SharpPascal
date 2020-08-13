@@ -193,10 +193,16 @@ namespace SharpPascal.Syntax
                 .Or(assignmentStatement)
                 .Parse;
 
+            var compoundStmt =
+                begin.And(
+                    statement.Bind((first, loc) =>
+                        ZeroOrMore(semi.And(statement)).Bind(stmts =>
+                            Constant(new CompoundStmt(new[] { first }.Concat(stmts).ToList(), new Location(loc)))))
+                    .Or(Constant(new CompoundStmt(new List<Statement>())))
+                ).Bind(compound => end.Map(_ => compound));
+
             var program =
-                Maybe(blank).And(
-                    begin.And(Maybe(statement))).Bind(stmt =>
-                        end.And(dot).Map(_ => stmt));
+                Maybe(blank).And(compoundStmt.Bind(compound => dot.Map(_ => compound)));
 
             return program.ParseToCompletion(text);
         }

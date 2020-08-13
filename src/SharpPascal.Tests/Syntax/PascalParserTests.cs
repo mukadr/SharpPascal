@@ -60,11 +60,13 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new AssignmentStatement("x", new IntegerExpression(150));
+            var expected = new CompoundStmt(new AssignmentStatement("x", new IntegerExpression(150)));
 
-            Assert.IsNotNull(tree?.Location);
-            Assert.AreEqual(3, tree?.Location?.Line);
+            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
+
+            dynamic dt = tree!;
+            Assert.AreEqual(3, dt.Statements[0].Location.Line);
         }
 
         [TestMethod]
@@ -78,11 +80,13 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new AssignmentStatement("division", new VarExpression("beta"));
+            var expected = new CompoundStmt(new AssignmentStatement("division", new VarExpression("beta")));
 
-            Assert.IsNotNull(tree?.Location);
-            Assert.AreEqual(3, tree?.Location?.Line);
+            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
+
+            dynamic dt = tree!;
+            Assert.AreEqual(3, dt.Statements[0].Location.Line);
         }
 
         [TestMethod]
@@ -105,13 +109,12 @@ namespace SharpPascal.Tests.Syntax
             Assert.IsNotNull(tree);
 
             dynamic dt = tree!;
-
-            Assert.AreEqual(3, dt.Location.Line);
-            Assert.AreEqual(6, dt.Expression.Left.Location.Line);
-            Assert.AreEqual(5, dt.Expression.Left.Left.Location.Line);
-            Assert.AreEqual(6, dt.Expression.Left.Right.Location.Line);
-            Assert.AreEqual(8, dt.Expression.Location.Line);
-            Assert.AreEqual(9, dt.Expression.Right.Location.Line);
+            Assert.AreEqual(3, dt.Statements[0].Location.Line);
+            Assert.AreEqual(6, dt.Statements[0].Expression.Left.Location.Line);
+            Assert.AreEqual(5, dt.Statements[0].Expression.Left.Left.Location.Line);
+            Assert.AreEqual(6, dt.Statements[0].Expression.Left.Right.Location.Line);
+            Assert.AreEqual(8, dt.Statements[0].Expression.Location.Line);
+            Assert.AreEqual(9, dt.Statements[0].Expression.Right.Location.Line);
         }
 
         [TestMethod]
@@ -123,7 +126,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected =
+            var expected = new CompoundStmt(
                 new AssignmentStatement(
                     "result",
                     new NotEqualExpression(
@@ -144,7 +147,7 @@ namespace SharpPascal.Tests.Syntax
                             new IntegerExpression(12)),
                         new EqualExpression(
                             new IntegerExpression(1),
-                            new IntegerExpression(1))));
+                            new IntegerExpression(1)))));
 
             var tree = PascalParser.Parse(source);
 
@@ -164,7 +167,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected =
+            var expected = new CompoundStmt(
                 new IfStatement(
                     new GreaterThanExpression(
                         new IntegerExpression(100),
@@ -174,10 +177,44 @@ namespace SharpPascal.Tests.Syntax
                             new IntegerExpression(15),
                             new IntegerExpression(15)),
                         new AssignmentStatement("x", new IntegerExpression(20)),
-                        new AssignmentStatement("x", new IntegerExpression(15))));
+                        new AssignmentStatement("x", new IntegerExpression(15)))));
 
             var tree = PascalParser.Parse(source);
 
+            Assert.AreEqual(expected, tree);
+        }
+
+        [TestMethod]
+        public void Parse_CompoundStatement_Succeeds()
+        {
+            var source = @"
+                begin
+                    x := 10;
+                    y := 15;
+                    if x + y < 30 then
+                        x := 20;
+                    z := x + y
+                end.
+            ";
+
+            var expected = new CompoundStmt(
+                new AssignmentStatement("x", new IntegerExpression(10)),
+                new AssignmentStatement("y", new IntegerExpression(15)),
+                new IfStatement(
+                    new LessThanExpression(
+                        new AddExpression(
+                            new VarExpression("x"),
+                            new VarExpression("y")),
+                        new IntegerExpression(30)),
+                    new AssignmentStatement("x", new IntegerExpression(20))),
+                new AssignmentStatement("z",
+                    new AddExpression(
+                        new VarExpression("x"),
+                        new VarExpression("y"))));
+
+            var tree = PascalParser.Parse(source);
+
+            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
         }
     }

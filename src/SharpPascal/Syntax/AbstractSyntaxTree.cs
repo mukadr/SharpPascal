@@ -197,6 +197,30 @@ namespace SharpPascal.Syntax
         { }
     }
 
+    public class CompoundStmt : Statement
+    {
+        public IReadOnlyList<Statement> Statements { get; }
+
+        public CompoundStmt(IReadOnlyList<Statement> statements, Location? location = default)
+            : base(location)
+        {
+            Statements = statements;
+        }
+
+        public CompoundStmt(params Statement[] statements)
+            : base(null)
+        {
+            Statements = statements;
+        }
+
+        public override int GetHashCode()
+            => Statements.GetHashCode();
+
+        public override bool Equals(object obj)
+            => obj is CompoundStmt list &&
+               list.Statements.SequenceEqual(Statements);
+    }
+
     public sealed class IfStatement : Statement
     {
         public Expression Expression { get; }
