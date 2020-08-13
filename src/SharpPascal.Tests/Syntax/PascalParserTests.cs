@@ -54,7 +54,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    x := 150;
+                    x := 150
                 end.
             ";
 
@@ -72,7 +72,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    division := 15;
+                    division := 15
                 end.
             ";
 
@@ -96,7 +96,7 @@ namespace SharpPascal.Tests.Syntax
                         + alpha)
 
                         div
-                        2;
+                        2
                 end.
             ";
 
@@ -119,7 +119,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    result := ((20 + func(15, 18 * alpha)) div beta) < 12 <> (1 = 1);
+                    result := ((20 + func(15, 18 * alpha)) div beta) < 12 <> (1 = 1)
                 end.
             ";
 
@@ -158,9 +158,9 @@ namespace SharpPascal.Tests.Syntax
                 begin
                     if 100 > 50 then
                         if 15 = 15 then
-                            x := 20;
+                            x := 20
                         else
-                            x := 15;
+                            x := 15
                 end.
             ";
 

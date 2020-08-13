@@ -185,8 +185,8 @@ namespace SharpPascal.Syntax
 
             var assignmentStatement =
                 id.Bind(id =>
-                    assign.And(expression.Bind(expr =>
-                        semi.And(Constant<Statement>(new AssignmentStatement(id.text, expr, id.location))))));
+                    assign.And(expression.Map<Statement>(expr =>
+                        new AssignmentStatement(id.text, expr, id.location))));
 
             statement.Parse =
                 ifStatement
