@@ -86,23 +86,40 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
-        public void Parse_BinaryExpression_Succeeds()
+        public void Parse_ComputesLocation_Correctly()
         {
             var source = @"
                 begin
                     result :=
-                    (
-                        20
-                        +
-                        func(15, 18 * 2)
-                    )
-                    div
-                    beta
-                    < 12
+                        (
+                        15
+                        + alpha)
 
-                    <>
+                        div
+                        2;
+                end.
+            ";
 
-                    1 >= 2;
+            var tree = PascalParser.Parse(source);
+
+            Assert.IsNotNull(tree);
+
+            dynamic dt = tree!;
+
+            Assert.AreEqual(3, dt.Location.Line);
+            Assert.AreEqual(6, dt.Expression.Left.Location.Line);
+            Assert.AreEqual(5, dt.Expression.Left.Left.Location.Line);
+            Assert.AreEqual(6, dt.Expression.Left.Right.Location.Line);
+            Assert.AreEqual(8, dt.Expression.Location.Line);
+            Assert.AreEqual(9, dt.Expression.Right.Location.Line);
+        }
+
+        [TestMethod]
+        public void Parse_BinaryExpression_Succeeds()
+        {
+            var source = @"
+                begin
+                    result := ((20 + func(15, 18 * alpha)) div beta) < 12 <> (1 = 1);
                 end.
             ";
 
@@ -119,30 +136,19 @@ namespace SharpPascal.Tests.Syntax
                                         new IntegerExpression(15),
                                         new MulExpression(
                                             new IntegerExpression(18),
-                                            new IntegerExpression(2)
+                                            new VarExpression("alpha")
                                         )
                                     })
                                 ),
                                 new VarExpression("beta")),
                             new IntegerExpression(12)),
-                        new GreaterOrEqualExpression(
+                        new EqualExpression(
                             new IntegerExpression(1),
-                            new IntegerExpression(2))));
+                            new IntegerExpression(1))));
 
             var tree = PascalParser.Parse(source);
 
             Assert.AreEqual(expected, tree);
-
-            if (tree != null)
-            {
-                dynamic dt = tree;
-
-                Assert.AreEqual(9, dt.Expression.Left.Left.Location.Line);
-                Assert.AreEqual(6, dt.Expression.Left.Left.Left.Location.Line);
-                Assert.AreEqual(10, dt.Expression.Left.Left.Right.Location.Line);
-                Assert.AreEqual(5, dt.Expression.Left.Left.Left.Left.Location.Line);
-                Assert.AreEqual(7, dt.Expression.Left.Left.Left.Right.Location.Line);
-            }
         }
 
         [TestMethod]
