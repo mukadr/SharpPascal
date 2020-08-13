@@ -13,8 +13,12 @@ namespace SharpPascal.Tests.Syntax
             var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
 
             PascalParser.Parse(source);
+        }
 
-            source = @"
+        [TestMethod]
+        public void SkipCommentTest()
+        {
+            var source = @"
                 begin
                 {
                     Hello World!
