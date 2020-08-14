@@ -195,10 +195,15 @@ namespace SharpPascal.Syntax
 
             var compoundStmt =
                 begin.And(
-                    statement.Bind((first, loc) =>
+                    Maybe(statement).Bind((first, loc) =>
                         ZeroOrMore(semi.And(statement)).Bind(stmts =>
-                            Constant(new CompoundStmt(new[] { first }.Concat(stmts).ToList(), new Location(loc)))))
-                    .Or(Constant(new CompoundStmt(new List<Statement>())))
+                        {
+                            if (first != null)
+                            {
+                                stmts.Insert(0, first);
+                            }
+                            return Constant(new CompoundStmt(stmts, new Location(loc)));
+                        }))
                 ).Bind(compound => end.Map(_ => compound));
 
             var program =

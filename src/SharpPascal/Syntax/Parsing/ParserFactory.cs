@@ -112,9 +112,11 @@ namespace SharpPascal.Syntax.Parsing
             });
 
         // A Parser that optionally accept the rule
-        public static Parser<T> Maybe<T>(Parser<T> parser)
-#pragma warning disable CS8604 // Possible null reference argument.
-            => parser.Or(Constant<T>(default));
-#pragma warning restore CS8604 // Possible null reference argument.
+        public static Parser<T?> Maybe<T>(Parser<T> parser) where T: class
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+            => parser.Or(Constant<T?>(default));
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
     }
 }
