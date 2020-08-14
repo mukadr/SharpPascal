@@ -8,10 +8,5 @@
         {
             Line = line;
         }
-
-        public override int GetHashCode()
-        {
-            return Line;
-        }
     }
 }
