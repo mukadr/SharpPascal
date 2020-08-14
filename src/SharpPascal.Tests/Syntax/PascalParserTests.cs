@@ -72,13 +72,13 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    division := 15
+                    division := beta
                 end.
             ";
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new AssignmentStatement("division", new IntegerExpression(15));
+            var expected = new AssignmentStatement("division", new VarExpression("beta"));
 
             Assert.IsNotNull(tree?.Location);
             Assert.AreEqual(3, tree?.Location?.Line);
