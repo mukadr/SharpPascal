@@ -60,7 +60,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new CompoundStmt(new AssignmentStatement("x", new IntegerExpression(150)));
+            var expected = new CompoundStatement(new AssignmentStatement("x", new IntegerExpression(150)));
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
@@ -80,7 +80,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new CompoundStmt(new AssignmentStatement("division", new VarExpression("beta")));
+            var expected = new CompoundStatement(new AssignmentStatement("division", new VarExpression("beta")));
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
@@ -126,7 +126,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new CompoundStmt(
+            var expected = new CompoundStatement(
                 new AssignmentStatement(
                     "result",
                     new NotEqualExpression(
@@ -167,7 +167,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new CompoundStmt(
+            var expected = new CompoundStatement(
                 new IfStatement(
                     new GreaterThanExpression(
                         new IntegerExpression(100),
@@ -197,7 +197,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new CompoundStmt(
+            var expected = new CompoundStatement(
                 new AssignmentStatement("x", new IntegerExpression(10)),
                 new AssignmentStatement("y", new IntegerExpression(15)),
                 new IfStatement(
