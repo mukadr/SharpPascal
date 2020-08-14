@@ -30,79 +30,39 @@ namespace SharpPascal.Syntax
             var digit =
                 Symbol('0', '9');
 
-            Parser<(string text, Location location)> parseOperator(string text) =>
+            Parser<(string text, Location location)> op(string text) =>
                 Text(text)
                 .Map((_, line) => (text, new Location(line)))
                 .Skip(blank);
 
-            Parser<(string text, Location location)> parseKeyword(string text) =>
+            var assign = op(":=");
+            var add = op("+");
+            var sub = op("-");
+            var mul = op("*");
+            var eq = op("=");
+            var ne = op("<>");
+            var le = op("<=");
+            var ge = op(">=");
+            var lt = op("<");
+            var gt = op(">");
+            var lparen = op("(");
+            var rparen = op(")");
+            var semi = op(";");
+            var comma = op(",");
+            var dot = op(".");
+
+            Parser<(string text, Location location)> kw(string text) =>
                 Text(text)
                 .And(Not(letter.Or(digit)))
                 .Map((_, line) => (text, new Location(line)))
                 .Skip(blank);
 
-            var add =
-                parseOperator("+");
-
-            var sub =
-                parseOperator("-");
-
-            var mul =
-                parseOperator("*");
-
-            var div =
-                parseKeyword("div");
-
-            var eq =
-                parseOperator("=");
-
-            var ne =
-                parseOperator("<>");
-
-            var lt =
-                parseOperator("<");
-
-            var gt =
-                parseOperator(">");
-
-            var le =
-                parseOperator("<=");
-
-            var ge =
-                parseOperator(">=");
-
-            var assign =
-                parseOperator(":=");
-
-            var lparen =
-                parseOperator("(");
-
-            var rparen =
-                parseOperator(")");
-
-            var comma =
-                parseOperator(",");
-
-            var dot =
-                parseOperator(".");
-
-            var semi =
-                parseOperator(";");
-
-            var begin =
-                parseKeyword("begin");
-
-            var end =
-                parseKeyword("end");
-
-            var @if =
-                parseKeyword("if");
-
-            var then =
-                parseKeyword("then");
-
-            var @else =
-                parseKeyword("else");
+            var begin = kw("begin");
+            var div = kw("div");
+            var @else = kw("else");
+            var end = kw("end");
+            var @if = kw("if");
+            var then = kw("then");
 
             var keyword =
                 begin
@@ -150,7 +110,7 @@ namespace SharpPascal.Syntax
                 .Or(variable)
                 .Or(lparen.And(expression).Bind(expr => rparen.And(Constant(expr))));
 
-            Parser<Expression> parseBinaryExpression(Parser<Expression> expr, Parser<(string text, Location location)> op) =>
+            Parser<Expression> binaryOperator(Parser<Expression> expr, Parser<(string text, Location location)> op) =>
                 expr.Bind(first =>
                     ZeroOrMore(op.Bind(op =>
                         expr.Map(right =>
@@ -159,16 +119,16 @@ namespace SharpPascal.Syntax
                                     BinaryExpression.CreateInstance(left, ot.op.text, ot.right, ot.op.location))));
 
             var mulExpression =
-                parseBinaryExpression(factor, mul.Or(div));
+                binaryOperator(factor, mul.Or(div));
 
             var addExpression =
-                parseBinaryExpression(mulExpression, add.Or(sub));
+                binaryOperator(mulExpression, add.Or(sub));
 
             var ltExpression =
-                parseBinaryExpression(addExpression, le.Or(ge).Or(lt).Or(gt));
+                binaryOperator(addExpression, le.Or(ge).Or(lt).Or(gt));
 
             var eqExpression =
-                parseBinaryExpression(ltExpression, eq.Or(ne));
+                binaryOperator(ltExpression, eq.Or(ne));
 
             expression.Parse =
                 eqExpression.Parse;
