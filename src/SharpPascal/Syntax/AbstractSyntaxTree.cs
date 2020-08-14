@@ -172,9 +172,9 @@ namespace SharpPascal.Syntax
     public sealed class CallExpression : Expression
     {
         public string Name { get; }
-        public IReadOnlyCollection<Expression> Arguments { get; }
+        public IReadOnlyList<Expression> Arguments { get; }
 
-        public CallExpression(string name, IReadOnlyCollection<Expression> arguments, Location? location = default)
+        public CallExpression(string name, IReadOnlyList<Expression> arguments, Location? location = default)
             : base(location)
         {
             Name = name;
