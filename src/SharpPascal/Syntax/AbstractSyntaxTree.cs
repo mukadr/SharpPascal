@@ -8,7 +8,7 @@ namespace SharpPascal.Syntax
     {
         public Location? Location { get; }
 
-        protected AbstractSyntaxTree(Location? location = default)
+        protected AbstractSyntaxTree(Location? location = null)
         {
             Location = location;
         }
@@ -16,7 +16,7 @@ namespace SharpPascal.Syntax
 
     public abstract class Expression : AbstractSyntaxTree
     {
-        protected Expression(Location? location = default)
+        protected Expression(Location? location = null)
             : base(location)
         { }
     }
@@ -25,7 +25,7 @@ namespace SharpPascal.Syntax
     {
         public int Value { get; }
 
-        public IntegerExpression(int value, Location? location = default)
+        public IntegerExpression(int value, Location? location = null)
             : base(location)
         {
             Value = value;
@@ -43,7 +43,7 @@ namespace SharpPascal.Syntax
     {
         public string Name { get; }
 
-        public VarExpression(string name, Location? location = default)
+        public VarExpression(string name, Location? location = null)
             : base(location)
         {
             Name = name;
@@ -63,7 +63,7 @@ namespace SharpPascal.Syntax
         public string Operator { get; }
         public Expression Right { get; }
 
-        protected BinaryExpression(Expression left, string @operator, Expression right, Location? location = default)
+        protected BinaryExpression(Expression left, string @operator, Expression right, Location? location = null)
             : base(location)
         {
             Left = left;
@@ -71,7 +71,7 @@ namespace SharpPascal.Syntax
             Right = right;
         }
 
-        public static BinaryExpression CreateInstance(Expression left, string @operator, Expression right, Location? location = default)
+        public static BinaryExpression CreateInstance(Expression left, string @operator, Expression right, Location? location = null)
         {
             switch (@operator)
             {
@@ -101,70 +101,70 @@ namespace SharpPascal.Syntax
 
     public sealed class AddExpression : BinaryExpression
     {
-        public AddExpression(Expression left, Expression right, Location? location = default)
+        public AddExpression(Expression left, Expression right, Location? location = null)
             : base(left, "+", right, location)
         { }
     }
 
     public sealed class SubExpression : BinaryExpression
     {
-        public SubExpression(Expression left, Expression right, Location? location = default)
+        public SubExpression(Expression left, Expression right, Location? location = null)
             : base(left, "-", right, location)
         { }
     }
 
     public sealed class MulExpression : BinaryExpression
     {
-        public MulExpression(Expression left, Expression right, Location? location = default)
+        public MulExpression(Expression left, Expression right, Location? location = null)
             : base(left, "*", right, location)
         { }
     }
 
     public sealed class DivExpression : BinaryExpression
     {
-        public DivExpression(Expression left, Expression right, Location? location = default)
+        public DivExpression(Expression left, Expression right, Location? location = null)
             : base(left, "div", right, location)
         { }
     }
 
     public sealed class EqualExpression : BinaryExpression
     {
-        public EqualExpression(Expression left, Expression right, Location? location = default)
+        public EqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, "=", right, location)
         { }
     }
 
     public sealed class NotEqualExpression : BinaryExpression
     {
-        public NotEqualExpression(Expression left, Expression right, Location? location = default)
+        public NotEqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, "<>", right, location)
         { }
     }
 
     public sealed class LessThanExpression : BinaryExpression
     {
-        public LessThanExpression(Expression left, Expression right, Location? location = default)
+        public LessThanExpression(Expression left, Expression right, Location? location = null)
             : base(left, "<", right, location)
         { }
     }
 
     public sealed class GreaterThanExpression : BinaryExpression
     {
-        public GreaterThanExpression(Expression left, Expression right, Location? location = default)
+        public GreaterThanExpression(Expression left, Expression right, Location? location = null)
             : base(left, ">", right, location)
         { }
     }
 
     public sealed class LessOrEqualExpression : BinaryExpression
     {
-        public LessOrEqualExpression(Expression left, Expression right, Location? location = default)
+        public LessOrEqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, "<=", right, location)
         { }
     }
 
     public sealed class GreaterOrEqualExpression : BinaryExpression
     {
-        public GreaterOrEqualExpression(Expression left, Expression right, Location? location = default)
+        public GreaterOrEqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, ">=", right, location)
         { }
     }
@@ -174,7 +174,7 @@ namespace SharpPascal.Syntax
         public string Name { get; }
         public IReadOnlyList<Expression> Arguments { get; }
 
-        public CallExpression(string name, IReadOnlyList<Expression> arguments, Location? location = default)
+        public CallExpression(string name, IReadOnlyList<Expression> arguments, Location? location = null)
             : base(location)
         {
             Name = name;
@@ -192,7 +192,7 @@ namespace SharpPascal.Syntax
 
     public abstract class Statement : AbstractSyntaxTree
     {
-        protected Statement(Location? location = default)
+        protected Statement(Location? location = null)
             : base(location)
         { }
     }
@@ -201,7 +201,7 @@ namespace SharpPascal.Syntax
     {
         public IReadOnlyList<Statement> Statements { get; }
 
-        public CompoundStatement(IReadOnlyList<Statement> statements, Location? location = default)
+        public CompoundStatement(IReadOnlyList<Statement> statements, Location? location = null)
             : base(location)
         {
             Statements = statements;
@@ -227,7 +227,7 @@ namespace SharpPascal.Syntax
         public Statement TrueStatement { get; }
         public Statement? FalseStatement { get; }
 
-        public IfStatement(Expression expression, Statement trueStatement, Statement? falseStatement = null, Location? location = default)
+        public IfStatement(Expression expression, Statement trueStatement, Statement? falseStatement = null, Location? location = null)
             : base(location)
         {
             Expression = expression;
@@ -251,7 +251,7 @@ namespace SharpPascal.Syntax
         public string Name { get; }
         public Expression Expression { get; }
 
-        public AssignmentStatement(string name, Expression expression, Location? location = default)
+        public AssignmentStatement(string name, Expression expression, Location? location = null)
             : base(location)
         {
             Name = name;
