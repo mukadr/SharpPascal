@@ -31,12 +31,12 @@ namespace SharpPascal.Syntax
             Value = value;
         }
 
-        public override int GetHashCode()
-            => Value;
-
         public override bool Equals(object obj)
             => obj is IntegerExpression @int &&
                @int.Value == Value;
+
+        public override int GetHashCode()
+            => Value;
     }
 
     public sealed class VarExpression : Expression
@@ -49,12 +49,12 @@ namespace SharpPascal.Syntax
             Name = name;
         }
 
-        public override int GetHashCode()
-            => Name.GetHashCode();
-
         public override bool Equals(object obj)
             => obj is VarExpression @var &&
                @var.Name == Name;
+
+        public override int GetHashCode()
+            => Name.GetHashCode();
     }
 
     public abstract class BinaryExpression : Expression
@@ -89,14 +89,14 @@ namespace SharpPascal.Syntax
             }
         }
 
-        public override int GetHashCode()
-            => Left.GetHashCode() ^ Operator.GetHashCode() ^ Right.GetHashCode();
-
         public override bool Equals(object obj)
             => obj is BinaryExpression bin &&
                bin.Left.Equals(Left) &&
                bin.Operator == Operator &&
                bin.Right.Equals(Right);
+
+        public override int GetHashCode()
+            => Left.GetHashCode() ^ Operator.GetHashCode() ^ Right.GetHashCode();
     }
 
     public sealed class AddExpression : BinaryExpression
@@ -181,13 +181,13 @@ namespace SharpPascal.Syntax
             Arguments = arguments;
         }
 
-        public override int GetHashCode()
-            => Name.GetHashCode() ^ Arguments.GetHashCode();
-
         public override bool Equals(object obj)
             => obj is CallExpression call &&
                call.Name == Name &&
                call.Arguments.SequenceEqual(Arguments);
+
+        public override int GetHashCode()
+            => Name.GetHashCode() ^ Arguments.GetHashCode();
     }
 
     public abstract class Statement : AbstractSyntaxTree
@@ -213,12 +213,12 @@ namespace SharpPascal.Syntax
             Statements = statements;
         }
 
-        public override int GetHashCode()
-            => Statements.GetHashCode();
-
         public override bool Equals(object obj)
             => obj is CompoundStatement compound &&
                compound.Statements.SequenceEqual(Statements);
+
+        public override int GetHashCode()
+            => Statements.GetHashCode();
     }
 
     public sealed class IfStatement : Statement
@@ -235,15 +235,15 @@ namespace SharpPascal.Syntax
             FalseStatement = falseStatement;
         }
 
-        public override int GetHashCode()
-            => Expression.GetHashCode();
-
         public override bool Equals(object obj)
             => obj is IfStatement @if &&
                @if.Expression.Equals(Expression) &&
                @if.TrueStatement.Equals(TrueStatement) &&
                (@if.FalseStatement is null && FalseStatement is null ||
                 (@if.FalseStatement != null && @if.FalseStatement.Equals(FalseStatement)));
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
     }
 
     public sealed class AssignmentStatement : Statement
@@ -258,12 +258,12 @@ namespace SharpPascal.Syntax
             Expression = expression;
         }
 
-        public override int GetHashCode()
-            => Expression.GetHashCode();
-
         public override bool Equals(object obj)
             => obj is AssignmentStatement assign &&
                assign.Name == Name &&
                assign.Expression.Equals(Expression);
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
     }
 }
