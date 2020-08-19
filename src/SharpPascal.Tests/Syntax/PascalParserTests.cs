@@ -213,6 +213,30 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
+        public void Parse_ProcedureStatement_Succeeds()
+        {
+            var source = @"
+                begin
+                    Inc(I);
+                    WriteLn
+                end.
+            ";
+
+            var expected = new CompoundStatement(
+                new ProcedureStatement(
+                    new CallExpression("inc", new Expression[]
+                    {
+                        new VarExpression("i")
+                    })),
+                new ProcedureStatement(
+                    new CallExpression("writeln")));
+
+            var tree = PascalParser.Parse(source);
+
+            Assert.AreEqual(expected, tree);
+        }
+
+        [TestMethod]
         public void Parse_CompoundStatement_Succeeds()
         {
             var source = @"

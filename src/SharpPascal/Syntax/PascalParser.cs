@@ -159,10 +159,17 @@ namespace SharpPascal.Syntax
                     assign.And(expression.Map<Statement>(expr =>
                         new AssignmentStatement(id.text, expr, id.location))));
 
+            var procedureStatement =
+                id.Bind(id =>
+                    Maybe(lparen.And(args.Bind(args => rparen.Map(_ => args))))
+                    .Map<Statement>(args =>
+                        new ProcedureStatement(new CallExpression(id.text, args, id.location))));
+
             statement.Parse =
                 ifStatement
                 .Or(whileStatement)
                 .Or(assignmentStatement)
+                .Or(procedureStatement)
                 .Parse;
 
             var compoundStmt =

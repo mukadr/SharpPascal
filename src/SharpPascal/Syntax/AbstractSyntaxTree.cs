@@ -182,11 +182,11 @@ namespace SharpPascal.Syntax
         public string Name { get; }
         public IReadOnlyList<Expression> Arguments { get; }
 
-        public CallExpression(string name, IReadOnlyList<Expression> arguments, Location? location = null)
+        public CallExpression(string name, IReadOnlyList<Expression>? arguments = null, Location? location = null)
             : base(location)
         {
             Name = name;
-            Arguments = arguments;
+            Arguments = arguments ?? new List<Expression>();
         }
 
         public override bool Equals(object obj)
@@ -294,5 +294,23 @@ namespace SharpPascal.Syntax
 
         public override int GetHashCode()
             => Expression.GetHashCode();
+    }
+
+    public sealed class ProcedureStatement : Statement
+    {
+        public CallExpression CallExpression { get; }
+
+        public ProcedureStatement(CallExpression callExpression)
+            : base(callExpression.Location)
+        {
+            CallExpression = callExpression;
+        }
+
+        public override bool Equals(object obj)
+            => obj is ProcedureStatement proc &&
+               proc.CallExpression.Equals(CallExpression);
+
+        public override int GetHashCode()
+            => CallExpression.GetHashCode();
     }
 }
