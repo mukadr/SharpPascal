@@ -59,19 +59,23 @@ namespace SharpPascal.Syntax
 
             var begin = kw("begin");
             var div = kw("div");
+            var @do = kw("do");
             var @else = kw("else");
             var end = kw("end");
             var @if = kw("if");
             var mod = kw("mod");
             var then = kw("then");
+            var @while = kw("while");
 
             var keyword =
                 begin
                 .Or(div)
+                .Or(@do)
                 .Or(@else)
                 .Or(end)
                 .Or(@if)
-                .Or(then);
+                .Or(then)
+                .Or(@while);
 
             var id =
                 Not(keyword)
@@ -144,6 +148,12 @@ namespace SharpPascal.Syntax
                             Maybe(@else.And(statement)).Map<Statement>(falseStmt =>
                                 new IfStatement(expr, trueStmt, falseStmt, @if.location))))));
 
+            var whileStatement =
+                @while.Bind(@while =>
+                    expression.Bind(expr =>
+                        @do.And(statement.Map<Statement>(stmt =>
+                            new WhileStatement(expr, stmt, @while.location)))));
+
             var assignmentStatement =
                 id.Bind(id =>
                     assign.And(expression.Map<Statement>(expr =>
@@ -151,6 +161,7 @@ namespace SharpPascal.Syntax
 
             statement.Parse =
                 ifStatement
+                .Or(whileStatement)
                 .Or(assignmentStatement)
                 .Parse;
 

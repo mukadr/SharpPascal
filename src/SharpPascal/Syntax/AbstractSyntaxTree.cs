@@ -254,6 +254,27 @@ namespace SharpPascal.Syntax
             => Expression.GetHashCode();
     }
 
+    public sealed class WhileStatement : Statement
+    {
+        public Expression Expression { get; }
+        public Statement Statement { get; }
+
+        public WhileStatement(Expression expression, Statement statement, Location? location = null)
+            : base(location)
+        {
+            Expression = expression;
+            Statement = statement;
+        }
+
+        public override bool Equals(object obj)
+            => obj is WhileStatement @while &&
+               @while.Expression.Equals(Expression) &&
+               @while.Statement.Equals(Statement);
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
+    }
+
     public sealed class AssignmentStatement : Statement
     {
         public string Name { get; }

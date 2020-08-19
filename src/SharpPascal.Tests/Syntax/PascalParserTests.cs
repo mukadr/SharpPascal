@@ -188,6 +188,31 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
+        public void Parse_WhileStatement_Succeeds()
+        {
+            var source = @"
+                begin
+                    while I < 10 do
+                        I := I + 1
+                end.
+            ";
+
+            var expected = new CompoundStatement(
+                new WhileStatement(
+                    new LessThanExpression(
+                        new VarExpression("i"),
+                        new IntegerExpression(10)),
+                    new AssignmentStatement("i",
+                        new AddExpression(
+                            new VarExpression("i"),
+                            new IntegerExpression(1)))));
+
+            var tree = PascalParser.Parse(source);
+
+            Assert.AreEqual(expected, tree);
+        }
+
+        [TestMethod]
         public void Parse_CompoundStatement_Succeeds()
         {
             var source = @"
