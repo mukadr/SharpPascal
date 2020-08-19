@@ -14,6 +14,122 @@ namespace SharpPascal.Syntax
         }
     }
 
+    public abstract class Statement : AbstractSyntaxTree
+    {
+        protected Statement(Location? location = null)
+            : base(location)
+        { }
+    }
+
+    public class CompoundStatement : Statement
+    {
+        public IReadOnlyList<Statement> Statements { get; }
+
+        public CompoundStatement(IReadOnlyList<Statement> statements, Location? location = null)
+            : base(location)
+        {
+            Statements = statements;
+        }
+
+        public CompoundStatement(params Statement[] statements)
+            : base(null)
+        {
+            Statements = statements;
+        }
+
+        public override bool Equals(object obj)
+            => obj is CompoundStatement compound &&
+               compound.Statements.SequenceEqual(Statements);
+
+        public override int GetHashCode()
+            => Statements.GetHashCode();
+    }
+
+    public sealed class IfStatement : Statement
+    {
+        public Expression Expression { get; }
+        public Statement TrueStatement { get; }
+        public Statement? FalseStatement { get; }
+
+        public IfStatement(Expression expression, Statement trueStatement, Statement? falseStatement = null, Location? location = null)
+            : base(location)
+        {
+            Expression = expression;
+            TrueStatement = trueStatement;
+            FalseStatement = falseStatement;
+        }
+
+        public override bool Equals(object obj)
+            => obj is IfStatement @if &&
+               @if.Expression.Equals(Expression) &&
+               @if.TrueStatement.Equals(TrueStatement) &&
+               (@if.FalseStatement is null && FalseStatement is null ||
+                (@if.FalseStatement != null && @if.FalseStatement.Equals(FalseStatement)));
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
+    }
+
+    public sealed class WhileStatement : Statement
+    {
+        public Expression Expression { get; }
+        public Statement Statement { get; }
+
+        public WhileStatement(Expression expression, Statement statement, Location? location = null)
+            : base(location)
+        {
+            Expression = expression;
+            Statement = statement;
+        }
+
+        public override bool Equals(object obj)
+            => obj is WhileStatement @while &&
+               @while.Expression.Equals(Expression) &&
+               @while.Statement.Equals(Statement);
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
+    }
+
+    public sealed class AssignmentStatement : Statement
+    {
+        public string Name { get; }
+        public Expression Expression { get; }
+
+        public AssignmentStatement(string name, Expression expression, Location? location = null)
+            : base(location)
+        {
+            Name = name;
+            Expression = expression;
+        }
+
+        public override bool Equals(object obj)
+            => obj is AssignmentStatement assign &&
+               assign.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
+               assign.Expression.Equals(Expression);
+
+        public override int GetHashCode()
+            => Expression.GetHashCode();
+    }
+
+    public sealed class ProcedureStatement : Statement
+    {
+        public CallExpression CallExpression { get; }
+
+        public ProcedureStatement(CallExpression callExpression)
+            : base(callExpression.Location)
+        {
+            CallExpression = callExpression;
+        }
+
+        public override bool Equals(object obj)
+            => obj is ProcedureStatement proc &&
+               proc.CallExpression.Equals(CallExpression);
+
+        public override int GetHashCode()
+            => CallExpression.GetHashCode();
+    }
+
     public abstract class Expression : AbstractSyntaxTree
     {
         protected Expression(Location? location = null)
@@ -196,121 +312,5 @@ namespace SharpPascal.Syntax
 
         public override int GetHashCode()
             => Name.GetHashCode() ^ Arguments.GetHashCode();
-    }
-
-    public abstract class Statement : AbstractSyntaxTree
-    {
-        protected Statement(Location? location = null)
-            : base(location)
-        { }
-    }
-
-    public class CompoundStatement : Statement
-    {
-        public IReadOnlyList<Statement> Statements { get; }
-
-        public CompoundStatement(IReadOnlyList<Statement> statements, Location? location = null)
-            : base(location)
-        {
-            Statements = statements;
-        }
-
-        public CompoundStatement(params Statement[] statements)
-            : base(null)
-        {
-            Statements = statements;
-        }
-
-        public override bool Equals(object obj)
-            => obj is CompoundStatement compound &&
-               compound.Statements.SequenceEqual(Statements);
-
-        public override int GetHashCode()
-            => Statements.GetHashCode();
-    }
-
-    public sealed class IfStatement : Statement
-    {
-        public Expression Expression { get; }
-        public Statement TrueStatement { get; }
-        public Statement? FalseStatement { get; }
-
-        public IfStatement(Expression expression, Statement trueStatement, Statement? falseStatement = null, Location? location = null)
-            : base(location)
-        {
-            Expression = expression;
-            TrueStatement = trueStatement;
-            FalseStatement = falseStatement;
-        }
-
-        public override bool Equals(object obj)
-            => obj is IfStatement @if &&
-               @if.Expression.Equals(Expression) &&
-               @if.TrueStatement.Equals(TrueStatement) &&
-               (@if.FalseStatement is null && FalseStatement is null ||
-                (@if.FalseStatement != null && @if.FalseStatement.Equals(FalseStatement)));
-
-        public override int GetHashCode()
-            => Expression.GetHashCode();
-    }
-
-    public sealed class WhileStatement : Statement
-    {
-        public Expression Expression { get; }
-        public Statement Statement { get; }
-
-        public WhileStatement(Expression expression, Statement statement, Location? location = null)
-            : base(location)
-        {
-            Expression = expression;
-            Statement = statement;
-        }
-
-        public override bool Equals(object obj)
-            => obj is WhileStatement @while &&
-               @while.Expression.Equals(Expression) &&
-               @while.Statement.Equals(Statement);
-
-        public override int GetHashCode()
-            => Expression.GetHashCode();
-    }
-
-    public sealed class AssignmentStatement : Statement
-    {
-        public string Name { get; }
-        public Expression Expression { get; }
-
-        public AssignmentStatement(string name, Expression expression, Location? location = null)
-            : base(location)
-        {
-            Name = name;
-            Expression = expression;
-        }
-
-        public override bool Equals(object obj)
-            => obj is AssignmentStatement assign &&
-               assign.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
-               assign.Expression.Equals(Expression);
-
-        public override int GetHashCode()
-            => Expression.GetHashCode();
-    }
-
-    public sealed class ProcedureStatement : Statement
-    {
-        public CallExpression CallExpression { get; }
-
-        public ProcedureStatement(CallExpression callExpression)
-            : base(callExpression.Location)
-        {
-            CallExpression = callExpression;
-        }
-
-        public override bool Equals(object obj)
-            => obj is ProcedureStatement proc &&
-               proc.CallExpression.Equals(CallExpression);
-
-        public override int GetHashCode()
-            => CallExpression.GetHashCode();
     }
 }
