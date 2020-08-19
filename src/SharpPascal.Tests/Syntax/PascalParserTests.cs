@@ -122,7 +122,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 BEGIN
-                    Result := ((20 + Func(15, 18 * Alpha)) div Beta) < 12 <> (1 = 1)
+                    Result := ((20 + Func(15, 18 * (Alpha MOD 3))) DIV Beta) < 12 <> (1 = 1)
                 END.
             ";
 
@@ -139,7 +139,10 @@ namespace SharpPascal.Tests.Syntax
                                         new IntegerExpression(15),
                                         new MulExpression(
                                             new IntegerExpression(18),
-                                            new VarExpression("alpha")
+                                            new ModExpression(
+                                                new VarExpression("alpha"),
+                                                new IntegerExpression(3)
+                                            )
                                         )
                                     })
                                 ),

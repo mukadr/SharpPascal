@@ -79,6 +79,7 @@ namespace SharpPascal.Syntax
                 case "-": return new SubExpression(left, right, location);
                 case "*": return new MulExpression(left, right, location);
                 case "div": return new DivExpression(left, right, location);
+                case "mod": return new ModExpression(left, right, location);
                 case "=": return new EqualExpression(left, right, location);
                 case "<>": return new NotEqualExpression(left, right, location);
                 case "<": return new LessThanExpression(left, right, location);
@@ -124,6 +125,13 @@ namespace SharpPascal.Syntax
     {
         public DivExpression(Expression left, Expression right, Location? location = null)
             : base(left, "div", right, location)
+        { }
+    }
+
+    public sealed class ModExpression : BinaryExpression
+    {
+        public ModExpression(Expression left, Expression right, Location? location = null)
+            : base(left, "mod", right, location)
         { }
     }
 

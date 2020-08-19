@@ -62,6 +62,7 @@ namespace SharpPascal.Syntax
             var @else = kw("else");
             var end = kw("end");
             var @if = kw("if");
+            var mod = kw("mod");
             var then = kw("then");
 
             var keyword =
@@ -119,7 +120,7 @@ namespace SharpPascal.Syntax
                                     BinaryExpression.CreateInstance(left, ot.op.text, ot.right, ot.op.location))));
 
             var mulExpression =
-                binaryOperator(factor, mul.Or(div));
+                binaryOperator(factor, mul.Or(div).Or(mod));
 
             var addExpression =
                 binaryOperator(mulExpression, add.Or(sub));
