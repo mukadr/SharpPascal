@@ -60,13 +60,13 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new CompoundStatement(new AssignmentStatement("x", new IntegerExpression(150)));
+            var expected = new Unit(new CompoundStatement(new AssignmentStatement("x", new IntegerExpression(150))));
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
 
             dynamic dt = tree!;
-            Assert.AreEqual(3, dt.Statements[0].Location.Line);
+            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
         }
 
         [TestMethod]
@@ -80,13 +80,13 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new CompoundStatement(new AssignmentStatement("division", new VarExpression("beta")));
+            var expected = new Unit(new CompoundStatement(new AssignmentStatement("division", new VarExpression("beta"))));
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
 
             dynamic dt = tree!;
-            Assert.AreEqual(3, dt.Statements[0].Location.Line);
+            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
         }
 
         [TestMethod]
@@ -109,12 +109,12 @@ namespace SharpPascal.Tests.Syntax
             Assert.IsNotNull(tree);
 
             dynamic dt = tree!;
-            Assert.AreEqual(3, dt.Statements[0].Location.Line);
-            Assert.AreEqual(6, dt.Statements[0].Expression.Left.Location.Line);
-            Assert.AreEqual(5, dt.Statements[0].Expression.Left.Left.Location.Line);
-            Assert.AreEqual(6, dt.Statements[0].Expression.Left.Right.Location.Line);
-            Assert.AreEqual(8, dt.Statements[0].Expression.Location.Line);
-            Assert.AreEqual(9, dt.Statements[0].Expression.Right.Location.Line);
+            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
+            Assert.AreEqual(6, dt.Main.Statements[0].Expression.Left.Location.Line);
+            Assert.AreEqual(5, dt.Main.Statements[0].Expression.Left.Left.Location.Line);
+            Assert.AreEqual(6, dt.Main.Statements[0].Expression.Left.Right.Location.Line);
+            Assert.AreEqual(8, dt.Main.Statements[0].Expression.Location.Line);
+            Assert.AreEqual(9, dt.Main.Statements[0].Expression.Right.Location.Line);
         }
 
         [TestMethod]
@@ -126,7 +126,7 @@ namespace SharpPascal.Tests.Syntax
                 END.
             ";
 
-            var expected = new CompoundStatement(
+            var expected = new Unit(new CompoundStatement(
                 new AssignmentStatement(
                     "result",
                     new NotEqualExpression(
@@ -150,7 +150,7 @@ namespace SharpPascal.Tests.Syntax
                             new IntegerExpression(12)),
                         new EqualExpression(
                             new IntegerExpression(1),
-                            new IntegerExpression(1)))));
+                            new IntegerExpression(1))))));
 
             var tree = PascalParser.Parse(source);
 
@@ -170,7 +170,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new CompoundStatement(
+            var expected = new Unit(new CompoundStatement(
                 new IfStatement(
                     new GreaterThanExpression(
                         new IntegerExpression(100),
@@ -180,7 +180,7 @@ namespace SharpPascal.Tests.Syntax
                             new IntegerExpression(15),
                             new IntegerExpression(15)),
                         new AssignmentStatement("x", new IntegerExpression(20)),
-                        new AssignmentStatement("x", new IntegerExpression(15)))));
+                        new AssignmentStatement("x", new IntegerExpression(15))))));
 
             var tree = PascalParser.Parse(source);
 
@@ -197,7 +197,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new CompoundStatement(
+            var expected = new Unit(new CompoundStatement(
                 new WhileStatement(
                     new LessThanExpression(
                         new VarExpression("i"),
@@ -205,7 +205,7 @@ namespace SharpPascal.Tests.Syntax
                     new AssignmentStatement("i",
                         new AddExpression(
                             new VarExpression("i"),
-                            new IntegerExpression(1)))));
+                            new IntegerExpression(1))))));
 
             var tree = PascalParser.Parse(source);
 
@@ -222,14 +222,14 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new CompoundStatement(
+            var expected = new Unit(new CompoundStatement(
                 new ProcedureStatement(
                     new CallExpression("inc", new Expression[]
                     {
                         new VarExpression("i")
                     })),
                 new ProcedureStatement(
-                    new CallExpression("writeln")));
+                    new CallExpression("writeln"))));
 
             var tree = PascalParser.Parse(source);
 
@@ -249,7 +249,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new CompoundStatement(
+            var expected = new Unit(new CompoundStatement(
                 new AssignmentStatement("x", new IntegerExpression(10)),
                 new AssignmentStatement("y", new IntegerExpression(15)),
                 new IfStatement(
@@ -262,7 +262,44 @@ namespace SharpPascal.Tests.Syntax
                 new AssignmentStatement("z",
                     new AddExpression(
                         new VarExpression("x"),
-                        new VarExpression("y"))));
+                        new VarExpression("y")))));
+
+            var tree = PascalParser.Parse(source);
+
+            Assert.IsNotNull(tree);
+            Assert.AreEqual(expected, tree);
+        }
+
+        [TestMethod]
+        public void Parse_VarDeclaration_Succeeds()
+        {
+            var source = @"
+                var
+                    x: integer;
+                    y: integer;
+                    z: integer;
+
+                begin
+                    x := 10;
+                    y := 20;
+                    z := x * y
+                end.
+            ";
+
+            var expected = new Unit(
+                new CompoundStatement(
+                    new AssignmentStatement("x", new IntegerExpression(10)),
+                    new AssignmentStatement("y", new IntegerExpression(20)),
+                    new AssignmentStatement("z",
+                        new AddExpression(
+                            new VarExpression("x"),
+                            new VarExpression("y")))),
+                new Declaration[]
+                {
+                    new VarDeclaration("x", "integer"),
+                    new VarDeclaration("y", "integer"),
+                    new VarDeclaration("z", "integer"),
+                });
 
             var tree = PascalParser.Parse(source);
 

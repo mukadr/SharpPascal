@@ -14,6 +14,61 @@ namespace SharpPascal.Syntax
         }
     }
 
+    public sealed class Unit : AbstractSyntaxTree
+    {
+        public IReadOnlyList<Declaration> Declarations { get; }
+        public CompoundStatement Main { get; }
+
+        public Unit(CompoundStatement main, IReadOnlyList<Declaration>? declarations)
+            : base(null)
+        {
+            Declarations = declarations ?? new List<Declaration>();
+            Main = main;
+        }
+
+        public Unit(CompoundStatement main, params Declaration[] declarations)
+            : base(null)
+        {
+            Declarations = declarations;
+            Main = main;
+        }
+
+        public override bool Equals(object obj)
+            => obj is Unit unit &&
+               unit.Declarations.SequenceEqual(Declarations);
+
+        public override int GetHashCode()
+            => Declarations.GetHashCode();
+    }
+
+    public abstract class Declaration : AbstractSyntaxTree
+    {
+        protected Declaration(Location? location = null)
+            : base(location)
+        { }
+    }
+
+    public sealed class VarDeclaration : Declaration
+    {
+        public string Name { get; }
+        public string Type { get; }
+
+        public VarDeclaration(string name, string type, Location? location = null)
+            : base(location)
+        {
+            Name = name;
+            Type = type;
+        }
+
+        public override bool Equals(object obj)
+            => obj is VarDeclaration @var &&
+               @var.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
+               @var.Type.Equals(Type, StringComparison.OrdinalIgnoreCase);
+
+        public override int GetHashCode()
+            => Name.GetHashCode() ^ Type.GetHashCode();
+    }
+
     public abstract class Statement : AbstractSyntaxTree
     {
         protected Statement(Location? location = null)

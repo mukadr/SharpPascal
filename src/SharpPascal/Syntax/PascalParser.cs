@@ -7,7 +7,7 @@ namespace SharpPascal.Syntax
 {
     public static class PascalParser
     {
-        public static AbstractSyntaxTree? Parse(string text)
+        public static Unit? Parse(string text)
         {
             var whitespace =
                 OneOrMore(
@@ -47,6 +47,7 @@ namespace SharpPascal.Syntax
             var gt = op(">");
             var lparen = op("(");
             var rparen = op(")");
+            var colon = op(":");
             var semi = op(";");
             var comma = op(",");
             var dot = op(".");
@@ -65,6 +66,7 @@ namespace SharpPascal.Syntax
             var @if = kw("if");
             var mod = kw("mod");
             var then = kw("then");
+            var @var = kw("var");
             var @while = kw("while");
 
             var keyword =
@@ -75,6 +77,7 @@ namespace SharpPascal.Syntax
                 .Or(end)
                 .Or(@if)
                 .Or(then)
+                .Or(@var)
                 .Or(@while);
 
             var id =
@@ -172,7 +175,7 @@ namespace SharpPascal.Syntax
                 .Or(procedureStatement)
                 .Parse;
 
-            var compoundStmt =
+            var compoundStatement =
                 begin.And(
                     Maybe(statement).Bind(first =>
                         ZeroOrMore(semi.And(statement)).Bind(stmts =>
@@ -185,8 +188,27 @@ namespace SharpPascal.Syntax
                         }))
                 ).Bind(compound => end.Map(_ => compound));
 
+            var varDeclaration =
+                id.Bind(name =>
+                    colon.And(id.Bind(type =>
+                        semi.And(Constant(new VarDeclaration(name.text, type.text, name.location))))));
+
+            var varSection =
+                @var.And(varDeclaration.Bind(first =>
+                    ZeroOrMore(varDeclaration).Map(vars =>
+                    {
+                        vars.Insert(0, first);
+                        return vars;
+                    })));
+
+            var declarations =
+                varSection;
+
             var program =
-                Maybe(blank).And(compoundStmt.Bind(compound => dot.Map(_ => compound)));
+                Maybe(blank)
+                .And(Maybe(declarations).Bind(decls =>
+                    compoundStatement.Bind(main =>
+                        dot.Map(_ => new Unit(main, decls)))));
 
             return program.ParseToCompletion(text);
         }
