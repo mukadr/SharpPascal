@@ -51,7 +51,7 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is VarExpression @var &&
-               @var.Name == Name;
+               @var.Name.Equals(Name, StringComparison.OrdinalIgnoreCase);
 
         public override int GetHashCode()
             => Name.GetHashCode();
@@ -183,7 +183,7 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is CallExpression call &&
-               call.Name == Name &&
+               call.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
                call.Arguments.SequenceEqual(Arguments);
 
         public override int GetHashCode()
@@ -260,7 +260,7 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is AssignmentStatement assign &&
-               assign.Name == Name &&
+               assign.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
                assign.Expression.Equals(Expression);
 
         public override int GetHashCode()

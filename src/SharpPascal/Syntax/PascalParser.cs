@@ -52,7 +52,7 @@ namespace SharpPascal.Syntax
             var dot = op(".");
 
             Parser<(string text, Location location)> kw(string text) =>
-                Text(text)
+                Text(text, ignoreCase: true)
                 .And(Not(letter.Or(digit)))
                 .Map((_, line) => (text, new Location(line)))
                 .Skip(blank);

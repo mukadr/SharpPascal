@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace SharpPascal.Syntax.Parsing
@@ -67,10 +68,10 @@ namespace SharpPascal.Syntax.Parsing
         }
 
         // Matches the string s
-        public ParseResult<string>? Match(string s)
+        public ParseResult<string>? Match(string s, bool ignoreCase)
         {
             if (Position + s.Length <= Text.Length &&
-                Text.Substring(Position, s.Length) == s)
+                Text.Substring(Position, s.Length).Equals(s, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
             {
                 var position = Position + s.Length;
                 var line = Line + s.Count(c => c == '\n');

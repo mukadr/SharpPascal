@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -28,8 +29,8 @@ namespace SharpPascal.Syntax.Parsing
             => new Parser<string>(source => source.MatchUntil(c));
 
         // A Parser that matches a string
-        public static Parser<string> Text(string text)
-            => new Parser<string>(source => source.Match(text));
+        public static Parser<string> Text(string text, bool ignoreCase = false)
+            => new Parser<string>(source => source.Match(text, ignoreCase));
 
         // A Parser that matches zero or more occurences
         public static Parser<List<T>> ZeroOrMore<T>(Parser<T> parser)

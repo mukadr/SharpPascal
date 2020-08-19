@@ -121,9 +121,9 @@ namespace SharpPascal.Tests.Syntax
         public void Parse_BinaryExpression_Succeeds()
         {
             var source = @"
-                begin
-                    result := ((20 + func(15, 18 * alpha)) div beta) < 12 <> (1 = 1)
-                end.
+                BEGIN
+                    Result := ((20 + Func(15, 18 * Alpha)) div Beta) < 12 <> (1 = 1)
+                END.
             ";
 
             var expected = new CompoundStatement(
