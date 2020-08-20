@@ -178,15 +178,15 @@ namespace SharpPascal.Syntax
             var compoundStatement =
                 begin.And(
                     Maybe(statement).Bind(first =>
-                        ZeroOrMore(semi.And(statement)).Bind(stmts =>
+                        ZeroOrMore(semi.And(statement)).Map(stmts =>
                         {
                             if (first != null)
                             {
                                 stmts.Insert(0, first);
                             }
-                            return Constant(new CompoundStatement(stmts, first?.Location));
+                            return new CompoundStatement(stmts, first?.Location);
                         }))
-                ).Bind(compound => end.Map(_ => compound));
+                ).Bind(compound => end.And(Constant(compound)));
 
             var varDeclaration =
                 id.Bind(name =>
