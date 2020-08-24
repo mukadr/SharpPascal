@@ -54,7 +54,7 @@ namespace SharpPascal.Syntax
 
             Parser<(string text, Location location)> kw(string text) =>
                 Text(text, ignoreCase: true)
-                .And(Not(letter.Or(digit)))
+                .And(SNot(letter.Or(digit)))
                 .Map((_, line) => (text, new Location(line)))
                 .Skip(blank);
 
@@ -81,7 +81,7 @@ namespace SharpPascal.Syntax
                 .Or(@while);
 
             var id =
-                Not(keyword)
+                SNot(keyword)
                 .And(letter.Bind(l =>
                     ZeroOrMore(letter.Or(digit)).Map((ld, line) =>
                         (text: l + ld, location: new Location(line)))))

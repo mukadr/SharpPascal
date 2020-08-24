@@ -12,9 +12,7 @@ namespace SharpPascal.Syntax.Parsing
 
         // A dummy Parser when forward declaration is necessary
         public static Parser<T> Forward<T>()
-#pragma warning disable CS8604 // Possible null reference argument.
-            => Not(Constant<T>(default)).OrError("Forward: Must implement Parse()");
-#pragma warning restore CS8604 // Possible null reference argument.
+            => new Parser<T>((_) => throw new ParseException("Forward: Must implement Parse()"));
 
         // A Parser that matches a single character
         public static Parser<char> Symbol(char c)
@@ -99,25 +97,31 @@ namespace SharpPascal.Syntax.Parsing
             });
 
         // A Parser that returns a value only if the specified parser fails
-        public static Parser<T> Not<T>(Parser<T> parser)
-            => new Parser<T>(source =>
+        public static Parser<T?> Not<T>(Parser<T> parser) where T: class
+            => new Parser<T?>(source =>
             {
                 var result = parser.Parse(source);
                 if (result == null)
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
-                    return new ParseResult<T>(default, source);
-#pragma warning restore CS8604 // Possible null reference argument.
+                    return new ParseResult<T?>(null, source);
+                }
+                return null;
+            });
+
+        // A Parser that returns a value only if the specified parser fails
+        public static Parser<T?> SNot<T>(Parser<T> parser) where T: struct
+            => new Parser<T?>(source =>
+            {
+                var result = parser.Parse(source);
+                if (result == null)
+                {
+                    return new ParseResult<T?>(null, source);
                 }
                 return null;
             });
 
         // A Parser that optionally accept the rule
         public static Parser<T?> Maybe<T>(Parser<T> parser) where T: class
-#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-            => parser.Or(Constant<T?>(default));
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+            => parser.Map(value => (T?)value).Or(Constant<T?>(null));
     }
 }
