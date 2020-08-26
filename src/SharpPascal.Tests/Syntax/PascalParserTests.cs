@@ -54,7 +54,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    x := 150
+                    x := 150;
                 end.
             ";
 
@@ -74,7 +74,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 begin
-                    division := beta
+                    division := beta;
                 end.
             ";
 
@@ -100,7 +100,7 @@ namespace SharpPascal.Tests.Syntax
                         + alpha)
 
                         div
-                        2
+                        2;
                 end.
             ";
 
@@ -122,7 +122,7 @@ namespace SharpPascal.Tests.Syntax
         {
             var source = @"
                 BEGIN
-                    Result := ((20 + Func(15, 18 * (Alpha MOD 3))) DIV Beta) < 12 <> (1 = 1)
+                    Result := ((20 + Func(15, 18 * (Alpha MOD 3))) DIV Beta) < 12 <> (1 = 1);
                 END.
             ";
 
@@ -166,7 +166,7 @@ namespace SharpPascal.Tests.Syntax
                         if 15 = 15 then
                             x := 20
                         else
-                            x := 15
+                            x := 15;
                 end.
             ";
 
@@ -193,7 +193,7 @@ namespace SharpPascal.Tests.Syntax
             var source = @"
                 begin
                     while I < 10 do
-                        I := I + 1
+                        I := I + 1;
                 end.
             ";
 
@@ -218,7 +218,7 @@ namespace SharpPascal.Tests.Syntax
             var source = @"
                 begin
                     Inc(I);
-                    WriteLn
+                    WriteLn;
                 end.
             ";
 
@@ -245,7 +245,7 @@ namespace SharpPascal.Tests.Syntax
                     y := 15;
                     if x + y < 30 then
                         x := 20;
-                    z := x + y
+                    z := x + y;
                 end.
             ";
 
