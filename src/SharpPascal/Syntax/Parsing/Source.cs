@@ -1,5 +1,5 @@
-using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SharpPascal.Syntax.Parsing
 {
@@ -8,76 +8,31 @@ namespace SharpPascal.Syntax.Parsing
         // Source text being parsed
         public string Text { get; }
 
-        // Current position to parse next grammar rule
-        public int Position { get; }
+        // Current location
+        public Location Location { get; }
 
-        // Current line number
-        public int Line { get; }
-
-        public Source(string text, int position = 0, int line = 1)
+        public Source(string text, Location? location = null)
         {
             Text = text;
-            Position = position;
-            Line = line;
+            Location = location ?? new Location(0, 1);
         }
 
-        // Matches the character c
-        public ParseResult<char>? Match(char c)
+        // Matches a regular expression
+        public ParseResult<string>? Match(string pattern, bool ignoreCase)
         {
-            if (Position < Text.Length &&
-                Text[Position] == c)
+            var options = RegexOptions.Multiline | RegexOptions.Compiled;
+            if (ignoreCase)
             {
-                var position = Position + 1;
-                var line = Line + (Text[Position] == '\n' ? 1 : 0);
-                return new ParseResult<char>(Text[Position], new Source(Text, position, line));
+                options |= RegexOptions.IgnoreCase;
             }
-
-            return null;
-        }
-
-        // Matches a character between begin and end
-        public ParseResult<char>? Match(char begin, char end)
-        {
-            if (Position < Text.Length &&
-                Text[Position] >= begin &&
-                Text[Position] <= end)
+            var regex = new Regex("\\G" + pattern, options);
+            var match = regex.Match(Text, Location.Position);
+            if (match.Success)
             {
-                var position = Position + 1;
-                var line = Line + (Text[Position] == '\n' ? 1 : 0);
-                return new ParseResult<char>(Text[Position], new Source(Text, position, line));
+                var position = Location.Position + match.Length;
+                var line = Location.Line + match.Value.Count(c => c == '\n');
+                return new ParseResult<string>(match.Value, new Source(Text, new Location(position, line)));
             }
-
-            return null;
-        }
-
-        // Matches anything until last is found
-        public ParseResult<string>? MatchUntil(char last)
-        {
-            if (Position < Text.Length)
-            {
-                var index = Text.IndexOf(last, Position);
-                if (index > -1)
-                {
-                    var position = index + 1;
-                    var s = Text.Substring(Position, position - Position);
-                    var line = Line + s.Count(c => c == '\n');
-                    return new ParseResult<string>(s, new Source(Text, position, line));
-                }
-            }
-            return null;
-        }
-
-        // Matches the string s
-        public ParseResult<string>? Match(string s, bool ignoreCase)
-        {
-            if (Position + s.Length <= Text.Length &&
-                Text.Substring(Position, s.Length).Equals(s, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
-            {
-                var position = Position + s.Length;
-                var line = Line + s.Count(c => c == '\n');
-                return new ParseResult<string>(s, new Source(Text, position, line));
-            }
-
             return null;
         }
     }

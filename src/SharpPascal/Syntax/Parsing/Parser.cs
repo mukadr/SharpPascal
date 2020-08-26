@@ -24,7 +24,7 @@ namespace SharpPascal.Syntax.Parsing
                 result = Parse(source);
 
                 if (result == null ||
-                    result.Source.Position != source.Text.Length)
+                    result.Source.Location.Position != source.Text.Length)
                 {
                     throw new ParseException("Parse Error: expected end of source");
                 }
@@ -33,7 +33,7 @@ namespace SharpPascal.Syntax.Parsing
             }
             catch (ParseException ex)
             {
-                var line = (result != null ? result.Source.Line : 1);
+                var line = (result != null ? result.Source.Location.Line : 1);
                 throw new ParseException(line + ": " + ex.Message);
             }
         }
@@ -66,14 +66,14 @@ namespace SharpPascal.Syntax.Parsing
                 return null;
             });
 
-        // Calls the next callback passing the parsed value and line number
-        public Parser<U> Bind<U>(Func<T, int, Parser<U>> next)
+        // Calls the next callback passing the parsed value and location
+        public Parser<U> Bind<U>(Func<T, Location, Parser<U>> next)
             => new Parser<U>(source =>
             {
                 var result = Parse(source);
                 if (result != null)
                 {
-                    return next(result.Value, result.Source.Line).Parse(result.Source);
+                    return next(result.Value, result.Source.Location).Parse(result.Source);
                 }
                 return null;
             });
@@ -86,9 +86,9 @@ namespace SharpPascal.Syntax.Parsing
         public Parser<U> Map<U>(Func<T, U> map)
             => Bind(value => Constant(map(value)));
 
-        // Maps the parsed value and line number with the map function
-        public Parser<U> Map<U>(Func<T, int, U> map)
-            => Bind((value, line) => Constant(map(value, line)));
+        // Maps the parsed value and location with the map function
+        public Parser<U> Map<U>(Func<T, Location, U> map)
+            => Bind((value, location) => Constant(map(value, location)));
 
         // Executes next parser, ignoring its result
         public Parser<T> Skip<U>(Parser<U> next)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpPascal.Syntax.Parsing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -244,7 +245,7 @@ namespace SharpPascal.Syntax
 
         public static BinaryExpression CreateInstance(Expression left, string @operator, Expression right, Location? location = null)
         {
-            switch (@operator)
+            switch (@operator.ToLower())
             {
                 case "+": return new AddExpression(left, right, location);
                 case "-": return new SubExpression(left, right, location);

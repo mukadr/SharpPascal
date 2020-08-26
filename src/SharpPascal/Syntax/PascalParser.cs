@@ -10,54 +10,33 @@ namespace SharpPascal.Syntax
         public static Unit? Parse(string text)
         {
             var whitespace =
-                OneOrMore(
-                    Symbol(' ')
-                    .Or(Symbol('\t'))
-                    .Or(Symbol('\n'))
-                    .Or(Symbol('\r')));
+                Regex("[ \t\n\r]+");
 
             var multilineComment =
-                Symbol('{').And(Until('}').OrError("expected '}' before end of source"));
+                Regex("{").And(Regex("[^}]*}").Or(new Parser<string>(_ => throw new ParseException("expected '}' before end of source"))));
 
             var blank =
                 OneOrMore(whitespace.Or(multilineComment));
 
-            var letter =
-                Symbol('_')
-                .Or(Symbol('a', 'z'))
-                .Or(Symbol('A', 'Z'));
-
-            var digit =
-                Symbol('0', '9');
-
-            Parser<(string text, Location location)> op(string text) =>
-                Text(text)
-                .Map((_, line) => (text, new Location(line)))
-                .Skip(blank);
-
+            Parser<(string text, Location location)> op(string text) => Regex(text).Map((text, location) => (text, location)).Skip(blank);
             var assign = op(":=");
-            var add = op("+");
+            var add = op("\\+");
             var sub = op("-");
-            var mul = op("*");
+            var mul = op("\\*");
             var eq = op("=");
             var ne = op("<>");
             var le = op("<=");
             var ge = op(">=");
             var lt = op("<");
             var gt = op(">");
-            var lparen = op("(");
-            var rparen = op(")");
+            var lparen = op("\\(");
+            var rparen = op("\\)");
             var colon = op(":");
             var semi = op(";");
             var comma = op(",");
-            var dot = op(".");
+            var dot = op("\\.");
 
-            Parser<(string text, Location location)> kw(string text) =>
-                Text(text, ignoreCase: true)
-                .And(SNot(letter.Or(digit)))
-                .Map((_, line) => (text, new Location(line)))
-                .Skip(blank);
-
+            Parser<(string text, Location location)> kw(string text) => Regex(text + "\\b", ignoreCase: true).Map((text, location) => (text, location)).Skip(blank);
             var begin = kw("begin");
             var div = kw("div");
             var @do = kw("do");
@@ -80,16 +59,11 @@ namespace SharpPascal.Syntax
                 .Or(@var)
                 .Or(@while);
 
-            var id =
-                SNot(keyword)
-                .And(letter.Bind(l =>
-                    ZeroOrMore(letter.Or(digit)).Map((ld, line) =>
-                        (text: l + ld, location: new Location(line)))))
-                .Skip(blank);
+            var id = SNot(keyword).And(Regex("[a-zA-Z_][a-zA-Z_0-9]*")).Map((text, location) => (text, location)).Skip(blank);
 
             var integer =
-                OneOrMore(digit)
-                .Map<Expression>((value, line) => new IntegerExpression(int.Parse(value), new Location(line)))
+                Regex("[0-9]+")
+                .Map<Expression>((value, location) => new IntegerExpression(int.Parse(value), location))
                 .Skip(blank);
 
             var variable =
