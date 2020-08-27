@@ -291,7 +291,7 @@ namespace SharpPascal.Tests.Syntax
                     new AssignmentStatement("x", new IntegerExpression(10)),
                     new AssignmentStatement("y", new IntegerExpression(20)),
                     new AssignmentStatement("z",
-                        new AddExpression(
+                        new MulExpression(
                             new VarExpression("x"),
                             new VarExpression("y")))),
                 new Declaration[]

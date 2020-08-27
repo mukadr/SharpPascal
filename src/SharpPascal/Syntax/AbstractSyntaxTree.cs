@@ -36,7 +36,8 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is Unit unit &&
-               unit.Declarations.SequenceEqual(Declarations);
+               unit.Declarations.SequenceEqual(Declarations) &&
+               unit.Main.Equals(Main);
 
         public override int GetHashCode()
             => Declarations.GetHashCode();
