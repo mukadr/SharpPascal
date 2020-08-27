@@ -66,6 +66,11 @@ namespace SharpPascal.Syntax
                 .Map<Expression>((value, location) => new IntegerExpression(int.Parse(value), location))
                 .Skip(blank);
 
+            var @string =
+                Regex("'[^('\n\r)]*'")
+                .Map<Expression>((value, location) => new StringExpression(value.Substring(1, value.Length - 2), location))
+                .Skip(blank);
+
             var variable =
                 id.Map<Expression>(id => new VarExpression(id.text, id.location));
 
@@ -88,6 +93,7 @@ namespace SharpPascal.Syntax
 
             var factor =
                 integer
+                .Or(@string)
                 .Or(call)
                 .Or(variable)
                 .Or(lparen.And(expression).Bind(expr => rparen.And(Constant(expr))));

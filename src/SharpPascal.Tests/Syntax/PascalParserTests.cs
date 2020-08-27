@@ -70,6 +70,26 @@ namespace SharpPascal.Tests.Syntax
         }
 
         [TestMethod]
+        public void Parse_StringExpression_Succeeds()
+        {
+            var source = @"
+                begin
+                    x := 'Hello World!';
+                end.
+            ";
+
+            var tree = PascalParser.Parse(source);
+
+            var expected = new Unit(new CompoundStatement(new AssignmentStatement("x", new StringExpression("Hello World!"))));
+
+            Assert.IsNotNull(tree);
+            Assert.AreEqual(expected, tree);
+
+            dynamic dt = tree!;
+            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
+        }
+
+        [TestMethod]
         public void Parse_VarExpression_Succeeds()
         {
             var source = @"

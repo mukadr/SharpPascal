@@ -212,6 +212,24 @@ namespace SharpPascal.Syntax
             => Value;
     }
 
+    public sealed class StringExpression : Expression
+    {
+        public string Value { get; }
+
+        public StringExpression(string value, Location? location = null)
+            : base(location)
+        {
+            Value = value;
+        }
+
+        public override bool Equals(object obj)
+            => obj is StringExpression str &&
+               str.Value == Value;
+
+        public override int GetHashCode()
+            => Value.GetHashCode();
+    }
+
     public sealed class VarExpression : Expression
     {
         public string Name { get; }
