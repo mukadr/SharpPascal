@@ -380,6 +380,13 @@ namespace SharpPascal.Syntax
             Arguments = arguments ?? new List<Expression>();
         }
 
+        public CallExpression(string name, params Expression[] arguments)
+            : base(null)
+        {
+            Name = name;
+            Arguments = arguments;
+        }
+
         public override bool Equals(object obj)
             => obj is CallExpression call &&
                call.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&

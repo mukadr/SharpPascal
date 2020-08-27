@@ -326,5 +326,49 @@ namespace SharpPascal.Tests.Syntax
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
         }
+
+        [TestMethod]
+        public void Parse_Accepts_SampleProgram1()
+        {
+            var source = @"
+                var
+                    x: Integer;
+                    xTimesTwo: Integer;
+
+                begin
+                    Write('Enter a number: ');
+
+                    Read(x);
+
+                    xTimesTwo := x * 2;
+
+                    WriteLn('You entered ', x, ', and ', x, ' multiplied by 2 is ', xTimesTwo, '.');
+                end.
+            ";
+
+            var expected = new Unit(
+                new CompoundStatement(
+                    new ProcedureStatement(new CallExpression("write", new StringExpression("Enter a number: "))),
+                    new ProcedureStatement(new CallExpression("read", new VarExpression("x"))),
+                    new AssignmentStatement("xTimesTwo", new MulExpression(new VarExpression("x"), new IntegerExpression(2))),
+                    new ProcedureStatement(new CallExpression("writeln",
+                        new StringExpression("You entered "),
+                        new VarExpression("x"),
+                        new StringExpression(", and "),
+                        new VarExpression("x"),
+                        new StringExpression(" multiplied by 2 is "),
+                        new VarExpression("xTimesTwo"),
+                        new StringExpression(".")))),
+                new Declaration[]
+                {
+                    new VarDeclaration("x", "integer"),
+                    new VarDeclaration("xTimesTwo", "integer")
+                });
+
+            var tree = PascalParser.Parse(source);
+
+            Assert.IsNotNull(tree);
+            Assert.AreEqual(expected, tree);
+        }
     }
 }
