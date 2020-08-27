@@ -148,18 +148,19 @@ namespace SharpPascal.Syntax
                     .Map<Statement>(args =>
                         new ProcedureStatement(new CallExpression(id.text, args, id.location))));
 
-            statement.Parse =
-                ifStatement
-                .Or(whileStatement)
-                .Or(assignmentStatement)
-                .Or(procedureStatement)
-                .Parse;
-
             var compoundStatement =
                 begin.And(
                     ZeroOrMore(
                         ZeroOrMore(semi).And(statement)).Bind(stmts =>
-                            ZeroOrMore(semi).And(end.And(Constant(new CompoundStatement(stmts))))));
+                            ZeroOrMore(semi).And(end.And(Constant<Statement>(new CompoundStatement(stmts))))));
+
+            statement.Parse =
+                compoundStatement
+                .Or(ifStatement)
+                .Or(whileStatement)
+                .Or(assignmentStatement)
+                .Or(procedureStatement)
+                .Parse;
 
             var varDeclaration =
                 id.Bind(name =>

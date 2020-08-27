@@ -18,16 +18,16 @@ namespace SharpPascal.Syntax
     public sealed class Unit : AbstractSyntaxTree
     {
         public IReadOnlyList<Declaration> Declarations { get; }
-        public CompoundStatement Main { get; }
+        public Statement Main { get; }
 
-        public Unit(CompoundStatement main, IReadOnlyList<Declaration>? declarations)
+        public Unit(Statement main, IReadOnlyList<Declaration>? declarations)
             : base(null)
         {
             Declarations = declarations ?? new List<Declaration>();
             Main = main;
         }
 
-        public Unit(CompoundStatement main, params Declaration[] declarations)
+        public Unit(Statement main, params Declaration[] declarations)
             : base(null)
         {
             Declarations = declarations;
