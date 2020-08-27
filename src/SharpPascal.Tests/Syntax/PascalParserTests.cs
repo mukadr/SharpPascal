@@ -154,17 +154,13 @@ namespace SharpPascal.Tests.Syntax
                             new DivExpression(
                                 new AddExpression(
                                     new IntegerExpression(20),
-                                    new CallExpression("func", new Expression[]
-                                    {
+                                    new CallExpression("func",
                                         new IntegerExpression(15),
                                         new MulExpression(
                                             new IntegerExpression(18),
                                             new ModExpression(
                                                 new VarExpression("alpha"),
-                                                new IntegerExpression(3)
-                                            )
-                                        )
-                                    })
+                                                new IntegerExpression(3))))
                                 ),
                                 new VarExpression("beta")),
                             new IntegerExpression(12)),
@@ -244,10 +240,7 @@ namespace SharpPascal.Tests.Syntax
 
             var expected = new Unit(new CompoundStatement(
                 new ProcedureStatement(
-                    new CallExpression("inc", new Expression[]
-                    {
-                        new VarExpression("i")
-                    })),
+                    new CallExpression("inc", new VarExpression("i"))),
                 new ProcedureStatement(
                     new CallExpression("writeln"))));
 
@@ -314,12 +307,9 @@ namespace SharpPascal.Tests.Syntax
                         new MulExpression(
                             new VarExpression("x"),
                             new VarExpression("y")))),
-                new Declaration[]
-                {
-                    new VarDeclaration("x", "integer"),
-                    new VarDeclaration("y", "integer"),
-                    new VarDeclaration("z", "integer"),
-                });
+                new VarDeclaration("x", "integer"),
+                new VarDeclaration("y", "integer"),
+                new VarDeclaration("z", "integer"));
 
             var tree = PascalParser.Parse(source);
 
@@ -359,11 +349,8 @@ namespace SharpPascal.Tests.Syntax
                         new StringExpression(" multiplied by 2 is "),
                         new VarExpression("xTimesTwo"),
                         new StringExpression(".")))),
-                new Declaration[]
-                {
-                    new VarDeclaration("x", "integer"),
-                    new VarDeclaration("xTimesTwo", "integer")
-                });
+                new VarDeclaration("x", "integer"),
+                new VarDeclaration("xTimesTwo", "integer"));
 
             var tree = PascalParser.Parse(source);
 
