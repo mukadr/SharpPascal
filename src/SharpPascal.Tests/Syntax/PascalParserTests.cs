@@ -357,5 +357,57 @@ namespace SharpPascal.Tests.Syntax
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
         }
+
+        [TestMethod]
+        public void Parse_Accepts_SampleProgram2()
+        {
+            var source = @"
+                var
+                    Value: Integer;
+                    I: Integer;
+                    Factorial: Integer;
+
+                begin
+                    Write('Enter a number: ');
+
+                    Read(Value);
+
+                    I := Value;
+                    Factorial := 1;
+                    while I > 0 do
+                    begin
+                        Factorial := Factorial * I;
+                        Dec(I);
+                    end;
+
+                    WriteLn('The factorial of ', Value, ' is ', Factorial);
+                end.
+            ";
+
+            var expected = new Unit(
+                new CompoundStatement(
+                    new ProcedureStatement(new CallExpression("write", new StringExpression("Enter a number: "))),
+                    new ProcedureStatement(new CallExpression("read", new VarExpression("value"))),
+                    new AssignmentStatement("i", new VarExpression("value")),
+                    new AssignmentStatement("factorial", new IntegerExpression(1)),
+                    new WhileStatement(
+                        new GreaterThanExpression(new VarExpression("i"), new IntegerExpression(0)),
+                        new CompoundStatement(
+                            new AssignmentStatement("factorial", new MulExpression(new VarExpression("factorial"), new VarExpression("i"))),
+                            new ProcedureStatement(new CallExpression("dec", new VarExpression("i"))))),
+                    new ProcedureStatement(new CallExpression("writeln",
+                        new StringExpression("The factorial of "),
+                        new VarExpression("value"),
+                        new StringExpression(" is "),
+                        new VarExpression("factorial")))),
+                new VarDeclaration("value", "integer"),
+                new VarDeclaration("i", "integer"),
+                new VarDeclaration("factorial", "integer"));
+
+            var tree = PascalParser.Parse(source);
+
+            Assert.IsNotNull(tree);
+            Assert.AreEqual(expected, tree);
+        }
     }
 }
