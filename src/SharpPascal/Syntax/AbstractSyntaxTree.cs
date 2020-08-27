@@ -264,21 +264,21 @@ namespace SharpPascal.Syntax
 
         public static BinaryExpression CreateInstance(Expression left, string @operator, Expression right, Location? location = null)
         {
-            switch (@operator.ToLower())
+            return (@operator.ToLower()) switch
             {
-                case "+": return new AddExpression(left, right, location);
-                case "-": return new SubExpression(left, right, location);
-                case "*": return new MulExpression(left, right, location);
-                case "div": return new DivExpression(left, right, location);
-                case "mod": return new ModExpression(left, right, location);
-                case "=": return new EqualExpression(left, right, location);
-                case "<>": return new NotEqualExpression(left, right, location);
-                case "<": return new LessThanExpression(left, right, location);
-                case ">": return new GreaterThanExpression(left, right, location);
-                case "<=": return new LessOrEqualExpression(left, right, location);
-                case ">=": return new GreaterOrEqualExpression(left, right, location);
-                default: throw new ArgumentException("Bad operator for BinaryExpression", nameof(@operator));
-            }
+                "+" => new AddExpression(left, right, location),
+                "-" => new SubExpression(left, right, location),
+                "*" => new MulExpression(left, right, location),
+                "div" => new DivExpression(left, right, location),
+                "mod" => new ModExpression(left, right, location),
+                "=" => new EqualExpression(left, right, location),
+                "<>" => new NotEqualExpression(left, right, location),
+                "<" => new LessThanExpression(left, right, location),
+                ">" => new GreaterThanExpression(left, right, location),
+                "<=" => new LessOrEqualExpression(left, right, location),
+                ">=" => new GreaterOrEqualExpression(left, right, location),
+                _ => throw new ArgumentException("Bad operator for BinaryExpression", nameof(@operator)),
+            };
         }
 
         public override bool Equals(object obj)
