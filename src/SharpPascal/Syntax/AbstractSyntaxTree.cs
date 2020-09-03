@@ -14,7 +14,7 @@ namespace SharpPascal.Syntax
             Location = location;
         }
 
-        public abstract void Visit(Visitor visit);
+        public abstract void Visit(Visitor visitor);
     }
 
     public sealed class Unit : AbstractSyntaxTree
