@@ -13,6 +13,8 @@ namespace SharpPascal.Syntax
         {
             Location = location;
         }
+
+        public abstract void Visit(Visitor visit);
     }
 
     public sealed class Unit : AbstractSyntaxTree
@@ -32,6 +34,18 @@ namespace SharpPascal.Syntax
         {
             Declarations = declarations;
             Main = main;
+        }
+
+        public override void Visit(Visitor visitor)
+        {
+            if (visitor.VisitUnit(this))
+            {
+                foreach (var decl in Declarations)
+                {
+                    decl.Visit(visitor);
+                }
+                Main.Visit(visitor);
+            }
         }
 
         public override bool Equals(object obj)
@@ -60,6 +74,11 @@ namespace SharpPascal.Syntax
         {
             Name = name;
             Type = type;
+        }
+
+        public override void Visit(Visitor visitor)
+        {
+            visitor.VisitVarDeclaration(this);
         }
 
         public override bool Equals(object obj)
@@ -94,6 +113,14 @@ namespace SharpPascal.Syntax
             Statements = statements;
         }
 
+        public override void Visit(Visitor visitor)
+        {
+            foreach (var stmt in Statements)
+            {
+                stmt.Visit(visitor);
+            }
+        }
+
         public override bool Equals(object obj)
             => obj is CompoundStatement compound &&
                compound.Statements.SequenceEqual(Statements);
@@ -114,6 +141,16 @@ namespace SharpPascal.Syntax
             Expression = expression;
             TrueStatement = trueStatement;
             FalseStatement = falseStatement;
+        }
+
+        public override void Visit(Visitor visitor)
+        {
+            if (visitor.VisitIfStatement(this))
+            {
+                Expression.Visit(visitor);
+                TrueStatement.Visit(visitor);
+                FalseStatement?.Visit(visitor);
+            }
         }
 
         public override bool Equals(object obj)
@@ -139,6 +176,15 @@ namespace SharpPascal.Syntax
             Statement = statement;
         }
 
+        public override void Visit(Visitor visitor)
+        {
+            if (visitor.VisitWhileStatement(this))
+            {
+                Expression.Visit(visitor);
+                Statement.Visit(visitor);
+            }
+        }
+
         public override bool Equals(object obj)
             => obj is WhileStatement @while &&
                @while.Expression.Equals(Expression) &&
@@ -160,6 +206,14 @@ namespace SharpPascal.Syntax
             Expression = expression;
         }
 
+        public override void Visit(Visitor visitor)
+        {
+            if (visitor.VisitAssignmentStatement(this))
+            {
+                Expression.Visit(visitor);
+            }
+        }
+
         public override bool Equals(object obj)
             => obj is AssignmentStatement assign &&
                assign.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
@@ -177,6 +231,11 @@ namespace SharpPascal.Syntax
             : base(callExpression.Location)
         {
             CallExpression = callExpression;
+        }
+
+        public override void Visit(Visitor visitor)
+        {
+            CallExpression.Visit(visitor);
         }
 
         public override bool Equals(object obj)
@@ -204,6 +263,11 @@ namespace SharpPascal.Syntax
             Value = value;
         }
 
+        public override void Visit(Visitor visitor)
+        {
+            visitor.VisitIntegerExpression(this);
+        }
+
         public override bool Equals(object obj)
             => obj is IntegerExpression @int &&
                @int.Value == Value;
@@ -222,6 +286,11 @@ namespace SharpPascal.Syntax
             Value = value;
         }
 
+        public override void Visit(Visitor visitor)
+        {
+            visitor.VisitStringExpression(this);
+        }
+
         public override bool Equals(object obj)
             => obj is StringExpression str &&
                str.Value == Value;
@@ -238,6 +307,11 @@ namespace SharpPascal.Syntax
             : base(location)
         {
             Name = name;
+        }
+
+        public override void Visit(Visitor visitor)
+        {
+            visitor.VisitVarExpression(this);
         }
 
         public override bool Equals(object obj)
@@ -281,6 +355,12 @@ namespace SharpPascal.Syntax
             };
         }
 
+        public override void Visit(Visitor visitor)
+        {
+            Left.Visit(visitor);
+            Right.Visit(visitor);
+        }
+
         public override bool Equals(object obj)
             => obj is BinaryExpression bin &&
                bin.Left.Equals(Left) &&
@@ -296,6 +376,12 @@ namespace SharpPascal.Syntax
         public AddExpression(Expression left, Expression right, Location? location = null)
             : base(left, "+", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitAddExpression(this);
+        }
     }
 
     public sealed class SubExpression : BinaryExpression
@@ -303,6 +389,12 @@ namespace SharpPascal.Syntax
         public SubExpression(Expression left, Expression right, Location? location = null)
             : base(left, "-", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitSubExpression(this);
+        }
     }
 
     public sealed class MulExpression : BinaryExpression
@@ -310,6 +402,12 @@ namespace SharpPascal.Syntax
         public MulExpression(Expression left, Expression right, Location? location = null)
             : base(left, "*", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitMulExpression(this);
+        }
     }
 
     public sealed class DivExpression : BinaryExpression
@@ -317,6 +415,12 @@ namespace SharpPascal.Syntax
         public DivExpression(Expression left, Expression right, Location? location = null)
             : base(left, "div", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitDivExpression(this);
+        }
     }
 
     public sealed class ModExpression : BinaryExpression
@@ -324,6 +428,12 @@ namespace SharpPascal.Syntax
         public ModExpression(Expression left, Expression right, Location? location = null)
             : base(left, "mod", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitModExpression(this);
+        }
     }
 
     public sealed class EqualExpression : BinaryExpression
@@ -331,6 +441,12 @@ namespace SharpPascal.Syntax
         public EqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, "=", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitEqualExpression(this);
+        }
     }
 
     public sealed class NotEqualExpression : BinaryExpression
@@ -338,6 +454,12 @@ namespace SharpPascal.Syntax
         public NotEqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, "<>", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitNotEqualExpression(this);
+        }
     }
 
     public sealed class LessThanExpression : BinaryExpression
@@ -345,6 +467,12 @@ namespace SharpPascal.Syntax
         public LessThanExpression(Expression left, Expression right, Location? location = null)
             : base(left, "<", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitLessThanExpression(this);
+        }
     }
 
     public sealed class GreaterThanExpression : BinaryExpression
@@ -352,6 +480,12 @@ namespace SharpPascal.Syntax
         public GreaterThanExpression(Expression left, Expression right, Location? location = null)
             : base(left, ">", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitGreaterThanExpression(this);
+        }
     }
 
     public sealed class LessOrEqualExpression : BinaryExpression
@@ -359,6 +493,12 @@ namespace SharpPascal.Syntax
         public LessOrEqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, "<=", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitLessOrEqualExpression(this);
+        }
     }
 
     public sealed class GreaterOrEqualExpression : BinaryExpression
@@ -366,6 +506,12 @@ namespace SharpPascal.Syntax
         public GreaterOrEqualExpression(Expression left, Expression right, Location? location = null)
             : base(left, ">=", right, location)
         { }
+
+        public override void Visit(Visitor visitor)
+        {
+            base.Visit(visitor);
+            visitor.VisitGreaterOrEqualExpression(this);
+        }
     }
 
     public sealed class CallExpression : Expression
@@ -385,6 +531,17 @@ namespace SharpPascal.Syntax
         {
             Name = name;
             Arguments = arguments;
+        }
+
+        public override void Visit(Visitor visitor)
+        {
+            if (visitor.VisitCallExpression(this))
+            {
+                foreach (var arg in Arguments)
+                {
+                    arg.Visit(visitor);
+                }
+            }
         }
 
         public override bool Equals(object obj)
