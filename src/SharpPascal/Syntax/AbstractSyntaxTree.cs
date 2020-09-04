@@ -66,14 +66,14 @@ namespace SharpPascal.Syntax
 
     public sealed class VarDeclaration : Declaration
     {
-        public string Name { get; }
-        public string Type { get; }
+        public PascalName Name { get; }
+        public PascalName Type { get; }
 
         public VarDeclaration(string name, string type, Location? location = null)
             : base(location)
         {
-            Name = name;
-            Type = type;
+            Name = new PascalName(name);
+            Type = new PascalName(type);
         }
 
         public override void Visit(Visitor visitor)
@@ -83,8 +83,8 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is VarDeclaration @var &&
-               @var.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
-               @var.Type.Equals(Type, StringComparison.OrdinalIgnoreCase);
+               @var.Name.Equals(Name) &&
+               @var.Type.Equals(Type);
 
         public override int GetHashCode()
             => Name.GetHashCode() ^ Type.GetHashCode();
@@ -196,13 +196,13 @@ namespace SharpPascal.Syntax
 
     public sealed class AssignmentStatement : Statement
     {
-        public string Name { get; }
+        public PascalName Name { get; }
         public Expression Expression { get; }
 
         public AssignmentStatement(string name, Expression expression, Location? location = null)
             : base(location)
         {
-            Name = name;
+            Name = new PascalName(name);
             Expression = expression;
         }
 
@@ -216,7 +216,7 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is AssignmentStatement assign &&
-               assign.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
+               assign.Name.Equals(Name) &&
                assign.Expression.Equals(Expression);
 
         public override int GetHashCode()
@@ -301,12 +301,12 @@ namespace SharpPascal.Syntax
 
     public sealed class VarExpression : Expression
     {
-        public string Name { get; }
+        public PascalName Name { get; }
 
         public VarExpression(string name, Location? location = null)
             : base(location)
         {
-            Name = name;
+            Name = new PascalName(name);
         }
 
         public override void Visit(Visitor visitor)
@@ -316,7 +316,7 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is VarExpression @var &&
-               @var.Name.Equals(Name, StringComparison.OrdinalIgnoreCase);
+               @var.Name.Equals(Name);
 
         public override int GetHashCode()
             => Name.GetHashCode();
@@ -516,20 +516,20 @@ namespace SharpPascal.Syntax
 
     public sealed class CallExpression : Expression
     {
-        public string Name { get; }
+        public PascalName Name { get; }
         public IReadOnlyList<Expression> Arguments { get; }
 
         public CallExpression(string name, IReadOnlyList<Expression>? arguments = null, Location? location = null)
             : base(location)
         {
-            Name = name;
+            Name = new PascalName(name);
             Arguments = arguments ?? new List<Expression>();
         }
 
         public CallExpression(string name, params Expression[] arguments)
             : base(null)
         {
-            Name = name;
+            Name = new PascalName(name);
             Arguments = arguments;
         }
 
@@ -546,7 +546,7 @@ namespace SharpPascal.Syntax
 
         public override bool Equals(object obj)
             => obj is CallExpression call &&
-               call.Name.Equals(Name, StringComparison.OrdinalIgnoreCase) &&
+               call.Name.Equals(Name) &&
                call.Arguments.SequenceEqual(Arguments);
 
         public override int GetHashCode()
