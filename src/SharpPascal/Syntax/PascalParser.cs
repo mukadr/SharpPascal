@@ -13,12 +13,18 @@ namespace SharpPascal.Syntax
                 Regex("[ \t\n\r]+");
 
             var multilineComment =
-                Regex("{").And(Regex("[^}]*}").Or(new Parser<string>(_ => throw new ParseException("expected '}' before end of source"))));
+                Regex("{")
+                .And(Regex("[^}]*}")
+                .Or(new Parser<string>(_ => throw new ParseException("expected '}' before end of source"))));
 
             var blank =
                 OneOrMore(whitespace.Or(multilineComment));
 
-            Parser<(string text, Location location)> op(string text) => Regex(text).Map((text, location) => (text, location)).Skip(blank);
+            Parser<(string text, Location location)> op(string text) =>
+                Regex(text)
+                .Map((text, location) => (text, location))
+                .Skip(blank);
+
             var assign = op(":=");
             var add = op("\\+");
             var sub = op("-");
@@ -36,7 +42,11 @@ namespace SharpPascal.Syntax
             var comma = op(",");
             var dot = op("\\.");
 
-            Parser<(string text, Location location)> kw(string text) => Regex(text + "\\b", ignoreCase: true).Map((text, location) => (text, location)).Skip(blank);
+            Parser<(string text, Location location)> kw(string text) =>
+                Regex(text + "\\b", ignoreCase: true)
+                .Map((text, location) => (text, location))
+                .Skip(blank);
+
             var begin = kw("begin");
             var div = kw("div");
             var @do = kw("do");
@@ -59,7 +69,11 @@ namespace SharpPascal.Syntax
                 .Or(@var)
                 .Or(@while);
 
-            var id = SNot(keyword).And(Regex("[a-zA-Z_][a-zA-Z_0-9]*")).Map((text, location) => (text, location)).Skip(blank);
+            var id =
+                SNot(keyword)
+                .And(Regex("[a-zA-Z_][a-zA-Z_0-9]*"))
+                .Map((text, location) => (text, location))
+                .Skip(blank);
 
             var integer =
                 Regex("[0-9]+")
