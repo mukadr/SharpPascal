@@ -22,12 +22,12 @@ namespace SharpPascal.Semantic
             => _symbols.FirstOrDefault(s => s.Name == name);
 
         public Symbol? Find(PascalName name)
-            => UntilLastScope
+            => AllScopes
                 .Select(scope => scope.FindLocal(name))
                 .SkipWhile(s => s is null)
                 .FirstOrDefault();
 
-        protected IEnumerable<Scope> UntilLastScope
+        protected IEnumerable<Scope> AllScopes
         {
             get
             {
