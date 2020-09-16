@@ -18,12 +18,12 @@ namespace SharpPascal.Semantic
         public void Add(Symbol symbol)
             => _symbols.Add(symbol);
 
-        public Symbol? LocalLookup(PascalName name)
+        public Symbol? FindLocal(PascalName name)
             => _symbols.FirstOrDefault(s => s.Name == name);
 
-        public Symbol? Lookup(PascalName name)
+        public Symbol? Find(PascalName name)
             => UntilLastScope
-                .Select(scope => scope.LocalLookup(name))
+                .Select(scope => scope.FindLocal(name))
                 .SkipWhile(s => s is null)
                 .FirstOrDefault();
 
