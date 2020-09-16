@@ -17,19 +17,19 @@ namespace SharpPascal.Syntax
         public abstract void Visit(Visitor visitor);
     }
 
-    public sealed class Unit : AbstractSyntaxTree
+    public sealed class UnitSyntax : AbstractSyntaxTree
     {
-        public IReadOnlyList<Declaration> Declarations { get; }
-        public Statement Main { get; }
+        public IReadOnlyList<DeclarationSyntax> Declarations { get; }
+        public StatementSyntax Main { get; }
 
-        public Unit(Statement main, IReadOnlyList<Declaration>? declarations)
+        public UnitSyntax(StatementSyntax main, IReadOnlyList<DeclarationSyntax>? declarations)
             : base(null)
         {
-            Declarations = declarations ?? new List<Declaration>();
+            Declarations = declarations ?? new List<DeclarationSyntax>();
             Main = main;
         }
 
-        public Unit(Statement main, params Declaration[] declarations)
+        public UnitSyntax(StatementSyntax main, params DeclarationSyntax[] declarations)
             : base(null)
         {
             Declarations = declarations;
@@ -49,7 +49,7 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is Unit unit &&
+            => obj is UnitSyntax unit &&
                unit.Declarations.SequenceEqual(Declarations) &&
                unit.Main.Equals(Main);
 
@@ -57,19 +57,19 @@ namespace SharpPascal.Syntax
             => Declarations.GetHashCode();
     }
 
-    public abstract class Declaration : AbstractSyntaxTree
+    public abstract class DeclarationSyntax : AbstractSyntaxTree
     {
-        protected Declaration(Location? location = null)
+        protected DeclarationSyntax(Location? location = null)
             : base(location)
         { }
     }
 
-    public sealed class VarDeclaration : Declaration
+    public sealed class VarDeclarationSyntax : DeclarationSyntax
     {
         public PascalName Name { get; }
         public PascalName Type { get; }
 
-        public VarDeclaration(string name, string type, Location? location = null)
+        public VarDeclarationSyntax(string name, string type, Location? location = null)
             : base(location)
         {
             Name = new PascalName(name);
@@ -82,7 +82,7 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is VarDeclaration @var &&
+            => obj is VarDeclarationSyntax @var &&
                @var.Name.Equals(Name) &&
                @var.Type.Equals(Type);
 
@@ -90,24 +90,24 @@ namespace SharpPascal.Syntax
             => Name.GetHashCode() ^ Type.GetHashCode();
     }
 
-    public abstract class Statement : AbstractSyntaxTree
+    public abstract class StatementSyntax : AbstractSyntaxTree
     {
-        protected Statement(Location? location = null)
+        protected StatementSyntax(Location? location = null)
             : base(location)
         { }
     }
 
-    public class CompoundStatement : Statement
+    public class CompoundStatementSyntax : StatementSyntax
     {
-        public IReadOnlyList<Statement> Statements { get; }
+        public IReadOnlyList<StatementSyntax> Statements { get; }
 
-        public CompoundStatement(IReadOnlyList<Statement> statements, Location? location = null)
+        public CompoundStatementSyntax(IReadOnlyList<StatementSyntax> statements, Location? location = null)
             : base(location)
         {
             Statements = statements;
         }
 
-        public CompoundStatement(params Statement[] statements)
+        public CompoundStatementSyntax(params StatementSyntax[] statements)
             : base(null)
         {
             Statements = statements;
@@ -122,20 +122,20 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is CompoundStatement compound &&
+            => obj is CompoundStatementSyntax compound &&
                compound.Statements.SequenceEqual(Statements);
 
         public override int GetHashCode()
             => Statements.GetHashCode();
     }
 
-    public sealed class IfStatement : Statement
+    public sealed class IfStatementSyntax : StatementSyntax
     {
-        public Expression Expression { get; }
-        public Statement TrueStatement { get; }
-        public Statement? FalseStatement { get; }
+        public ExpressionSyntax Expression { get; }
+        public StatementSyntax TrueStatement { get; }
+        public StatementSyntax? FalseStatement { get; }
 
-        public IfStatement(Expression expression, Statement trueStatement, Statement? falseStatement = null, Location? location = null)
+        public IfStatementSyntax(ExpressionSyntax expression, StatementSyntax trueStatement, StatementSyntax? falseStatement = null, Location? location = null)
             : base(location)
         {
             Expression = expression;
@@ -154,7 +154,7 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is IfStatement @if &&
+            => obj is IfStatementSyntax @if &&
                @if.Expression.Equals(Expression) &&
                @if.TrueStatement.Equals(TrueStatement) &&
                (@if.FalseStatement is null && FalseStatement is null ||
@@ -164,12 +164,12 @@ namespace SharpPascal.Syntax
             => Expression.GetHashCode();
     }
 
-    public sealed class WhileStatement : Statement
+    public sealed class WhileStatementSyntax : StatementSyntax
     {
-        public Expression Expression { get; }
-        public Statement Statement { get; }
+        public ExpressionSyntax Expression { get; }
+        public StatementSyntax Statement { get; }
 
-        public WhileStatement(Expression expression, Statement statement, Location? location = null)
+        public WhileStatementSyntax(ExpressionSyntax expression, StatementSyntax statement, Location? location = null)
             : base(location)
         {
             Expression = expression;
@@ -186,7 +186,7 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is WhileStatement @while &&
+            => obj is WhileStatementSyntax @while &&
                @while.Expression.Equals(Expression) &&
                @while.Statement.Equals(Statement);
 
@@ -194,12 +194,12 @@ namespace SharpPascal.Syntax
             => Expression.GetHashCode();
     }
 
-    public sealed class AssignmentStatement : Statement
+    public sealed class AssignmentStatementSyntax : StatementSyntax
     {
         public PascalName Name { get; }
-        public Expression Expression { get; }
+        public ExpressionSyntax Expression { get; }
 
-        public AssignmentStatement(string name, Expression expression, Location? location = null)
+        public AssignmentStatementSyntax(string name, ExpressionSyntax expression, Location? location = null)
             : base(location)
         {
             Name = new PascalName(name);
@@ -215,7 +215,7 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is AssignmentStatement assign &&
+            => obj is AssignmentStatementSyntax assign &&
                assign.Name.Equals(Name) &&
                assign.Expression.Equals(Expression);
 
@@ -223,11 +223,11 @@ namespace SharpPascal.Syntax
             => Expression.GetHashCode();
     }
 
-    public sealed class ProcedureStatement : Statement
+    public sealed class ProcedureStatementSyntax : StatementSyntax
     {
-        public CallExpression CallExpression { get; }
+        public CallExpressionSyntax CallExpression { get; }
 
-        public ProcedureStatement(CallExpression callExpression)
+        public ProcedureStatementSyntax(CallExpressionSyntax callExpression)
             : base(callExpression.Location)
         {
             CallExpression = callExpression;
@@ -239,25 +239,25 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is ProcedureStatement proc &&
+            => obj is ProcedureStatementSyntax proc &&
                proc.CallExpression.Equals(CallExpression);
 
         public override int GetHashCode()
             => CallExpression.GetHashCode();
     }
 
-    public abstract class Expression : AbstractSyntaxTree
+    public abstract class ExpressionSyntax : AbstractSyntaxTree
     {
-        protected Expression(Location? location = null)
+        protected ExpressionSyntax(Location? location = null)
             : base(location)
         { }
     }
 
-    public sealed class IntegerExpression : Expression
+    public sealed class IntegerExpressionSyntax : ExpressionSyntax
     {
         public int Value { get; }
 
-        public IntegerExpression(int value, Location? location = null)
+        public IntegerExpressionSyntax(int value, Location? location = null)
             : base(location)
         {
             Value = value;
@@ -269,18 +269,18 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is IntegerExpression @int &&
+            => obj is IntegerExpressionSyntax @int &&
                @int.Value == Value;
 
         public override int GetHashCode()
             => Value;
     }
 
-    public sealed class StringExpression : Expression
+    public sealed class StringExpressionSyntax : ExpressionSyntax
     {
         public string Value { get; }
 
-        public StringExpression(string value, Location? location = null)
+        public StringExpressionSyntax(string value, Location? location = null)
             : base(location)
         {
             Value = value;
@@ -292,18 +292,18 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is StringExpression str &&
+            => obj is StringExpressionSyntax str &&
                str.Value == Value;
 
         public override int GetHashCode()
             => Value.GetHashCode();
     }
 
-    public sealed class VarExpression : Expression
+    public sealed class VarExpressionSyntax : ExpressionSyntax
     {
         public PascalName Name { get; }
 
-        public VarExpression(string name, Location? location = null)
+        public VarExpressionSyntax(string name, Location? location = null)
             : base(location)
         {
             Name = new PascalName(name);
@@ -315,20 +315,20 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is VarExpression @var &&
+            => obj is VarExpressionSyntax @var &&
                @var.Name.Equals(Name);
 
         public override int GetHashCode()
             => Name.GetHashCode();
     }
 
-    public abstract class BinaryExpression : Expression
+    public abstract class BinaryExpressionSyntax : ExpressionSyntax
     {
-        public Expression Left { get; }
+        public ExpressionSyntax Left { get; }
         public string Operator { get; }
-        public Expression Right { get; }
+        public ExpressionSyntax Right { get; }
 
-        protected BinaryExpression(Expression left, string @operator, Expression right, Location? location = null)
+        protected BinaryExpressionSyntax(ExpressionSyntax left, string @operator, ExpressionSyntax right, Location? location = null)
             : base(location)
         {
             Left = left;
@@ -336,21 +336,21 @@ namespace SharpPascal.Syntax
             Right = right;
         }
 
-        public static BinaryExpression CreateInstance(Expression left, string @operator, Expression right, Location? location = null)
+        public static BinaryExpressionSyntax CreateInstance(ExpressionSyntax left, string @operator, ExpressionSyntax right, Location? location = null)
         {
             return (@operator.ToLower()) switch
             {
-                "+" => new AddExpression(left, right, location),
-                "-" => new SubExpression(left, right, location),
-                "*" => new MulExpression(left, right, location),
-                "div" => new DivExpression(left, right, location),
-                "mod" => new ModExpression(left, right, location),
-                "=" => new EqualExpression(left, right, location),
-                "<>" => new NotEqualExpression(left, right, location),
-                "<" => new LessThanExpression(left, right, location),
-                ">" => new GreaterThanExpression(left, right, location),
-                "<=" => new LessOrEqualExpression(left, right, location),
-                ">=" => new GreaterOrEqualExpression(left, right, location),
+                "+" => new AddExpressionSyntax(left, right, location),
+                "-" => new SubExpressionSyntax(left, right, location),
+                "*" => new MulExpressionSyntax(left, right, location),
+                "div" => new DivExpressionSyntax(left, right, location),
+                "mod" => new ModExpressionSyntax(left, right, location),
+                "=" => new EqualExpressionSyntax(left, right, location),
+                "<>" => new NotEqualExpressionSyntax(left, right, location),
+                "<" => new LessThanExpressionSyntax(left, right, location),
+                ">" => new GreaterThanExpressionSyntax(left, right, location),
+                "<=" => new LessOrEqualExpressionSyntax(left, right, location),
+                ">=" => new GreaterOrEqualExpressionSyntax(left, right, location),
                 _ => throw new ArgumentException("Bad operator for BinaryExpression", nameof(@operator)),
             };
         }
@@ -362,7 +362,7 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is BinaryExpression bin &&
+            => obj is BinaryExpressionSyntax bin &&
                bin.Left.Equals(Left) &&
                bin.Operator == Operator &&
                bin.Right.Equals(Right);
@@ -371,9 +371,9 @@ namespace SharpPascal.Syntax
             => Left.GetHashCode() ^ Operator.GetHashCode() ^ Right.GetHashCode();
     }
 
-    public sealed class AddExpression : BinaryExpression
+    public sealed class AddExpressionSyntax : BinaryExpressionSyntax
     {
-        public AddExpression(Expression left, Expression right, Location? location = null)
+        public AddExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "+", right, location)
         { }
 
@@ -384,9 +384,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class SubExpression : BinaryExpression
+    public sealed class SubExpressionSyntax : BinaryExpressionSyntax
     {
-        public SubExpression(Expression left, Expression right, Location? location = null)
+        public SubExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "-", right, location)
         { }
 
@@ -397,9 +397,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class MulExpression : BinaryExpression
+    public sealed class MulExpressionSyntax : BinaryExpressionSyntax
     {
-        public MulExpression(Expression left, Expression right, Location? location = null)
+        public MulExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "*", right, location)
         { }
 
@@ -410,9 +410,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class DivExpression : BinaryExpression
+    public sealed class DivExpressionSyntax : BinaryExpressionSyntax
     {
-        public DivExpression(Expression left, Expression right, Location? location = null)
+        public DivExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "div", right, location)
         { }
 
@@ -423,9 +423,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class ModExpression : BinaryExpression
+    public sealed class ModExpressionSyntax : BinaryExpressionSyntax
     {
-        public ModExpression(Expression left, Expression right, Location? location = null)
+        public ModExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "mod", right, location)
         { }
 
@@ -436,9 +436,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class EqualExpression : BinaryExpression
+    public sealed class EqualExpressionSyntax : BinaryExpressionSyntax
     {
-        public EqualExpression(Expression left, Expression right, Location? location = null)
+        public EqualExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "=", right, location)
         { }
 
@@ -449,9 +449,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class NotEqualExpression : BinaryExpression
+    public sealed class NotEqualExpressionSyntax : BinaryExpressionSyntax
     {
-        public NotEqualExpression(Expression left, Expression right, Location? location = null)
+        public NotEqualExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "<>", right, location)
         { }
 
@@ -462,9 +462,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class LessThanExpression : BinaryExpression
+    public sealed class LessThanExpressionSyntax : BinaryExpressionSyntax
     {
-        public LessThanExpression(Expression left, Expression right, Location? location = null)
+        public LessThanExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "<", right, location)
         { }
 
@@ -475,9 +475,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class GreaterThanExpression : BinaryExpression
+    public sealed class GreaterThanExpressionSyntax : BinaryExpressionSyntax
     {
-        public GreaterThanExpression(Expression left, Expression right, Location? location = null)
+        public GreaterThanExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, ">", right, location)
         { }
 
@@ -488,9 +488,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class LessOrEqualExpression : BinaryExpression
+    public sealed class LessOrEqualExpressionSyntax : BinaryExpressionSyntax
     {
-        public LessOrEqualExpression(Expression left, Expression right, Location? location = null)
+        public LessOrEqualExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, "<=", right, location)
         { }
 
@@ -501,9 +501,9 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class GreaterOrEqualExpression : BinaryExpression
+    public sealed class GreaterOrEqualExpressionSyntax : BinaryExpressionSyntax
     {
-        public GreaterOrEqualExpression(Expression left, Expression right, Location? location = null)
+        public GreaterOrEqualExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Location? location = null)
             : base(left, ">=", right, location)
         { }
 
@@ -514,19 +514,19 @@ namespace SharpPascal.Syntax
         }
     }
 
-    public sealed class CallExpression : Expression
+    public sealed class CallExpressionSyntax : ExpressionSyntax
     {
         public PascalName Name { get; }
-        public IReadOnlyList<Expression> Arguments { get; }
+        public IReadOnlyList<ExpressionSyntax> Arguments { get; }
 
-        public CallExpression(string name, IReadOnlyList<Expression>? arguments = null, Location? location = null)
+        public CallExpressionSyntax(string name, IReadOnlyList<ExpressionSyntax>? arguments = null, Location? location = null)
             : base(location)
         {
             Name = new PascalName(name);
-            Arguments = arguments ?? new List<Expression>();
+            Arguments = arguments ?? new List<ExpressionSyntax>();
         }
 
-        public CallExpression(string name, params Expression[] arguments)
+        public CallExpressionSyntax(string name, params ExpressionSyntax[] arguments)
             : base(null)
         {
             Name = new PascalName(name);
@@ -545,7 +545,7 @@ namespace SharpPascal.Syntax
         }
 
         public override bool Equals(object obj)
-            => obj is CallExpression call &&
+            => obj is CallExpressionSyntax call &&
                call.Name.Equals(Name) &&
                call.Arguments.SequenceEqual(Arguments);
 

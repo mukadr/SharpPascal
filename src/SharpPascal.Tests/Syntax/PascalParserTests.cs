@@ -60,7 +60,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new Unit(new CompoundStatement(new AssignmentStatement("x", new IntegerExpression(150))));
+            var expected = new UnitSyntax(new CompoundStatementSyntax(new AssignmentStatementSyntax("x", new IntegerExpressionSyntax(150))));
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
@@ -80,7 +80,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new Unit(new CompoundStatement(new AssignmentStatement("x", new StringExpression("Hello World!"))));
+            var expected = new UnitSyntax(new CompoundStatementSyntax(new AssignmentStatementSyntax("x", new StringExpressionSyntax("Hello World!"))));
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
@@ -100,7 +100,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var expected = new Unit(new CompoundStatement(new AssignmentStatement("division", new VarExpression("beta"))));
+            var expected = new UnitSyntax(new CompoundStatementSyntax(new AssignmentStatementSyntax("division", new VarExpressionSyntax("beta"))));
 
             Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
@@ -146,27 +146,27 @@ namespace SharpPascal.Tests.Syntax
                 END.
             ";
 
-            var expected = new Unit(new CompoundStatement(
-                new AssignmentStatement(
+            var expected = new UnitSyntax(new CompoundStatementSyntax(
+                new AssignmentStatementSyntax(
                     "result",
-                    new NotEqualExpression(
-                        new LessThanExpression(
-                            new DivExpression(
-                                new AddExpression(
-                                    new IntegerExpression(20),
-                                    new CallExpression("func",
-                                        new IntegerExpression(15),
-                                        new MulExpression(
-                                            new IntegerExpression(18),
-                                            new ModExpression(
-                                                new VarExpression("alpha"),
-                                                new IntegerExpression(3))))
+                    new NotEqualExpressionSyntax(
+                        new LessThanExpressionSyntax(
+                            new DivExpressionSyntax(
+                                new AddExpressionSyntax(
+                                    new IntegerExpressionSyntax(20),
+                                    new CallExpressionSyntax("func",
+                                        new IntegerExpressionSyntax(15),
+                                        new MulExpressionSyntax(
+                                            new IntegerExpressionSyntax(18),
+                                            new ModExpressionSyntax(
+                                                new VarExpressionSyntax("alpha"),
+                                                new IntegerExpressionSyntax(3))))
                                 ),
-                                new VarExpression("beta")),
-                            new IntegerExpression(12)),
-                        new EqualExpression(
-                            new IntegerExpression(1),
-                            new IntegerExpression(1))))));
+                                new VarExpressionSyntax("beta")),
+                            new IntegerExpressionSyntax(12)),
+                        new EqualExpressionSyntax(
+                            new IntegerExpressionSyntax(1),
+                            new IntegerExpressionSyntax(1))))));
 
             var tree = PascalParser.Parse(source);
 
@@ -186,17 +186,17 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new Unit(new CompoundStatement(
-                new IfStatement(
-                    new GreaterThanExpression(
-                        new IntegerExpression(100),
-                        new IntegerExpression(50)),
-                    new IfStatement(
-                        new EqualExpression(
-                            new IntegerExpression(15),
-                            new IntegerExpression(15)),
-                        new AssignmentStatement("x", new IntegerExpression(20)),
-                        new AssignmentStatement("x", new IntegerExpression(15))))));
+            var expected = new UnitSyntax(new CompoundStatementSyntax(
+                new IfStatementSyntax(
+                    new GreaterThanExpressionSyntax(
+                        new IntegerExpressionSyntax(100),
+                        new IntegerExpressionSyntax(50)),
+                    new IfStatementSyntax(
+                        new EqualExpressionSyntax(
+                            new IntegerExpressionSyntax(15),
+                            new IntegerExpressionSyntax(15)),
+                        new AssignmentStatementSyntax("x", new IntegerExpressionSyntax(20)),
+                        new AssignmentStatementSyntax("x", new IntegerExpressionSyntax(15))))));
 
             var tree = PascalParser.Parse(source);
 
@@ -213,15 +213,15 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new Unit(new CompoundStatement(
-                new WhileStatement(
-                    new LessThanExpression(
-                        new VarExpression("i"),
-                        new IntegerExpression(10)),
-                    new AssignmentStatement("i",
-                        new AddExpression(
-                            new VarExpression("i"),
-                            new IntegerExpression(1))))));
+            var expected = new UnitSyntax(new CompoundStatementSyntax(
+                new WhileStatementSyntax(
+                    new LessThanExpressionSyntax(
+                        new VarExpressionSyntax("i"),
+                        new IntegerExpressionSyntax(10)),
+                    new AssignmentStatementSyntax("i",
+                        new AddExpressionSyntax(
+                            new VarExpressionSyntax("i"),
+                            new IntegerExpressionSyntax(1))))));
 
             var tree = PascalParser.Parse(source);
 
@@ -238,11 +238,11 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new Unit(new CompoundStatement(
-                new ProcedureStatement(
-                    new CallExpression("inc", new VarExpression("i"))),
-                new ProcedureStatement(
-                    new CallExpression("writeln"))));
+            var expected = new UnitSyntax(new CompoundStatementSyntax(
+                new ProcedureStatementSyntax(
+                    new CallExpressionSyntax("inc", new VarExpressionSyntax("i"))),
+                new ProcedureStatementSyntax(
+                    new CallExpressionSyntax("writeln"))));
 
             var tree = PascalParser.Parse(source);
 
@@ -262,20 +262,20 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new Unit(new CompoundStatement(
-                new AssignmentStatement("x", new IntegerExpression(10)),
-                new AssignmentStatement("y", new IntegerExpression(15)),
-                new IfStatement(
-                    new LessThanExpression(
-                        new AddExpression(
-                            new VarExpression("x"),
-                            new VarExpression("y")),
-                        new IntegerExpression(30)),
-                    new AssignmentStatement("x", new IntegerExpression(20))),
-                new AssignmentStatement("z",
-                    new AddExpression(
-                        new VarExpression("x"),
-                        new VarExpression("y")))));
+            var expected = new UnitSyntax(new CompoundStatementSyntax(
+                new AssignmentStatementSyntax("x", new IntegerExpressionSyntax(10)),
+                new AssignmentStatementSyntax("y", new IntegerExpressionSyntax(15)),
+                new IfStatementSyntax(
+                    new LessThanExpressionSyntax(
+                        new AddExpressionSyntax(
+                            new VarExpressionSyntax("x"),
+                            new VarExpressionSyntax("y")),
+                        new IntegerExpressionSyntax(30)),
+                    new AssignmentStatementSyntax("x", new IntegerExpressionSyntax(20))),
+                new AssignmentStatementSyntax("z",
+                    new AddExpressionSyntax(
+                        new VarExpressionSyntax("x"),
+                        new VarExpressionSyntax("y")))));
 
             var tree = PascalParser.Parse(source);
 
@@ -299,17 +299,17 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new Unit(
-                new CompoundStatement(
-                    new AssignmentStatement("x", new IntegerExpression(10)),
-                    new AssignmentStatement("y", new IntegerExpression(20)),
-                    new AssignmentStatement("z",
-                        new MulExpression(
-                            new VarExpression("x"),
-                            new VarExpression("y")))),
-                new VarDeclaration("x", "integer"),
-                new VarDeclaration("y", "integer"),
-                new VarDeclaration("z", "integer"));
+            var expected = new UnitSyntax(
+                new CompoundStatementSyntax(
+                    new AssignmentStatementSyntax("x", new IntegerExpressionSyntax(10)),
+                    new AssignmentStatementSyntax("y", new IntegerExpressionSyntax(20)),
+                    new AssignmentStatementSyntax("z",
+                        new MulExpressionSyntax(
+                            new VarExpressionSyntax("x"),
+                            new VarExpressionSyntax("y")))),
+                new VarDeclarationSyntax("x", "integer"),
+                new VarDeclarationSyntax("y", "integer"),
+                new VarDeclarationSyntax("z", "integer"));
 
             var tree = PascalParser.Parse(source);
 
@@ -336,21 +336,21 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new Unit(
-                new CompoundStatement(
-                    new ProcedureStatement(new CallExpression("write", new StringExpression("Enter a number: "))),
-                    new ProcedureStatement(new CallExpression("read", new VarExpression("x"))),
-                    new AssignmentStatement("xTimesTwo", new MulExpression(new VarExpression("x"), new IntegerExpression(2))),
-                    new ProcedureStatement(new CallExpression("writeln",
-                        new StringExpression("You entered "),
-                        new VarExpression("x"),
-                        new StringExpression(", and "),
-                        new VarExpression("x"),
-                        new StringExpression(" multiplied by 2 is "),
-                        new VarExpression("xTimesTwo"),
-                        new StringExpression(".")))),
-                new VarDeclaration("x", "integer"),
-                new VarDeclaration("xTimesTwo", "integer"));
+            var expected = new UnitSyntax(
+                new CompoundStatementSyntax(
+                    new ProcedureStatementSyntax(new CallExpressionSyntax("write", new StringExpressionSyntax("Enter a number: "))),
+                    new ProcedureStatementSyntax(new CallExpressionSyntax("read", new VarExpressionSyntax("x"))),
+                    new AssignmentStatementSyntax("xTimesTwo", new MulExpressionSyntax(new VarExpressionSyntax("x"), new IntegerExpressionSyntax(2))),
+                    new ProcedureStatementSyntax(new CallExpressionSyntax("writeln",
+                        new StringExpressionSyntax("You entered "),
+                        new VarExpressionSyntax("x"),
+                        new StringExpressionSyntax(", and "),
+                        new VarExpressionSyntax("x"),
+                        new StringExpressionSyntax(" multiplied by 2 is "),
+                        new VarExpressionSyntax("xTimesTwo"),
+                        new StringExpressionSyntax(".")))),
+                new VarDeclarationSyntax("x", "integer"),
+                new VarDeclarationSyntax("xTimesTwo", "integer"));
 
             var tree = PascalParser.Parse(source);
 
@@ -384,25 +384,25 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var expected = new Unit(
-                new CompoundStatement(
-                    new ProcedureStatement(new CallExpression("write", new StringExpression("Enter a number: "))),
-                    new ProcedureStatement(new CallExpression("read", new VarExpression("value"))),
-                    new AssignmentStatement("i", new VarExpression("value")),
-                    new AssignmentStatement("factorial", new IntegerExpression(1)),
-                    new WhileStatement(
-                        new GreaterThanExpression(new VarExpression("i"), new IntegerExpression(0)),
-                        new CompoundStatement(
-                            new AssignmentStatement("factorial", new MulExpression(new VarExpression("factorial"), new VarExpression("i"))),
-                            new ProcedureStatement(new CallExpression("dec", new VarExpression("i"))))),
-                    new ProcedureStatement(new CallExpression("writeln",
-                        new StringExpression("The factorial of "),
-                        new VarExpression("value"),
-                        new StringExpression(" is "),
-                        new VarExpression("factorial")))),
-                new VarDeclaration("value", "integer"),
-                new VarDeclaration("i", "integer"),
-                new VarDeclaration("factorial", "integer"));
+            var expected = new UnitSyntax(
+                new CompoundStatementSyntax(
+                    new ProcedureStatementSyntax(new CallExpressionSyntax("write", new StringExpressionSyntax("Enter a number: "))),
+                    new ProcedureStatementSyntax(new CallExpressionSyntax("read", new VarExpressionSyntax("value"))),
+                    new AssignmentStatementSyntax("i", new VarExpressionSyntax("value")),
+                    new AssignmentStatementSyntax("factorial", new IntegerExpressionSyntax(1)),
+                    new WhileStatementSyntax(
+                        new GreaterThanExpressionSyntax(new VarExpressionSyntax("i"), new IntegerExpressionSyntax(0)),
+                        new CompoundStatementSyntax(
+                            new AssignmentStatementSyntax("factorial", new MulExpressionSyntax(new VarExpressionSyntax("factorial"), new VarExpressionSyntax("i"))),
+                            new ProcedureStatementSyntax(new CallExpressionSyntax("dec", new VarExpressionSyntax("i"))))),
+                    new ProcedureStatementSyntax(new CallExpressionSyntax("writeln",
+                        new StringExpressionSyntax("The factorial of "),
+                        new VarExpressionSyntax("value"),
+                        new StringExpressionSyntax(" is "),
+                        new VarExpressionSyntax("factorial")))),
+                new VarDeclarationSyntax("value", "integer"),
+                new VarDeclarationSyntax("i", "integer"),
+                new VarDeclarationSyntax("factorial", "integer"));
 
             var tree = PascalParser.Parse(source);
 
