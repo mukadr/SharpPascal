@@ -8,7 +8,7 @@ namespace SharpPascal.Semantic
     {
         private readonly Scope? _previous;
 
-        private readonly ICollection<Symbol> _symbols = new HashSet<Symbol>();
+        private readonly ISet<Symbol> _symbols = new HashSet<Symbol>();
 
         public Scope(Scope? previous = null)
         {
@@ -37,5 +37,32 @@ namespace SharpPascal.Semantic
                 }
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Scope scope)
+            {
+                if (!scope._symbols.SetEquals(_symbols))
+                {
+                    return false;
+                }
+
+                if (scope._previous is null != _previous is null)
+                {
+                    return false;
+                }
+
+                if (scope._previous is null)
+                {
+                    return true;
+                }
+
+                return scope._previous.Equals(_previous!);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+            => _symbols.GetHashCode();
     }
 }

@@ -7,6 +7,32 @@ namespace SharpPascal.Tests.Syntax
     public class ScopeTests
     {
         [TestMethod]
+        public void Scope_Equals_Works()
+        {
+            var integer = new Type("integer");
+            var @string = new Type("string");
+
+            var scope1 = new Scope();
+            scope1.Add(new Symbol("foo", integer));
+            scope1.Add(new Symbol("bar", @string));
+
+            var scope2 = new Scope(scope1);
+            scope2.Add(new Symbol("number", integer));
+
+            var scope3 = new Scope();
+            scope3.Add(new Symbol("bar", @string));
+
+            var scope4 = new Scope(scope3);
+            scope4.Add(new Symbol("number", integer));
+
+            Assert.AreNotEqual(scope2, scope4);
+
+            scope3.Add(new Symbol("foo", integer));
+
+            Assert.AreEqual(scope2, scope4);
+        }
+
+        [TestMethod]
         public void Scope_Finds_LocalSymbol()
         {
             var scope1 = new Scope();
