@@ -3,7 +3,7 @@ using static SharpPascal.Syntax.Parsing.ParserFactory;
 
 namespace SharpPascal.Syntax.Parsing
 {
-    public class Parser<T>
+    internal class Parser<T>
     {
         public Func<Source, ParseResult<T>?> Parse { get; set; }
 

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace SharpPascal.Syntax.Parsing
 {
-    public class Source
+    internal class Source
     {
         // Source text being parsed
         public string Text { get; }

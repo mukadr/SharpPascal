@@ -1,6 +1,6 @@
 namespace SharpPascal.Syntax.Parsing
 {
-    public class ParseResult<T>
+    internal class ParseResult<T>
     {
         // Value returned by the Parser
         public T Value { get; }

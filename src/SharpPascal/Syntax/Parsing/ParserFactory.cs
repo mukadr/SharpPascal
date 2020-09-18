@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SharpPascal.Syntax.Parsing
 {
-    public static class ParserFactory
+    internal static class ParserFactory
     {
         // A Parser that only returns a constant value
         public static Parser<T> Constant<T>(T value)
