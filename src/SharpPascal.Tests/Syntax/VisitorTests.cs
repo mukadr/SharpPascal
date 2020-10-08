@@ -85,8 +85,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            Assert.IsNotNull(tree);
-            tree?.Visit(visitor);
+            tree.Visit(visitor);
 
             Assert.AreEqual(unitCount, 1);
             Assert.AreEqual(varDecl, 2);

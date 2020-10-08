@@ -21,8 +21,6 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            Assert.IsNotNull(tree);
-
             var boundUnit = Binder.SyntaxCheck(tree!);
 
             var x = boundUnit.Scope.Find("x");

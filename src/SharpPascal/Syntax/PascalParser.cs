@@ -7,7 +7,7 @@ namespace SharpPascal.Syntax
 {
     public static class PascalParser
     {
-        public static UnitSyntax? Parse(string text)
+        public static UnitSyntax Parse(string text)
         {
             var whitespace =
                 Regex("[ \t\n\r]+");

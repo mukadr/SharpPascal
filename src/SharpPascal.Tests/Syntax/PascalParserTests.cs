@@ -62,7 +62,6 @@ namespace SharpPascal.Tests.Syntax
 
             var expected = new UnitSyntax(new CompoundStatementSyntax(new AssignmentStatementSyntax("x", new IntegerExpressionSyntax(150))));
 
-            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
 
             dynamic dt = tree!;
@@ -82,7 +81,6 @@ namespace SharpPascal.Tests.Syntax
 
             var expected = new UnitSyntax(new CompoundStatementSyntax(new AssignmentStatementSyntax("x", new StringExpressionSyntax("Hello World!"))));
 
-            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
 
             dynamic dt = tree!;
@@ -102,7 +100,6 @@ namespace SharpPascal.Tests.Syntax
 
             var expected = new UnitSyntax(new CompoundStatementSyntax(new AssignmentStatementSyntax("division", new VarExpressionSyntax("beta"))));
 
-            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
 
             dynamic dt = tree!;
@@ -125,8 +122,6 @@ namespace SharpPascal.Tests.Syntax
             ";
 
             var tree = PascalParser.Parse(source);
-
-            Assert.IsNotNull(tree);
 
             dynamic dt = tree!;
             Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
@@ -279,7 +274,6 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
         }
 
@@ -313,7 +307,6 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
         }
 
@@ -354,7 +347,6 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
         }
 
@@ -406,7 +398,6 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            Assert.IsNotNull(tree);
             Assert.AreEqual(expected, tree);
         }
     }
