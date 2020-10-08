@@ -33,9 +33,9 @@ namespace SharpPascal.Tests.Syntax
             Assert.IsNotNull(y);
             Assert.IsNotNull(z);
 
-            Assert.AreEqual("integer", x.Type.Name);
-            Assert.AreEqual("integer", y.Type.Name);
-            Assert.AreEqual("integer", z.Type.Name);
+            Assert.AreEqual("integer", x!.Type.Name);
+            Assert.AreEqual("integer", y!.Type.Name);
+            Assert.AreEqual("integer", z!.Type.Name);
         }
     }
 }
