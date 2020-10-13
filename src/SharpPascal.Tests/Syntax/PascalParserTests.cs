@@ -64,7 +64,7 @@ namespace SharpPascal.Tests.Syntax
 
             Assert.AreEqual(expected, tree);
 
-            dynamic dt = tree!;
+            dynamic dt = tree;
             Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
         }
 
@@ -83,7 +83,7 @@ namespace SharpPascal.Tests.Syntax
 
             Assert.AreEqual(expected, tree);
 
-            dynamic dt = tree!;
+            dynamic dt = tree;
             Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
         }
 
@@ -102,7 +102,7 @@ namespace SharpPascal.Tests.Syntax
 
             Assert.AreEqual(expected, tree);
 
-            dynamic dt = tree!;
+            dynamic dt = tree;
             Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
         }
 
@@ -123,7 +123,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            dynamic dt = tree!;
+            dynamic dt = tree;
             Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
             Assert.AreEqual(6, dt.Main.Statements[0].Expression.Left.Location.Line);
             Assert.AreEqual(5, dt.Main.Statements[0].Expression.Left.Left.Location.Line);

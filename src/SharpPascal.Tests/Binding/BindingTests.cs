@@ -21,7 +21,7 @@ namespace SharpPascal.Tests.Syntax
 
             var tree = PascalParser.Parse(source);
 
-            var boundUnit = Binder.SyntaxCheck(tree!);
+            var boundUnit = Binder.SyntaxCheck(tree);
 
             var x = boundUnit.Scope.Find("x");
             var y = boundUnit.Scope.Find("y");
