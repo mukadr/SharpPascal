@@ -47,7 +47,7 @@ namespace SharpPascal.Tests.Syntax
             }
 
             Assert.IsNotNull(parseException);
-            Assert.IsTrue(parseException?.Message?.Contains("expected '}' before end of source") == true);
+            Assert.IsTrue(parseException?.Message.Contains("expected '}' before end of source") == true);
         }
 
         [TestMethod]
