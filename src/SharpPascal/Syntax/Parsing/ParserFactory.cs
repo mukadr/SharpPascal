@@ -10,7 +10,7 @@ namespace SharpPascal.Syntax.Parsing
 
         // A dummy Parser when forward declaration is necessary
         public static Parser<T> Forward<T>()
-            => new Parser<T>((_) => throw new ParseException("Forward: Must implement Parse()"));
+            => new Parser<T>(_ => throw new ParseException("Forward: Must implement Parse()"));
 
         // A Parser that matches a string
         public static Parser<string> Regex(string pattern, bool ignoreCase = false)
