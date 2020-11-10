@@ -27,7 +27,7 @@ namespace SharpPascal.Semantic
                 .SkipWhile(s => s is null)
                 .FirstOrDefault();
 
-        protected IEnumerable<Scope> AllScopes
+        private IEnumerable<Scope> AllScopes
         {
             get
             {
