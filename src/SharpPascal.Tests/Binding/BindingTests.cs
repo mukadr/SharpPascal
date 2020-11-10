@@ -2,7 +2,7 @@
 using SharpPascal.Binding;
 using SharpPascal.Syntax;
 
-namespace SharpPascal.Tests.Syntax
+namespace SharpPascal.Tests.Binding
 {
     [TestClass]
     public class BindingTests
