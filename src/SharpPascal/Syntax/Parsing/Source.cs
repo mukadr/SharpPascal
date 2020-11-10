@@ -25,15 +25,17 @@ namespace SharpPascal.Syntax.Parsing
             {
                 options |= RegexOptions.IgnoreCase;
             }
+
             var regex = new Regex("\\G" + pattern, options);
             var match = regex.Match(Text, Location.Position);
-            if (match.Success)
+            if (!match.Success)
             {
-                var position = Location.Position + match.Length;
-                var line = Location.Line + match.Value.Count(c => c == '\n');
-                return new ParseResult<string>(match.Value, new Source(Text, new Location(position, line)));
+                return null;
             }
-            return null;
+
+            var position = Location.Position + match.Length;
+            var line = Location.Line + match.Value.Count(c => c == '\n');
+            return new ParseResult<string>(match.Value, new Source(Text, new Location(position, line)));
         }
     }
 }
