@@ -38,14 +38,17 @@ namespace SharpPascal.Syntax
 
         public override void Visit(Visitor visitor)
         {
-            if (visitor.VisitUnit(this))
+            if (!visitor.VisitUnit(this))
             {
-                foreach (var decl in Declarations)
-                {
-                    decl.Visit(visitor);
-                }
-                Main.Visit(visitor);
+                return;
             }
+
+            foreach (var decl in Declarations)
+            {
+                decl.Visit(visitor);
+            }
+
+            Main.Visit(visitor);
         }
 
         public override bool Equals(object obj)
@@ -535,12 +538,14 @@ namespace SharpPascal.Syntax
 
         public override void Visit(Visitor visitor)
         {
-            if (visitor.VisitCallExpression(this))
+            if (!visitor.VisitCallExpression(this))
             {
-                foreach (var arg in Arguments)
-                {
-                    arg.Visit(visitor);
-                }
+                return;
+            }
+
+            foreach (var arg in Arguments)
+            {
+                arg.Visit(visitor);
             }
         }
 
