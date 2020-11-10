@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpPascal.Syntax;
 using SharpPascal.Syntax.Parsing;
+using static SharpPascal.Syntax.PascalParser;
 
 namespace SharpPascal.Tests.Syntax
 {
@@ -12,7 +13,7 @@ namespace SharpPascal.Tests.Syntax
         {
             const string source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
 
-            PascalParser.Parse(source);
+            Parse(source);
         }
 
         [TestMethod]
@@ -24,7 +25,7 @@ namespace SharpPascal.Tests.Syntax
                     Hello World!
                 } end.";
 
-            PascalParser.Parse(source);
+            Parse(source);
         }
 
         [TestMethod]
@@ -38,7 +39,7 @@ namespace SharpPascal.Tests.Syntax
             ParseException? parseException = null;
             try
             {
-                PascalParser.Parse(source);
+                Parse(source);
             }
             catch (ParseException ex)
             {
@@ -58,7 +59,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var tree = PascalParser.Parse(source);
+            var tree = Parse(source);
 
             var expected =
                 new UnitSyntax(
@@ -82,7 +83,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var tree = PascalParser.Parse(source);
+            var tree = Parse(source);
 
             var expected =
                 new UnitSyntax(
@@ -106,7 +107,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var tree = PascalParser.Parse(source);
+            var tree = Parse(source);
 
             var expected =
                 new UnitSyntax(
@@ -136,7 +137,7 @@ namespace SharpPascal.Tests.Syntax
                 end.
             ";
 
-            var tree = PascalParser.Parse(source);
+            var tree = Parse(source);
 
             dynamic dt = tree;
             Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
@@ -181,9 +182,7 @@ namespace SharpPascal.Tests.Syntax
                                     new IntegerExpressionSyntax(1),
                                     new IntegerExpressionSyntax(1))))));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
 
         [TestMethod]
@@ -217,9 +216,7 @@ namespace SharpPascal.Tests.Syntax
                                     "x",
                                     new IntegerExpressionSyntax(15))))));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
 
         [TestMethod]
@@ -245,9 +242,7 @@ namespace SharpPascal.Tests.Syntax
                                     new VarExpressionSyntax("i"),
                                     new IntegerExpressionSyntax(1))))));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
 
         [TestMethod]
@@ -270,9 +265,7 @@ namespace SharpPascal.Tests.Syntax
                         new ProcedureStatementSyntax(
                             new CallExpressionSyntax("writeln"))));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
 
         [TestMethod]
@@ -312,9 +305,7 @@ namespace SharpPascal.Tests.Syntax
                                 new VarExpressionSyntax("x"),
                                 new VarExpressionSyntax("y")))));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
 
         [TestMethod]
@@ -351,9 +342,7 @@ namespace SharpPascal.Tests.Syntax
                     new VarDeclarationSyntax("y", "integer"),
                     new VarDeclarationSyntax("z", "integer"));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
 
         [TestMethod]
@@ -404,9 +393,7 @@ namespace SharpPascal.Tests.Syntax
                     new VarDeclarationSyntax("x", "integer"),
                     new VarDeclarationSyntax("xTimesTwo", "integer"));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
 
         [TestMethod]
@@ -477,9 +464,7 @@ namespace SharpPascal.Tests.Syntax
                     new VarDeclarationSyntax("i", "integer"),
                     new VarDeclarationSyntax("factorial", "integer"));
 
-            var tree = PascalParser.Parse(source);
-
-            Assert.AreEqual(expected, tree);
+            Assert.AreEqual(expected, Parse(source));
         }
     }
 }
