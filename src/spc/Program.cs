@@ -4,7 +4,7 @@ using static SharpPascal.Syntax.PascalParser;
 
 namespace SharpPascal
 {
-    internal class Program
+    internal static class Program
     {
         internal static void Main(string[] args)
         {
