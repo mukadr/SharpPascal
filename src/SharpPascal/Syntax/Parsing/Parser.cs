@@ -33,22 +33,14 @@ namespace SharpPascal.Syntax.Parsing
             }
             catch (ParseException ex)
             {
-                var line = (result != null ? result.Source.Location.Line : 1);
+                var line = result?.Source.Location.Line ?? 1;
                 throw new ParseException(line + ": " + ex.Message);
             }
         }
 
         // Tries another parser if this fails
         public Parser<T> Or(Parser<T> other)
-            => new Parser<T>(source =>
-            {
-                var result = Parse(source);
-                if (result == null)
-                {
-                    result = other.Parse(source);
-                }
-                return result;
-            });
+            => new Parser<T>(source => Parse(source) ?? other.Parse(source));
 
         // Throws an exception if this fails
         public Parser<T> OrError(string message)
@@ -59,11 +51,9 @@ namespace SharpPascal.Syntax.Parsing
             => new Parser<U>(source =>
             {
                 var result = Parse(source);
-                if (result != null)
-                {
-                    return next(result.Value).Parse(result.Source);
-                }
-                return null;
+                return result != null
+                    ? next(result.Value).Parse(result.Source)
+                    : null;
             });
 
         // Calls the next callback passing the parsed value and location
@@ -71,11 +61,9 @@ namespace SharpPascal.Syntax.Parsing
             => new Parser<U>(source =>
             {
                 var result = Parse(source);
-                if (result != null)
-                {
-                    return next(result.Value, result.Source.Location).Parse(result.Source);
-                }
-                return null;
+                return result != null
+                    ? next(result.Value, result.Source.Location).Parse(result.Source)
+                    : null;
             });
 
         // Tries another parser if this succeeds
@@ -95,15 +83,15 @@ namespace SharpPascal.Syntax.Parsing
             => new Parser<T>(source =>
             {
                 var result = Parse(source);
-                if (result != null)
+                if (result == null)
                 {
-                    var consumed = next.Parse(result.Source);
-                    if (consumed != null)
-                    {
-                        result = new ParseResult<T>(result.Value, consumed.Source);
-                    }
+                    return result;
                 }
-                return result;
+
+                var consumed = next.Parse(result.Source);
+                return consumed == null
+                    ? result
+                    : new ParseResult<T>(result.Value, consumed.Source);
             });
     }
 }
