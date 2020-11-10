@@ -15,7 +15,7 @@ namespace SharpPascal.Syntax.Parsing
         public T ParseToCompletion(string text)
             => ParseToCompletion(new Source(text));
 
-        public T ParseToCompletion(Source source)
+        private T ParseToCompletion(Source source)
         {
             ParseResult<T>? result = null;
 
