@@ -42,10 +42,6 @@ namespace SharpPascal.Syntax.Parsing
         public Parser<T> Or(Parser<T> other)
             => new Parser<T>(source => Parse(source) ?? other.Parse(source));
 
-        // Throws an exception if this fails
-        public Parser<T> OrError(string message)
-            => Or(new Parser<T>(_ => throw new ParseException(message)));
-
         // Calls the next callback passing the parsed value
         public Parser<U> Bind<U>(Func<T, Parser<U>> next)
             => new Parser<U>(source =>
