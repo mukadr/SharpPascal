@@ -40,26 +40,22 @@ namespace SharpPascal.Semantic
 
         public override bool Equals(object obj)
         {
-            if (obj is Scope scope)
+            if (!(obj is Scope scope))
             {
-                if (!scope._symbols.SetEquals(_symbols))
-                {
-                    return false;
-                }
-
-                if (scope._previous is null != _previous is null)
-                {
-                    return false;
-                }
-
-                if (scope._previous is null)
-                {
-                    return true;
-                }
-
-                return scope._previous.Equals(_previous!);
+                return false;
             }
-            return false;
+
+            if (!scope._symbols.SetEquals(_symbols))
+            {
+                return false;
+            }
+
+            if (scope._previous is null != _previous is null)
+            {
+                return false;
+            }
+
+            return scope._previous is null || scope._previous.Equals(_previous!);
         }
 
         public override int GetHashCode()
