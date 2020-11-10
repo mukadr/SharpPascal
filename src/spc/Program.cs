@@ -2,7 +2,7 @@
 using System.IO;
 using static SharpPascal.Syntax.PascalParser;
 
-namespace SharpPascal
+namespace spc
 {
     internal static class Program
     {
