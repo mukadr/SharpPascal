@@ -54,11 +54,10 @@ namespace SharpPascal.Syntax.Parsing
             => new Parser<T?>(source =>
             {
                 var result = parser.Parse(source);
-                if (result == null)
-                {
-                    return new ParseResult<T?>(null, source);
-                }
-                return null;
+
+                return result == null
+                    ? new ParseResult<T?>(null, source)
+                    : null;
             });
 
         // A Parser that returns a value only if the specified parser fails
@@ -66,11 +65,10 @@ namespace SharpPascal.Syntax.Parsing
             => new Parser<T?>(source =>
             {
                 var result = parser.Parse(source);
-                if (result == null)
-                {
-                    return new ParseResult<T?>(null, source);
-                }
-                return null;
+
+                return result == null
+                    ? new ParseResult<T?>(null, source)
+                    : null;
             });
 
         // A Parser that optionally accept the rule
