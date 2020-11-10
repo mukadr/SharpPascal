@@ -7,7 +7,7 @@ namespace SharpPascal.Syntax
 {
     public static class PascalParser
     {
-        public static UnitSyntax Parse(string text)
+        public static UnitSyntax Parse(string sourceText)
         {
             var whitespace =
                 Regex("[ \t\n\r]+");
@@ -20,8 +20,8 @@ namespace SharpPascal.Syntax
             var blank =
                 OneOrMore(whitespace.Or(multilineComment));
 
-            Parser<(string text, Location location)> Op(string text) =>
-                Regex(text)
+            Parser<(string text, Location location)> Op(string regex) =>
+                Regex(regex)
                 .Map((text, location) => (text, location))
                 .Skip(blank);
 
@@ -42,8 +42,8 @@ namespace SharpPascal.Syntax
             var comma = Op(",");
             var dot = Op("\\.");
 
-            Parser<(string text, Location location)> Kw(string text) =>
-                Regex(text + "\\b", ignoreCase: true)
+            Parser<(string text, Location location)> Kw(string name) =>
+                Regex(name + "\\b", true)
                 .Map((text, location) => (text, location))
                 .Skip(blank);
 
@@ -55,7 +55,7 @@ namespace SharpPascal.Syntax
             var @if = Kw("if");
             var mod = Kw("mod");
             var then = Kw("then");
-            var @var = Kw("var");
+            var var = Kw("var");
             var @while = Kw("while");
 
             var keyword =
@@ -66,7 +66,7 @@ namespace SharpPascal.Syntax
                 .Or(end)
                 .Or(@if)
                 .Or(then)
-                .Or(@var)
+                .Or(var)
                 .Or(@while);
 
             var id =
@@ -86,12 +86,12 @@ namespace SharpPascal.Syntax
                 .Skip(blank);
 
             var variable =
-                id.Map<ExpressionSyntax>(id => new VarExpressionSyntax(id.text, id.location));
+                id.Map<ExpressionSyntax>(idToken => new VarExpressionSyntax(idToken.text, idToken.location));
 
             var expression =
                 Forward<ExpressionSyntax>();
 
-            var args =
+            var arguments =
                 expression.Bind(arg =>
                     ZeroOrMore(comma.And(expression)).Map(args =>
                     {
@@ -101,9 +101,9 @@ namespace SharpPascal.Syntax
                 .Or(Constant(new List<ExpressionSyntax>()));
 
             var call =
-                id.Bind(id =>
-                    lparen.And(args.Bind(args =>
-                        rparen.Map<ExpressionSyntax>(_ => new CallExpressionSyntax(id.text, args, id.location)))));
+                id.Bind(idToken =>
+                    lparen.And(arguments.Bind(args =>
+                        rparen.Map<ExpressionSyntax>(_ => new CallExpressionSyntax(idToken.text, args, idToken.location)))));
 
             var factor =
                 integer
@@ -114,11 +114,11 @@ namespace SharpPascal.Syntax
 
             Parser<ExpressionSyntax> binaryOperator(Parser<ExpressionSyntax> expr, Parser<(string text, Location location)> op) =>
                 expr.Bind(first =>
-                    ZeroOrMore(op.Bind(op =>
+                    ZeroOrMore(op.Bind(opToken =>
                         expr.Map(right =>
-                            (op, right)))).Map(operatorTerms =>
+                            (opToken, right)))).Map(operatorTerms =>
                                 operatorTerms.Aggregate(first, (left, ot) =>
-                                    BinaryExpressionSyntax.CreateInstance(left, ot.op.text, ot.right, ot.op.location))));
+                                    BinaryExpressionSyntax.CreateInstance(left, ot.opToken.text, ot.right, ot.opToken.location))));
 
             var mulExpression =
                 binaryOperator(factor, mul.Or(div).Or(mod));
@@ -139,28 +139,28 @@ namespace SharpPascal.Syntax
                 Forward<StatementSyntax>();
 
             var ifStatement =
-                @if.Bind(@if =>
+                @if.Bind(ifToken =>
                     expression.Bind(expr =>
                         then.And(statement.Bind(trueStmt =>
                             Maybe(@else.And(statement)).Map<StatementSyntax>(falseStmt =>
-                                new IfStatementSyntax(expr, trueStmt, falseStmt, @if.location))))));
+                                new IfStatementSyntax(expr, trueStmt, falseStmt, ifToken.location))))));
 
             var whileStatement =
-                @while.Bind(@while =>
+                @while.Bind(whileToken =>
                     expression.Bind(expr =>
                         @do.And(statement.Map<StatementSyntax>(stmt =>
-                            new WhileStatementSyntax(expr, stmt, @while.location)))));
+                            new WhileStatementSyntax(expr, stmt, whileToken.location)))));
 
             var assignmentStatement =
-                id.Bind(id =>
+                id.Bind(idToken =>
                     assign.And(expression.Map<StatementSyntax>(expr =>
-                        new AssignmentStatementSyntax(id.text, expr, id.location))));
+                        new AssignmentStatementSyntax(idToken.text, expr, idToken.location))));
 
             var procedureStatement =
-                id.Bind(id =>
-                    Maybe(lparen.And(args.Bind(args => rparen.Map(_ => args))))
+                id.Bind(idToken =>
+                    Maybe(lparen.And(arguments.Bind(args => rparen.Map(_ => args))))
                     .Map<StatementSyntax>(args =>
-                        new ProcedureStatementSyntax(new CallExpressionSyntax(id.text, args, id.location))));
+                        new ProcedureStatementSyntax(new CallExpressionSyntax(idToken.text, args, idToken.location))));
 
             var compoundStatement =
                 begin.And(
@@ -182,7 +182,7 @@ namespace SharpPascal.Syntax
                         semi.And(Constant(new VarDeclarationSyntax(name.text, type.text, name.location))))));
 
             var varSection =
-                @var.And(varDeclaration.Bind(first =>
+                var.And(varDeclaration.Bind(first =>
                     ZeroOrMore(varDeclaration).Map(vars =>
                     {
                         vars.Insert(0, first);
@@ -198,7 +198,7 @@ namespace SharpPascal.Syntax
                     compoundStatement.Bind(main =>
                         dot.Map(_ => new UnitSyntax(main, decls)))));
 
-            return program.ParseToCompletion(text);
+            return program.ParseToCompletion(sourceText);
         }
     }
 }
