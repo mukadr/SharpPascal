@@ -10,7 +10,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Skip_Whitespace_Succeeds()
         {
-            var source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
+            const string source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
 
             PascalParser.Parse(source);
         }
@@ -18,7 +18,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Skip_MultilineComment_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                 {
                     Hello World!
@@ -30,7 +30,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Skip_UnterminatedMultilineComment_ThrowsParseException()
         {
-            var source = @"
+            const string source = @"
                 {
                     Hello World!
             ";
@@ -52,7 +52,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_IntegerExpression_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                     x := 150;
                 end.
@@ -71,7 +71,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_StringExpression_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                     x := 'Hello World!';
                 end.
@@ -90,7 +90,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_VarExpression_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                     division := beta;
                 end.
@@ -109,7 +109,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_ComputesLocation_Correctly()
         {
-            var source = @"
+            const string source = @"
                 begin
                     result :=
                         (
@@ -135,7 +135,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_BinaryExpression_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 BEGIN
                     Result := ((20 + Func(15, 18 * (Alpha MOD 3))) DIV Beta) < 12 <> (1 = 1);
                 END.
@@ -171,7 +171,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_IfStatement_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                     if 100 > 50 then
                         if 15 = 15 then
@@ -201,7 +201,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_WhileStatement_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                     while I < 10 do
                         I := I + 1;
@@ -226,7 +226,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_ProcedureStatement_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                     Inc(I);
                     WriteLn;
@@ -247,7 +247,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_CompoundStatement_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 begin
                     x := 10;
                     y := 15;
@@ -280,7 +280,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_VarDeclaration_Succeeds()
         {
-            var source = @"
+            const string source = @"
                 var
                     x: integer;
                     y: integer;
@@ -313,7 +313,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_Accepts_SampleProgram1()
         {
-            var source = @"
+            const string source = @"
                 var
                     x: Integer;
                     xTimesTwo: Integer;
@@ -353,7 +353,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Parse_Accepts_SampleProgram2()
         {
-            var source = @"
+            const string source = @"
                 var
                     Value: Integer;
                     I: Integer;

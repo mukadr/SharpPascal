@@ -9,7 +9,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Visitor_Visits_AllNodes()
         {
-            var source = @"
+            const string source = @"
                 var
                     X: Integer;
                     Y: Integer;

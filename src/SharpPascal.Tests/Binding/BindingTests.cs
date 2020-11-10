@@ -10,7 +10,7 @@ namespace SharpPascal.Tests.Syntax
         [TestMethod]
         public void Binder_Declares_Variables()
         {
-            var source = @"
+            const string source = @"
                 var
                     x: integer;
                     y: integer;
