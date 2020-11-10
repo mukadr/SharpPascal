@@ -20,43 +20,43 @@ namespace SharpPascal.Syntax
             var blank =
                 OneOrMore(whitespace.Or(multilineComment));
 
-            Parser<(string text, Location location)> op(string text) =>
+            Parser<(string text, Location location)> Op(string text) =>
                 Regex(text)
                 .Map((text, location) => (text, location))
                 .Skip(blank);
 
-            var assign = op(":=");
-            var add = op("\\+");
-            var sub = op("-");
-            var mul = op("\\*");
-            var eq = op("=");
-            var ne = op("<>");
-            var le = op("<=");
-            var ge = op(">=");
-            var lt = op("<");
-            var gt = op(">");
-            var lparen = op("\\(");
-            var rparen = op("\\)");
-            var colon = op(":");
-            var semi = op(";");
-            var comma = op(",");
-            var dot = op("\\.");
+            var assign = Op(":=");
+            var add = Op("\\+");
+            var sub = Op("-");
+            var mul = Op("\\*");
+            var eq = Op("=");
+            var ne = Op("<>");
+            var le = Op("<=");
+            var ge = Op(">=");
+            var lt = Op("<");
+            var gt = Op(">");
+            var lparen = Op("\\(");
+            var rparen = Op("\\)");
+            var colon = Op(":");
+            var semi = Op(";");
+            var comma = Op(",");
+            var dot = Op("\\.");
 
-            Parser<(string text, Location location)> kw(string text) =>
+            Parser<(string text, Location location)> Kw(string text) =>
                 Regex(text + "\\b", ignoreCase: true)
                 .Map((text, location) => (text, location))
                 .Skip(blank);
 
-            var begin = kw("begin");
-            var div = kw("div");
-            var @do = kw("do");
-            var @else = kw("else");
-            var end = kw("end");
-            var @if = kw("if");
-            var mod = kw("mod");
-            var then = kw("then");
-            var @var = kw("var");
-            var @while = kw("while");
+            var begin = Kw("begin");
+            var div = Kw("div");
+            var @do = Kw("do");
+            var @else = Kw("else");
+            var end = Kw("end");
+            var @if = Kw("if");
+            var mod = Kw("mod");
+            var then = Kw("then");
+            var @var = Kw("var");
+            var @while = Kw("while");
 
             var keyword =
                 begin
