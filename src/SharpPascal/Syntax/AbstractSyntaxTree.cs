@@ -23,14 +23,12 @@ namespace SharpPascal.Syntax
         public StatementSyntax Main { get; }
 
         public UnitSyntax(StatementSyntax main, IReadOnlyList<DeclarationSyntax>? declarations)
-            : base(null)
         {
             Declarations = declarations ?? new List<DeclarationSyntax>();
             Main = main;
         }
 
         public UnitSyntax(StatementSyntax main, params DeclarationSyntax[] declarations)
-            : base(null)
         {
             Declarations = declarations;
             Main = main;
@@ -111,7 +109,6 @@ namespace SharpPascal.Syntax
         }
 
         public CompoundStatementSyntax(params StatementSyntax[] statements)
-            : base(null)
         {
             Statements = statements;
         }
@@ -530,7 +527,6 @@ namespace SharpPascal.Syntax
         }
 
         public CallExpressionSyntax(string name, params ExpressionSyntax[] arguments)
-            : base(null)
         {
             Name = new PascalName(name);
             Arguments = arguments;
