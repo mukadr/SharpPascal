@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpPascal.Semantic;
 
-namespace SharpPascal.Tests.Syntax
+namespace SharpPascal.Tests.Semantic
 {
     [TestClass]
     public class ScopeTests
