@@ -16,7 +16,7 @@ namespace SharpPascal.Syntax.Parsing
         public static Parser<string> Regex(string pattern, bool ignoreCase = false)
             => new Parser<string>(source => source.Match(pattern, ignoreCase));
 
-        // A Parser that matches zero or more occurences
+        // A Parser that matches zero or more occurrences
         public static Parser<List<T>> ZeroOrMore<T>(Parser<T> parser)
             => new Parser<List<T>>(source =>
                 OneOrMore(parser).Parse(source)
