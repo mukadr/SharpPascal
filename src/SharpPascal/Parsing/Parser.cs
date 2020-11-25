@@ -1,7 +1,7 @@
 using System;
-using static SharpPascal.Syntax.Parsing.ParserFactory;
+using static SharpPascal.Parsing.ParserFactory;
 
-namespace SharpPascal.Syntax.Parsing
+namespace SharpPascal.Parsing
 {
     internal class Parser<T>
     {

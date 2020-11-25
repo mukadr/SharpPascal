@@ -1,9 +1,9 @@
-﻿using SharpPascal.Syntax.Parsing;
+﻿using SharpPascal.Parsing;
 using System.Collections.Generic;
 using System.Linq;
-using static SharpPascal.Syntax.Parsing.ParserFactory;
+using static SharpPascal.Parsing.ParserFactory;
 
-namespace SharpPascal.Syntax
+namespace SharpPascal
 {
     public static class PascalParser
     {

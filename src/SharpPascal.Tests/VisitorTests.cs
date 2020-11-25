@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpPascal.Syntax;
 
-namespace SharpPascal.Tests.Syntax
+namespace SharpPascal.Tests
 {
     [TestClass]
     public class VisitorTests

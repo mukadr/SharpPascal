@@ -1,6 +1,4 @@
-using SharpPascal.Syntax;
-
-namespace SharpPascal.Semantic
+namespace SharpPascal
 {
     public class Symbol
     {

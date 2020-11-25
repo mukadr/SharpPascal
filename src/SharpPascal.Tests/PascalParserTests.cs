@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpPascal.Syntax;
-using SharpPascal.Syntax.Parsing;
-using static SharpPascal.Syntax.PascalParser;
+using SharpPascal.Parsing;
+using static SharpPascal.PascalParser;
 
-namespace SharpPascal.Tests.Syntax
+namespace SharpPascal.Tests
 {
     [TestClass]
     public class PascalParserTests

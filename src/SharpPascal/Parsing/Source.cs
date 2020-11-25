@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace SharpPascal.Syntax.Parsing
+namespace SharpPascal.Parsing
 {
     internal class Source
     {

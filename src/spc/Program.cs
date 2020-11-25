@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using static SharpPascal.Syntax.PascalParser;
+using static SharpPascal.PascalParser;
 
 namespace spc
 {

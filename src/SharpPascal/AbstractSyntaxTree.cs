@@ -1,9 +1,9 @@
-﻿using SharpPascal.Syntax.Parsing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpPascal.Parsing;
 
-namespace SharpPascal.Syntax
+namespace SharpPascal
 {
     public abstract class AbstractSyntaxTree
     {

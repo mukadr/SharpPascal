@@ -1,6 +1,6 @@
 using System;
 
-namespace SharpPascal.Syntax.Parsing
+namespace SharpPascal.Parsing
 {
     public class ParseException : Exception
     {

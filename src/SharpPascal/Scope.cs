@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using SharpPascal.Syntax;
 
-namespace SharpPascal.Semantic
+namespace SharpPascal
 {
     public class Scope
     {

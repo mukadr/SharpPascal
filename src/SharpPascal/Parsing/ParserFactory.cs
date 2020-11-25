@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SharpPascal.Syntax.Parsing
+namespace SharpPascal.Parsing
 {
     internal static class ParserFactory
     {

@@ -1,4 +1,4 @@
-namespace SharpPascal.Syntax.Parsing
+namespace SharpPascal.Parsing
 {
     internal class ParseResult<T>
     {

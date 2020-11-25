@@ -1,6 +1,6 @@
 using System;
 
-namespace SharpPascal.Syntax
+namespace SharpPascal
 {
     public class PascalName
     {
