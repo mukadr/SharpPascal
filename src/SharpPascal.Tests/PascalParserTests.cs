@@ -22,7 +22,8 @@ namespace SharpPascal.Tests
                 begin
                 {
                     Hello World!
-                } end.";
+                } end.
+            ";
 
             Parse(source);
         }
