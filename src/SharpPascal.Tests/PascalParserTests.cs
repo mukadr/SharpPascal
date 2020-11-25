@@ -62,11 +62,11 @@ namespace SharpPascal.Tests
             var tree = Parse(source);
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new AssignmentStatement(
                             "x",
-                            new IntegerExpressionSyntax(150))));
+                            new IntegerExpression(150))));
 
             Assert.AreEqual(expected, tree);
 
@@ -86,11 +86,11 @@ namespace SharpPascal.Tests
             var tree = Parse(source);
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new AssignmentStatement(
                             "x",
-                            new StringExpressionSyntax("Hello World!"))));
+                            new StringExpression("Hello World!"))));
 
             Assert.AreEqual(expected, tree);
 
@@ -110,11 +110,11 @@ namespace SharpPascal.Tests
             var tree = Parse(source);
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new AssignmentStatement(
                             "division",
-                            new VarExpressionSyntax("beta"))));
+                            new VarExpression("beta"))));
 
             Assert.AreEqual(expected, tree);
 
@@ -158,29 +158,29 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new AssignmentStatement(
                             "result",
-                            new NotEqualExpressionSyntax(
-                                new LessThanExpressionSyntax(
-                                    new DivExpressionSyntax(
-                                        new AddExpressionSyntax(
-                                            new IntegerExpressionSyntax(20),
-                                            new CallExpressionSyntax(
+                            new NotEqualExpression(
+                                new LessThanExpression(
+                                    new DivExpression(
+                                        new AddExpression(
+                                            new IntegerExpression(20),
+                                            new CallExpression(
                                                 "func",
-                                                new IntegerExpressionSyntax(15),
-                                                new MulExpressionSyntax(
-                                                    new IntegerExpressionSyntax(18),
-                                                    new ModExpressionSyntax(
-                                                        new VarExpressionSyntax("alpha"),
-                                                        new IntegerExpressionSyntax(3))))
+                                                new IntegerExpression(15),
+                                                new MulExpression(
+                                                    new IntegerExpression(18),
+                                                    new ModExpression(
+                                                        new VarExpression("alpha"),
+                                                        new IntegerExpression(3))))
                                         ),
-                                        new VarExpressionSyntax("beta")),
-                                    new IntegerExpressionSyntax(12)),
-                                new EqualExpressionSyntax(
-                                    new IntegerExpressionSyntax(1),
-                                    new IntegerExpressionSyntax(1))))));
+                                        new VarExpression("beta")),
+                                    new IntegerExpression(12)),
+                                new EqualExpression(
+                                    new IntegerExpression(1),
+                                    new IntegerExpression(1))))));
 
             Assert.AreEqual(expected, Parse(source));
         }
@@ -199,22 +199,22 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new IfStatementSyntax(
-                            new GreaterThanExpressionSyntax(
-                                new IntegerExpressionSyntax(100),
-                                new IntegerExpressionSyntax(50)),
-                            new IfStatementSyntax(
-                                new EqualExpressionSyntax(
-                                    new IntegerExpressionSyntax(15),
-                                    new IntegerExpressionSyntax(15)),
-                                new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new IfStatement(
+                            new GreaterThanExpression(
+                                new IntegerExpression(100),
+                                new IntegerExpression(50)),
+                            new IfStatement(
+                                new EqualExpression(
+                                    new IntegerExpression(15),
+                                    new IntegerExpression(15)),
+                                new AssignmentStatement(
                                     "x",
-                                    new IntegerExpressionSyntax(20)),
-                                new AssignmentStatementSyntax(
+                                    new IntegerExpression(20)),
+                                new AssignmentStatement(
                                     "x",
-                                    new IntegerExpressionSyntax(15))))));
+                                    new IntegerExpression(15))))));
 
             Assert.AreEqual(expected, Parse(source));
         }
@@ -230,17 +230,17 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new WhileStatementSyntax(
-                            new LessThanExpressionSyntax(
-                                new VarExpressionSyntax("i"),
-                                new IntegerExpressionSyntax(10)),
-                            new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new WhileStatement(
+                            new LessThanExpression(
+                                new VarExpression("i"),
+                                new IntegerExpression(10)),
+                            new AssignmentStatement(
                                 "i",
-                                new AddExpressionSyntax(
-                                    new VarExpressionSyntax("i"),
-                                    new IntegerExpressionSyntax(1))))));
+                                new AddExpression(
+                                    new VarExpression("i"),
+                                    new IntegerExpression(1))))));
 
             Assert.AreEqual(expected, Parse(source));
         }
@@ -256,14 +256,14 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new ProcedureStatement(
+                            new CallExpression(
                                 "inc",
-                                new VarExpressionSyntax("i"))),
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax("writeln"))));
+                                new VarExpression("i"))),
+                        new ProcedureStatement(
+                            new CallExpression("writeln"))));
 
             Assert.AreEqual(expected, Parse(source));
         }
@@ -282,28 +282,28 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new AssignmentStatement(
                             "x",
-                            new IntegerExpressionSyntax(10)),
-                        new AssignmentStatementSyntax(
+                            new IntegerExpression(10)),
+                        new AssignmentStatement(
                             "y",
-                            new IntegerExpressionSyntax(15)),
-                        new IfStatementSyntax(
-                            new LessThanExpressionSyntax(
-                                new AddExpressionSyntax(
-                                    new VarExpressionSyntax("x"),
-                                    new VarExpressionSyntax("y")),
-                                new IntegerExpressionSyntax(30)),
-                            new AssignmentStatementSyntax(
+                            new IntegerExpression(15)),
+                        new IfStatement(
+                            new LessThanExpression(
+                                new AddExpression(
+                                    new VarExpression("x"),
+                                    new VarExpression("y")),
+                                new IntegerExpression(30)),
+                            new AssignmentStatement(
                                 "x",
-                                new IntegerExpressionSyntax(20))),
-                        new AssignmentStatementSyntax(
+                                new IntegerExpression(20))),
+                        new AssignmentStatement(
                             "z",
-                            new AddExpressionSyntax(
-                                new VarExpressionSyntax("x"),
-                                new VarExpressionSyntax("y")))));
+                            new AddExpression(
+                                new VarExpression("x"),
+                                new VarExpression("y")))));
 
             Assert.AreEqual(expected, Parse(source));
         }
@@ -325,22 +325,22 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new AssignmentStatementSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new AssignmentStatement(
                             "x",
-                            new IntegerExpressionSyntax(10)),
-                        new AssignmentStatementSyntax(
+                            new IntegerExpression(10)),
+                        new AssignmentStatement(
                             "y",
-                            new IntegerExpressionSyntax(20)),
-                        new AssignmentStatementSyntax(
+                            new IntegerExpression(20)),
+                        new AssignmentStatement(
                             "z",
-                            new MulExpressionSyntax(
-                                new VarExpressionSyntax("x"),
-                                new VarExpressionSyntax("y")))),
-                    new VarDeclarationSyntax("x", "integer"),
-                    new VarDeclarationSyntax("y", "integer"),
-                    new VarDeclarationSyntax("z", "integer"));
+                            new MulExpression(
+                                new VarExpression("x"),
+                                new VarExpression("y")))),
+                    new VarDeclaration("x", "integer"),
+                    new VarDeclaration("y", "integer"),
+                    new VarDeclaration("z", "integer"));
 
             Assert.AreEqual(expected, Parse(source));
         }
@@ -365,33 +365,33 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new ProcedureStatement(
+                            new CallExpression(
                                 "write",
-                                new StringExpressionSyntax("Enter a number: "))),
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax(
+                                new StringExpression("Enter a number: "))),
+                        new ProcedureStatement(
+                            new CallExpression(
                                 "read",
-                                new VarExpressionSyntax("x"))),
-                        new AssignmentStatementSyntax(
+                                new VarExpression("x"))),
+                        new AssignmentStatement(
                             "xTimesTwo",
-                            new MulExpressionSyntax(
-                                new VarExpressionSyntax("x"),
-                                new IntegerExpressionSyntax(2))),
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax(
+                            new MulExpression(
+                                new VarExpression("x"),
+                                new IntegerExpression(2))),
+                        new ProcedureStatement(
+                            new CallExpression(
                                 "writeln",
-                                new StringExpressionSyntax("You entered "),
-                                new VarExpressionSyntax("x"),
-                                new StringExpressionSyntax(", and "),
-                                new VarExpressionSyntax("x"),
-                                new StringExpressionSyntax(" multiplied by 2 is "),
-                                new VarExpressionSyntax("xTimesTwo"),
-                                new StringExpressionSyntax(".")))),
-                    new VarDeclarationSyntax("x", "integer"),
-                    new VarDeclarationSyntax("xTimesTwo", "integer"));
+                                new StringExpression("You entered "),
+                                new VarExpression("x"),
+                                new StringExpression(", and "),
+                                new VarExpression("x"),
+                                new StringExpression(" multiplied by 2 is "),
+                                new VarExpression("xTimesTwo"),
+                                new StringExpression(".")))),
+                    new VarDeclaration("x", "integer"),
+                    new VarDeclaration("xTimesTwo", "integer"));
 
             Assert.AreEqual(expected, Parse(source));
         }
@@ -423,46 +423,46 @@ namespace SharpPascal.Tests
             ";
 
             var expected =
-                new UnitSyntax(
-                    new CompoundStatementSyntax(
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax(
+                new Unit(
+                    new CompoundStatement(
+                        new ProcedureStatement(
+                            new CallExpression(
                                 "write",
-                                new StringExpressionSyntax("Enter a number: "))),
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax(
+                                new StringExpression("Enter a number: "))),
+                        new ProcedureStatement(
+                            new CallExpression(
                                 "read",
-                                new VarExpressionSyntax("value"))),
-                        new AssignmentStatementSyntax(
+                                new VarExpression("value"))),
+                        new AssignmentStatement(
                             "i",
-                            new VarExpressionSyntax("value")),
-                        new AssignmentStatementSyntax(
+                            new VarExpression("value")),
+                        new AssignmentStatement(
                             "factorial",
-                            new IntegerExpressionSyntax(1)),
-                        new WhileStatementSyntax(
-                            new GreaterThanExpressionSyntax(
-                                new VarExpressionSyntax("i"),
-                                new IntegerExpressionSyntax(0)),
-                            new CompoundStatementSyntax(
-                                new AssignmentStatementSyntax(
+                            new IntegerExpression(1)),
+                        new WhileStatement(
+                            new GreaterThanExpression(
+                                new VarExpression("i"),
+                                new IntegerExpression(0)),
+                            new CompoundStatement(
+                                new AssignmentStatement(
                                     "factorial",
-                                    new MulExpressionSyntax(
-                                        new VarExpressionSyntax("factorial"),
-                                        new VarExpressionSyntax("i"))),
-                                new ProcedureStatementSyntax(
-                                    new CallExpressionSyntax(
+                                    new MulExpression(
+                                        new VarExpression("factorial"),
+                                        new VarExpression("i"))),
+                                new ProcedureStatement(
+                                    new CallExpression(
                                         "dec",
-                                        new VarExpressionSyntax("i"))))),
-                        new ProcedureStatementSyntax(
-                            new CallExpressionSyntax(
+                                        new VarExpression("i"))))),
+                        new ProcedureStatement(
+                            new CallExpression(
                                 "writeln",
-                                new StringExpressionSyntax("The factorial of "),
-                                new VarExpressionSyntax("value"),
-                                new StringExpressionSyntax(" is "),
-                                new VarExpressionSyntax("factorial")))),
-                    new VarDeclarationSyntax("value", "integer"),
-                    new VarDeclarationSyntax("i", "integer"),
-                    new VarDeclarationSyntax("factorial", "integer"));
+                                new StringExpression("The factorial of "),
+                                new VarExpression("value"),
+                                new StringExpression(" is "),
+                                new VarExpression("factorial")))),
+                    new VarDeclaration("value", "integer"),
+                    new VarDeclaration("i", "integer"),
+                    new VarDeclaration("factorial", "integer"));
 
             Assert.AreEqual(expected, Parse(source));
         }

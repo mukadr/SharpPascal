@@ -4,44 +4,44 @@ namespace SharpPascal
 {
     public class Visitor
     {
-        public Func<UnitSyntax, bool> VisitUnit = _ => true;
+        public Func<Unit, bool> VisitUnit = _ => true;
 
-        public Action<VarDeclarationSyntax> VisitVarDeclaration = _ => { };
+        public Action<VarDeclaration> VisitVarDeclaration = _ => { };
 
-        public Func<IfStatementSyntax, bool> VisitIfStatement = _ => true;
+        public Func<IfStatement, bool> VisitIfStatement = _ => true;
 
-        public Func<WhileStatementSyntax, bool> VisitWhileStatement = _ => true;
+        public Func<WhileStatement, bool> VisitWhileStatement = _ => true;
 
-        public Func<AssignmentStatementSyntax, bool> VisitAssignmentStatement = _ => true;
+        public Func<AssignmentStatement, bool> VisitAssignmentStatement = _ => true;
 
-        public Action<IntegerExpressionSyntax> VisitIntegerExpression = _ => { };
+        public Action<IntegerExpression> VisitIntegerExpression = _ => { };
 
-        public Action<StringExpressionSyntax> VisitStringExpression = _ => { };
+        public Action<StringExpression> VisitStringExpression = _ => { };
 
-        public Action<VarExpressionSyntax> VisitVarExpression = _ => { };
+        public Action<VarExpression> VisitVarExpression = _ => { };
 
-        public Action<AddExpressionSyntax> VisitAddExpression = _ => { };
+        public Action<AddExpression> VisitAddExpression = _ => { };
 
-        public Action<SubExpressionSyntax> VisitSubExpression = _ => { };
+        public Action<SubExpression> VisitSubExpression = _ => { };
 
-        public Action<MulExpressionSyntax> VisitMulExpression = _ => { };
+        public Action<MulExpression> VisitMulExpression = _ => { };
 
-        public Action<DivExpressionSyntax> VisitDivExpression = _ => { };
+        public Action<DivExpression> VisitDivExpression = _ => { };
 
-        public Action<ModExpressionSyntax> VisitModExpression = _ => { };
+        public Action<ModExpression> VisitModExpression = _ => { };
 
-        public Action<EqualExpressionSyntax> VisitEqualExpression = _ => { };
+        public Action<EqualExpression> VisitEqualExpression = _ => { };
 
-        public Action<NotEqualExpressionSyntax> VisitNotEqualExpression = _ => { };
+        public Action<NotEqualExpression> VisitNotEqualExpression = _ => { };
 
-        public Action<LessThanExpressionSyntax> VisitLessThanExpression = _ => { };
+        public Action<LessThanExpression> VisitLessThanExpression = _ => { };
 
-        public Action<GreaterThanExpressionSyntax> VisitGreaterThanExpression = _ => { };
+        public Action<GreaterThanExpression> VisitGreaterThanExpression = _ => { };
 
-        public Action<LessOrEqualExpressionSyntax> VisitLessOrEqualExpression = _ => { };
+        public Action<LessOrEqualExpression> VisitLessOrEqualExpression = _ => { };
 
-        public Action<GreaterOrEqualExpressionSyntax> VisitGreaterOrEqualExpression = _ => { };
+        public Action<GreaterOrEqualExpression> VisitGreaterOrEqualExpression = _ => { };
 
-        public Func<CallExpressionSyntax, bool> VisitCallExpression = _ => true;
+        public Func<CallExpression, bool> VisitCallExpression = _ => true;
     }
 }
