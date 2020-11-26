@@ -2,6 +2,8 @@
 {
     public class Location
     {
+        public static readonly Location Unknown = new Location(0, 0);
+
         public int Position { get; }
         public int Line { get; }
 

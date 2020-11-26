@@ -7,11 +7,11 @@ namespace SharpPascal
 {
     public abstract class Node
     {
-        public Location? Location { get; }
+        public Location Location { get; }
 
         protected Node(Location? location = null)
         {
-            Location = location;
+            Location = location ?? Location.Unknown;
         }
 
         public abstract void Visit(Visitor visitor);
@@ -21,6 +21,7 @@ namespace SharpPascal
     {
         public IReadOnlyList<Declaration> Declarations { get; }
         public Statement Main { get; }
+        public Scope Scope { get; } = new Scope();
 
         public Unit(Statement main, IReadOnlyList<Declaration>? declarations)
         {
@@ -52,7 +53,8 @@ namespace SharpPascal
         public override bool Equals(object obj)
             => obj is Unit unit &&
                unit.Declarations.SequenceEqual(Declarations) &&
-               unit.Main.Equals(Main);
+               unit.Main.Equals(Main) &&
+               unit.Scope.Equals(Scope);
 
         public override int GetHashCode()
             => Declarations.GetHashCode();
@@ -69,6 +71,7 @@ namespace SharpPascal
     {
         public PascalName Name { get; }
         public PascalName TypeName { get; }
+        public Type Type { get; set; } = Type.Unknown;
 
         public VarDeclaration(string name, string type, Location? location = null)
             : base(location)
@@ -83,9 +86,10 @@ namespace SharpPascal
         }
 
         public override bool Equals(object obj)
-            => obj is VarDeclaration @var &&
-               @var.Name.Equals(Name) &&
-               @var.TypeName.Equals(TypeName);
+            => obj is VarDeclaration var &&
+               var.Name.Equals(Name) &&
+               var.TypeName.Equals(TypeName) &&
+               var.Type.Equals(Type);
 
         public override int GetHashCode()
             => Name.GetHashCode() ^ TypeName.GetHashCode();
