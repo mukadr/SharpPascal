@@ -68,13 +68,13 @@ namespace SharpPascal
     public sealed class VarDeclaration : Declaration
     {
         public PascalName Name { get; }
-        public PascalName Type { get; }
+        public PascalName TypeName { get; }
 
         public VarDeclaration(string name, string type, Location? location = null)
             : base(location)
         {
             Name = new PascalName(name);
-            Type = new PascalName(type);
+            TypeName = new PascalName(type);
         }
 
         public override void Visit(Visitor visitor)
@@ -85,10 +85,10 @@ namespace SharpPascal
         public override bool Equals(object obj)
             => obj is VarDeclaration @var &&
                @var.Name.Equals(Name) &&
-               @var.Type.Equals(Type);
+               @var.TypeName.Equals(TypeName);
 
         public override int GetHashCode()
-            => Name.GetHashCode() ^ Type.GetHashCode();
+            => Name.GetHashCode() ^ TypeName.GetHashCode();
     }
 
     public abstract class Statement : Node
