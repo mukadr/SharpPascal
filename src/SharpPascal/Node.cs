@@ -145,12 +145,14 @@ namespace SharpPascal
 
         public override void Visit(Visitor visitor)
         {
-            if (visitor.VisitIfStatement(this))
+            if (!visitor.VisitIfStatement(this))
             {
-                Expression.Visit(visitor);
-                TrueStatement.Visit(visitor);
-                FalseStatement?.Visit(visitor);
+                return;
             }
+
+            Expression.Visit(visitor);
+            TrueStatement.Visit(visitor);
+            FalseStatement?.Visit(visitor);
         }
 
         public override bool Equals(object obj)
@@ -178,11 +180,13 @@ namespace SharpPascal
 
         public override void Visit(Visitor visitor)
         {
-            if (visitor.VisitWhileStatement(this))
+            if (!visitor.VisitWhileStatement(this))
             {
-                Expression.Visit(visitor);
-                Statement.Visit(visitor);
+                return;
             }
+
+            Expression.Visit(visitor);
+            Statement.Visit(visitor);
         }
 
         public override bool Equals(object obj)
@@ -208,10 +212,12 @@ namespace SharpPascal
 
         public override void Visit(Visitor visitor)
         {
-            if (visitor.VisitAssignmentStatement(this))
+            if (!visitor.VisitAssignmentStatement(this))
             {
-                Expression.Visit(visitor);
+                return;
             }
+
+            Expression.Visit(visitor);
         }
 
         public override bool Equals(object obj)
