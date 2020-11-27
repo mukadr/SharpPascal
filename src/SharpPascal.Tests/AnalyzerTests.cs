@@ -9,7 +9,7 @@ namespace SharpPascal.Tests
     public class AnalyzerTests
     {
         [TestMethod]
-        public void Analyzer_Complaints_About_Redeclared_Variable()
+        public void Analyzer_Complains_About_Redeclared_Variable()
         {
             const string source = @"
                 var
@@ -30,7 +30,7 @@ namespace SharpPascal.Tests
         }
 
         [TestMethod]
-        public void Analyzer_Complaints_About_Unknown_Type()
+        public void Analyzer_Complains_About_Unknown_Type()
         {
             const string source = @"
                 var
