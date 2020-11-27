@@ -66,7 +66,7 @@ namespace SharpPascal.Tests
         }
 
         [TestMethod]
-        public void Analyzer_TypeChecks_Variable_Declaration()
+        public void Analyzer_Checks_Variable_Declaration()
         {
             const string source = @"
                 var
@@ -88,6 +88,43 @@ namespace SharpPascal.Tests
                     Assert.AreEqual(Type.Integer, var.Type);
                 }
             });
+        }
+
+        [TestMethod]
+        public void Analyzer_Checks_Arithmetic_Expression()
+        {
+            const string source = @"
+                var
+                    x: Integer;
+
+                begin
+                    x := 1 * (5 - x);
+                end.
+            ";
+
+            var unit = Parse(source);
+
+            var diagnostics = TypeCheck(unit);
+
+            Assert.AreEqual(0, diagnostics.Count());
+        }
+
+        public void Analyzer_Checks_Comparison_Expression()
+        {
+            const string source = @"
+                var
+                    x: Boolean;
+
+                begin
+                    x := (10 > 5) = (5 > 10);
+                end.
+            ";
+
+            var unit = Parse(source);
+
+            var diagnostics = TypeCheck(unit);
+
+            Assert.AreEqual(0, diagnostics.Count());
         }
     }
 }

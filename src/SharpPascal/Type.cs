@@ -3,6 +3,7 @@ namespace SharpPascal
     public class Type
     {
         public static readonly Type Unknown = new Type("unknown");
+        public static readonly Type Boolean = new Type("boolean");
         public static readonly Type Integer = new Type("integer");
 
         public PascalName Name { get; }

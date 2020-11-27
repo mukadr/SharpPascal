@@ -258,6 +258,8 @@ namespace SharpPascal
 
     public abstract class Expression : Node
     {
+        public Type Type { get; set; } = Type.Unknown;
+
         protected Expression(Location? location = null)
             : base(location)
         { }
