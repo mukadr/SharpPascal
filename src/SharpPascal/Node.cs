@@ -15,6 +15,7 @@ namespace SharpPascal
         }
 
         public abstract void Visit(Visitor visitor);
+        public virtual void Emit(CodeEmitter emitter) { } // FIXME: abstract
     }
 
     public sealed class Unit : Node
@@ -48,6 +49,16 @@ namespace SharpPascal
             }
 
             Main.Visit(visitor);
+        }
+
+        public override void Emit(CodeEmitter emitter)
+        {
+            emitter.Emit(".global main");
+            emitter.Emit("main:");
+            emitter.Emit("  push {fp, lr}");
+            Main.Emit(emitter);
+            emitter.Emit("  mov r0, #0");
+            emitter.Emit("  pop {fp, pc}");
         }
 
         public override bool Equals(object obj)
@@ -122,6 +133,14 @@ namespace SharpPascal
             foreach (var stmt in Statements)
             {
                 stmt.Visit(visitor);
+            }
+        }
+
+        public override void Emit(CodeEmitter emitter)
+        {
+            foreach (var stmt in Statements)
+            {
+                stmt.Emit(emitter);
             }
         }
 
@@ -224,6 +243,11 @@ namespace SharpPascal
             Expression.Visit(visitor);
         }
 
+        public override void Emit(CodeEmitter emitter)
+        {
+            Expression.Emit(emitter);
+        }
+
         public override bool Equals(object obj)
             => obj is AssignmentStatement assign &&
                assign.Name.Equals(Name) &&
@@ -278,6 +302,11 @@ namespace SharpPascal
         public override void Visit(Visitor visitor)
         {
             visitor.VisitIntegerExpression(this);
+        }
+
+        public override void Emit(CodeEmitter emitter)
+        {
+            emitter.Emit($"  ldr r0, #{Value}");
         }
 
         public override bool Equals(object obj)
