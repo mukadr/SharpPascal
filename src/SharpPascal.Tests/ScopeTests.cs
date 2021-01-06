@@ -1,11 +1,10 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace SharpPascal.Tests
 {
-    [TestClass]
     public class ScopeTests
     {
-        [TestMethod]
+        [Fact]
         public void Scope_Equals_Works()
         {
             var integer = new Type("integer");
@@ -24,14 +23,14 @@ namespace SharpPascal.Tests
             var scope4 = new Scope(scope3);
             scope4.Add(new Symbol("number", integer));
 
-            Assert.AreNotEqual(scope2, scope4);
+            Assert.NotEqual(scope2, scope4);
 
             scope3.Add(new Symbol("foo", integer));
 
-            Assert.AreEqual(scope2, scope4);
+            Assert.Equal(scope2, scope4);
         }
 
-        [TestMethod]
+        [Fact]
         public void Scope_Finds_LocalSymbol()
         {
             var scope1 = new Scope();
@@ -47,17 +46,17 @@ namespace SharpPascal.Tests
             var mustFind1 = scope1.FindLocal(sym1.Name);
             var mustFail1 = scope1.FindLocal(sym2.Name);
 
-            Assert.AreEqual(sym1, mustFind1);
-            Assert.IsNull(mustFail1);
+            Assert.Equal(sym1, mustFind1);
+            Assert.Null(mustFail1);
 
             var mustFind2 = scope2.FindLocal(sym2.Name);
             var mustFail2 = scope2.FindLocal(sym1.Name);
 
-            Assert.AreEqual(sym2, mustFind2);
-            Assert.IsNull(mustFail2);
+            Assert.Equal(sym2, mustFind2);
+            Assert.Null(mustFail2);
         }
 
-        [TestMethod]
+        [Fact]
         public void Scope_Finds_Symbol()
         {
             var scope1 = new Scope();
@@ -73,8 +72,8 @@ namespace SharpPascal.Tests
             var mustFind1 = scope2.Find(sym1.Name);
             var mustFind2 = scope2.Find(sym2.Name);
 
-            Assert.AreEqual(sym1, mustFind1);
-            Assert.AreEqual(sym2, mustFind2);
+            Assert.Equal(sym1, mustFind1);
+            Assert.Equal(sym2, mustFind2);
         }
     }
 }

@@ -1,13 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpPascal.Parsing;
+﻿using SharpPascal.Parsing;
+using Xunit;
 using static SharpPascal.PascalParser;
 
 namespace SharpPascal.Tests
 {
-    [TestClass]
     public class PascalParserTests
     {
-        [TestMethod]
+        [Fact]
         public void Skip_Whitespace_Succeeds()
         {
             const string source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
@@ -15,7 +14,7 @@ namespace SharpPascal.Tests
             Parse(source);
         }
 
-        [TestMethod]
+        [Fact]
         public void Skip_MultilineComment_Succeeds()
         {
             const string source = @"
@@ -28,7 +27,7 @@ namespace SharpPascal.Tests
             Parse(source);
         }
 
-        [TestMethod]
+        [Fact]
         public void Skip_UnterminatedMultilineComment_ThrowsParseException()
         {
             const string source = @"
@@ -46,11 +45,11 @@ namespace SharpPascal.Tests
                 parseException = ex;
             }
 
-            Assert.IsNotNull(parseException);
-            Assert.IsTrue(parseException?.Message.Contains("expected '}' before end of source") == true);
+            Assert.NotNull(parseException);
+            Assert.Contains("expected '}' before end of source", parseException!.Message);
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_IntegerExpression_Succeeds()
         {
             const string source = @"
@@ -68,13 +67,13 @@ namespace SharpPascal.Tests
                             "x",
                             new IntegerExpression(150))));
 
-            Assert.AreEqual(expected, tree);
+            Assert.Equal(expected, tree);
 
             dynamic dt = tree;
-            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
+            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_StringExpression_Succeeds()
         {
             const string source = @"
@@ -92,13 +91,13 @@ namespace SharpPascal.Tests
                             "x",
                             new StringExpression("Hello World!"))));
 
-            Assert.AreEqual(expected, tree);
+            Assert.Equal(expected, tree);
 
             dynamic dt = tree;
-            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
+            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_VarExpression_Succeeds()
         {
             const string source = @"
@@ -116,13 +115,13 @@ namespace SharpPascal.Tests
                             "division",
                             new VarExpression("beta"))));
 
-            Assert.AreEqual(expected, tree);
+            Assert.Equal(expected, tree);
 
             dynamic dt = tree;
-            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
+            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_ComputesLocation_Correctly()
         {
             const string source = @"
@@ -140,15 +139,15 @@ namespace SharpPascal.Tests
             var tree = Parse(source);
 
             dynamic dt = tree;
-            Assert.AreEqual(3, dt.Main.Statements[0].Location.Line);
-            Assert.AreEqual(6, dt.Main.Statements[0].Expression.Left.Location.Line);
-            Assert.AreEqual(5, dt.Main.Statements[0].Expression.Left.Left.Location.Line);
-            Assert.AreEqual(6, dt.Main.Statements[0].Expression.Left.Right.Location.Line);
-            Assert.AreEqual(8, dt.Main.Statements[0].Expression.Location.Line);
-            Assert.AreEqual(9, dt.Main.Statements[0].Expression.Right.Location.Line);
+            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
+            Assert.Equal(6, dt.Main.Statements[0].Expression.Left.Location.Line);
+            Assert.Equal(5, dt.Main.Statements[0].Expression.Left.Left.Location.Line);
+            Assert.Equal(6, dt.Main.Statements[0].Expression.Left.Right.Location.Line);
+            Assert.Equal(8, dt.Main.Statements[0].Expression.Location.Line);
+            Assert.Equal(9, dt.Main.Statements[0].Expression.Right.Location.Line);
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_BinaryExpression_Succeeds()
         {
             const string source = @"
@@ -182,10 +181,10 @@ namespace SharpPascal.Tests
                                     new IntegerExpression(1),
                                     new IntegerExpression(1))))));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_IfStatement_Succeeds()
         {
             const string source = @"
@@ -216,10 +215,10 @@ namespace SharpPascal.Tests
                                     "x",
                                     new IntegerExpression(15))))));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_WhileStatement_Succeeds()
         {
             const string source = @"
@@ -242,10 +241,10 @@ namespace SharpPascal.Tests
                                     new VarExpression("i"),
                                     new IntegerExpression(1))))));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_ProcedureStatement_Succeeds()
         {
             const string source = @"
@@ -265,10 +264,10 @@ namespace SharpPascal.Tests
                         new ProcedureStatement(
                             new CallExpression("writeln"))));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_CompoundStatement_Succeeds()
         {
             const string source = @"
@@ -305,10 +304,10 @@ namespace SharpPascal.Tests
                                 new VarExpression("x"),
                                 new VarExpression("y")))));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_VarDeclaration_Succeeds()
         {
             const string source = @"
@@ -342,10 +341,10 @@ namespace SharpPascal.Tests
                     new VarDeclaration("y", "integer"),
                     new VarDeclaration("z", "integer"));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_Accepts_SampleProgram1()
         {
             const string source = @"
@@ -393,10 +392,10 @@ namespace SharpPascal.Tests
                     new VarDeclaration("x", "integer"),
                     new VarDeclaration("xTimesTwo", "integer"));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_Accepts_SampleProgram2()
         {
             const string source = @"
@@ -464,7 +463,7 @@ namespace SharpPascal.Tests
                     new VarDeclaration("i", "integer"),
                     new VarDeclaration("factorial", "integer"));
 
-            Assert.AreEqual(expected, Parse(source));
+            Assert.Equal(expected, Parse(source));
         }
     }
 }

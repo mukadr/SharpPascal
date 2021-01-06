@@ -1,11 +1,10 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace SharpPascal.Tests
 {
-    [TestClass]
     public class VisitorTests
     {
-        [TestMethod]
+        [Fact]
         public void Visitor_Visits_AllNodes()
         {
             const string source = @"
@@ -86,26 +85,26 @@ namespace SharpPascal.Tests
 
             tree.Visit(visitor);
 
-            Assert.AreEqual(unitCount, 1);
-            Assert.AreEqual(varDecl, 2);
-            Assert.AreEqual(ifCount, 5);
-            Assert.AreEqual(whileCount, 1);
-            Assert.AreEqual(assignCount, 7);
-            Assert.AreEqual(integerCount, 15);
-            Assert.AreEqual(stringCount, 1);
-            Assert.AreEqual(varCount, 18);
-            Assert.AreEqual(addCount, 4);
-            Assert.AreEqual(subCount, 4);
-            Assert.AreEqual(mulCount, 2);
-            Assert.AreEqual(divCount, 1);
-            Assert.AreEqual(modCount, 1);
-            Assert.AreEqual(equalCount, 1);
-            Assert.AreEqual(notEqualCount, 1);
-            Assert.AreEqual(lessThanCount, 1);
-            Assert.AreEqual(greaterThanCount, 1);
-            Assert.AreEqual(lessOrEqualCount, 1);
-            Assert.AreEqual(greaterOrEqualCount, 1);
-            Assert.AreEqual(callCount, 1);
+            Assert.Equal(1, unitCount);
+            Assert.Equal(2, varDecl);
+            Assert.Equal(5, ifCount);
+            Assert.Equal(1, whileCount);
+            Assert.Equal(7, assignCount);
+            Assert.Equal(15, integerCount);
+            Assert.Equal(1, stringCount);
+            Assert.Equal(18, varCount);
+            Assert.Equal(4, addCount);
+            Assert.Equal(4, subCount);
+            Assert.Equal(2, mulCount);
+            Assert.Equal(1, divCount);
+            Assert.Equal(1, modCount);
+            Assert.Equal(1, equalCount);
+            Assert.Equal(1, notEqualCount);
+            Assert.Equal(1, lessThanCount);
+            Assert.Equal(1, greaterThanCount);
+            Assert.Equal(1, lessOrEqualCount);
+            Assert.Equal(1, greaterOrEqualCount);
+            Assert.Equal(1, callCount);
         }
     }
 }

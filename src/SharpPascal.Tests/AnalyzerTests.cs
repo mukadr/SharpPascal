@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
+﻿using System.Linq;
+using Xunit;
 using static SharpPascal.Analyzer;
 using static SharpPascal.PascalParser;
 
 namespace SharpPascal.Tests
 {
-    [TestClass]
     public class AnalyzerTests
     {
-        [TestMethod]
+        [Fact]
         public void Analyzer_Complains_About_Redeclared_Variable()
         {
             const string source = @"
@@ -25,11 +24,11 @@ namespace SharpPascal.Tests
 
             var redeclaredVariableError = diagnostics.First();
 
-            Assert.IsTrue(redeclaredVariableError.IsError);
-            Assert.IsTrue(redeclaredVariableError.Message.Contains("redeclared"));
+            Assert.True(redeclaredVariableError.IsError);
+            Assert.Contains("redeclared", redeclaredVariableError.Message);
         }
 
-        [TestMethod]
+        [Fact]
         public void Analyzer_Complains_About_Unknown_Type()
         {
             const string source = @"
@@ -46,8 +45,8 @@ namespace SharpPascal.Tests
 
             var unknownTypeError = diagnostics.First();
 
-            Assert.IsTrue(unknownTypeError.IsError);
-            Assert.IsTrue(unknownTypeError.Message.Contains("type"));
+            Assert.True(unknownTypeError.IsError);
+            Assert.Contains("type", unknownTypeError.Message);
 
             unit.Visit(new Visitor
             {
@@ -55,17 +54,17 @@ namespace SharpPascal.Tests
                 {
                     if (var.Name == "x")
                     {
-                        Assert.AreEqual(Type.Unknown, var.Type);
+                        Assert.Equal(Type.Unknown, var.Type);
                     }
                     else
                     {
-                        Assert.AreEqual(Type.Integer, var.Type);
+                        Assert.Equal(Type.Integer, var.Type);
                     }
                 }
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void Analyzer_Checks_Variable_Declaration()
         {
             const string source = @"
@@ -79,18 +78,18 @@ namespace SharpPascal.Tests
 
             var diagnostics = TypeCheck(unit);
 
-            Assert.AreEqual(0, diagnostics.Count());
+            Assert.Empty(diagnostics);
 
             unit.Visit(new Visitor
             {
                 VisitVarDeclaration = var =>
                 {
-                    Assert.AreEqual(Type.Integer, var.Type);
+                    Assert.Equal(Type.Integer, var.Type);
                 }
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void Analyzer_Checks_Arithmetic_Expression()
         {
             const string source = @"
@@ -106,9 +105,10 @@ namespace SharpPascal.Tests
 
             var diagnostics = TypeCheck(unit);
 
-            Assert.AreEqual(0, diagnostics.Count());
+            Assert.Empty(diagnostics);
         }
 
+        [Fact]
         public void Analyzer_Checks_Comparison_Expression()
         {
             const string source = @"
@@ -124,7 +124,7 @@ namespace SharpPascal.Tests
 
             var diagnostics = TypeCheck(unit);
 
-            Assert.AreEqual(0, diagnostics.Count());
+            Assert.Empty(diagnostics);
         }
     }
 }
