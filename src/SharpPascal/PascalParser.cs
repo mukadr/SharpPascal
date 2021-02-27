@@ -5,9 +5,21 @@ using static SharpPascal.Parsing.ParserFactory;
 
 namespace SharpPascal
 {
-    public static class PascalParser
+    public class PascalParser
     {
-        public static Unit Parse(string sourceText)
+        private readonly Parser<Unit> _parser;
+
+        public PascalParser()
+        {
+            _parser = BuildPascalParser();
+        }
+
+        public Unit Parse(string sourceText)
+        {
+            return _parser.ParseToCompletion(sourceText);
+        }
+
+        private static Parser<Unit> BuildPascalParser()
         {
             var whitespace =
                 Regex("[ \t\n\r]+");
@@ -206,7 +218,7 @@ namespace SharpPascal
                     compoundStatement.Bind(main =>
                         dot.Map(_ => new Unit(main, decls))));
 
-            return program.ParseToCompletion(sourceText);
+            return program;
         }
     }
 }

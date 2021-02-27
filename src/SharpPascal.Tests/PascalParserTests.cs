@@ -1,17 +1,23 @@
 ﻿using SharpPascal.Parsing;
 using Xunit;
-using static SharpPascal.PascalParser;
 
 namespace SharpPascal.Tests
 {
-    public class PascalParserTests
+    public class PascalParserTests : IClassFixture<PascalParserFixture>
     {
+        private readonly PascalParser _parser;
+
+        public PascalParserTests(PascalParserFixture pascalParserFixture)
+        {
+            _parser = pascalParserFixture.Parser;
+        }
+
         [Fact]
         public void Skip_Whitespace_Succeeds()
         {
             const string source = "\t\t\n\n\r\r     \r\r\n\r    \t \t \n begin end.";
 
-            Parse(source);
+            _parser.Parse(source);
         }
 
         [Fact]
@@ -24,7 +30,7 @@ namespace SharpPascal.Tests
                 } end.
             ";
 
-            Parse(source);
+            _parser.Parse(source);
         }
 
         [Fact]
@@ -38,7 +44,7 @@ namespace SharpPascal.Tests
             ParseException? parseException = null;
             try
             {
-                Parse(source);
+                _parser.Parse(source);
             }
             catch (ParseException ex)
             {
@@ -58,7 +64,7 @@ namespace SharpPascal.Tests
                 end.
             ";
 
-            var tree = Parse(source);
+            var tree = _parser.Parse(source);
 
             var expected =
                 new Unit(
@@ -82,7 +88,7 @@ namespace SharpPascal.Tests
                 end.
             ";
 
-            var tree = Parse(source);
+            var tree = _parser.Parse(source);
 
             var expected =
                 new Unit(
@@ -106,7 +112,7 @@ namespace SharpPascal.Tests
                 end.
             ";
 
-            var tree = Parse(source);
+            var tree = _parser.Parse(source);
 
             var expected =
                 new Unit(
@@ -136,7 +142,7 @@ namespace SharpPascal.Tests
                 end.
             ";
 
-            var tree = Parse(source);
+            var tree = _parser.Parse(source);
 
             dynamic dt = tree;
             Assert.Equal(3, dt.Main.Statements[0].Location.Line);
@@ -181,7 +187,7 @@ namespace SharpPascal.Tests
                                     new IntegerExpression(1),
                                     new IntegerExpression(1))))));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
 
         [Fact]
@@ -215,7 +221,7 @@ namespace SharpPascal.Tests
                                     "x",
                                     new IntegerExpression(15))))));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
 
         [Fact]
@@ -241,7 +247,7 @@ namespace SharpPascal.Tests
                                     new VarExpression("i"),
                                     new IntegerExpression(1))))));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
 
         [Fact]
@@ -264,7 +270,7 @@ namespace SharpPascal.Tests
                         new ProcedureStatement(
                             new CallExpression("writeln"))));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
 
         [Fact]
@@ -304,7 +310,7 @@ namespace SharpPascal.Tests
                                 new VarExpression("x"),
                                 new VarExpression("y")))));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
 
         [Fact]
@@ -341,7 +347,7 @@ namespace SharpPascal.Tests
                     new VarDeclaration("y", "integer"),
                     new VarDeclaration("z", "integer"));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
 
         [Fact]
@@ -392,7 +398,7 @@ namespace SharpPascal.Tests
                     new VarDeclaration("x", "integer"),
                     new VarDeclaration("xTimesTwo", "integer"));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
 
         [Fact]
@@ -463,7 +469,7 @@ namespace SharpPascal.Tests
                     new VarDeclaration("i", "integer"),
                     new VarDeclaration("factorial", "integer"));
 
-            Assert.Equal(expected, Parse(source));
+            Assert.Equal(expected, _parser.Parse(source));
         }
     }
 }

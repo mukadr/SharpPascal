@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SharpPascal;
+using System;
 using System.IO;
-using static SharpPascal.PascalParser;
 
 namespace spc
 {
@@ -17,7 +17,7 @@ namespace spc
             foreach (var file in args)
             {
                 var sourceText = File.ReadAllText(file);
-                Parse(sourceText);
+                new PascalParser().Parse(sourceText);
             }
         }
     }

@@ -1,12 +1,18 @@
 ﻿using System.Linq;
 using Xunit;
 using static SharpPascal.Analyzer;
-using static SharpPascal.PascalParser;
 
 namespace SharpPascal.Tests
 {
-    public class AnalyzerTests
+    public class AnalyzerTests : IClassFixture<PascalParserFixture>
     {
+        private readonly PascalParser _parser;
+
+        public AnalyzerTests(PascalParserFixture pascalParserFixture)
+        {
+            _parser = pascalParserFixture.Parser;
+        }
+
         [Fact]
         public void Analyzer_Complains_About_Redeclared_Variable()
         {
@@ -18,7 +24,7 @@ namespace SharpPascal.Tests
                 begin end.
             ";
 
-            var unit = Parse(source);
+            var unit = _parser.Parse(source);
 
             var diagnostics = TypeCheck(unit);
 
@@ -39,7 +45,7 @@ namespace SharpPascal.Tests
                 begin end.
             ";
 
-            var unit = Parse(source);
+            var unit = _parser.Parse(source);
 
             var diagnostics = TypeCheck(unit);
 
@@ -74,7 +80,7 @@ namespace SharpPascal.Tests
                 begin end.
             ";
 
-            var unit = Parse(source);
+            var unit = _parser.Parse(source);
 
             var diagnostics = TypeCheck(unit);
 
@@ -101,7 +107,7 @@ namespace SharpPascal.Tests
                 end.
             ";
 
-            var unit = Parse(source);
+            var unit = _parser.Parse(source);
 
             var diagnostics = TypeCheck(unit);
 
@@ -120,7 +126,7 @@ namespace SharpPascal.Tests
                 end.
             ";
 
-            var unit = Parse(source);
+            var unit = _parser.Parse(source);
 
             var diagnostics = TypeCheck(unit);
 

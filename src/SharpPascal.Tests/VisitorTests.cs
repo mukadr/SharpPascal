@@ -2,8 +2,15 @@ using Xunit;
 
 namespace SharpPascal.Tests
 {
-    public class VisitorTests
+    public class VisitorTests : IClassFixture<PascalParserFixture>
     {
+        private readonly PascalParser _parser;
+
+        public VisitorTests(PascalParserFixture pascalParserFixture)
+        {
+            _parser = pascalParserFixture.Parser;
+        }
+
         [Fact]
         public void Visitor_Visits_AllNodes()
         {
@@ -81,7 +88,7 @@ namespace SharpPascal.Tests
                 VisitCallExpression = _ => { callCount++; return true; }
             };
 
-            var tree = PascalParser.Parse(source);
+            var tree = _parser.Parse(source);
 
             tree.Visit(visitor);
 
