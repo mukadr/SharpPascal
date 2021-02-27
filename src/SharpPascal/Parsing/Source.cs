@@ -18,15 +18,8 @@ namespace SharpPascal.Parsing
         }
 
         // Matches a regular expression
-        public ParseResult<string>? Match(string pattern, bool ignoreCase)
+        public ParseResult<string>? Match(Regex regex)
         {
-            var options = RegexOptions.Multiline | RegexOptions.Compiled;
-            if (ignoreCase)
-            {
-                options |= RegexOptions.IgnoreCase;
-            }
-
-            var regex = new Regex("\\G" + pattern, options);
             var match = regex.Match(Text, Location.Position);
             if (!match.Success)
             {

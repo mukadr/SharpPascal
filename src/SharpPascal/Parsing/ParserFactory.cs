@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace SharpPascal.Parsing
 {
@@ -14,7 +15,15 @@ namespace SharpPascal.Parsing
 
         // A Parser that matches a string
         public static Parser<string> Regex(string pattern, bool ignoreCase = false)
-            => new Parser<string>(source => source.Match(pattern, ignoreCase));
+        {
+            var options = RegexOptions.Multiline | RegexOptions.Compiled;
+            if (ignoreCase)
+            {
+                options |= RegexOptions.IgnoreCase;
+            }
+            var regex = new Regex("\\G" + pattern, options);
+            return new Parser<string>(source => source.Match(regex));
+        }
 
         // A Parser that matches zero or more occurrences
         public static Parser<List<T>> ZeroOrMore<T>(Parser<T> parser)
