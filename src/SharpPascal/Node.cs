@@ -350,7 +350,7 @@ namespace SharpPascal
 
         public static BinaryExpression CreateInstance(Expression left, string @operator, Expression right, Location? location = null)
         {
-            return (@operator.ToLower()) switch
+            return @operator.ToLower() switch
             {
                 "+" => new AddExpression(left, right, location),
                 "-" => new SubExpression(left, right, location),
