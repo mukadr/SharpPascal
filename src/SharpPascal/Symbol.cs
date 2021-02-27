@@ -11,7 +11,7 @@ namespace SharpPascal
             Type = type;
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
             => other is Symbol symbol &&
                symbol.Name.Equals(Name) &&
                symbol.Type.Equals(Type);

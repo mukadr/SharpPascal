@@ -50,7 +50,7 @@ namespace SharpPascal
             Main.Visit(visitor);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is Unit unit &&
                unit.Declarations.SequenceEqual(Declarations) &&
                unit.Main.Equals(Main) &&
@@ -85,7 +85,7 @@ namespace SharpPascal
             visitor.VisitVarDeclaration(this);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is VarDeclaration var &&
                var.Name.Equals(Name) &&
                var.TypeName.Equals(TypeName) &&
@@ -125,7 +125,7 @@ namespace SharpPascal
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is CompoundStatement compound &&
                compound.Statements.SequenceEqual(Statements);
 
@@ -159,7 +159,7 @@ namespace SharpPascal
             FalseStatement?.Visit(visitor);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is IfStatement @if &&
                @if.Expression.Equals(Expression) &&
                @if.TrueStatement.Equals(TrueStatement) &&
@@ -193,7 +193,7 @@ namespace SharpPascal
             Statement.Visit(visitor);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is WhileStatement @while &&
                @while.Expression.Equals(Expression) &&
                @while.Statement.Equals(Statement);
@@ -224,7 +224,7 @@ namespace SharpPascal
             Expression.Visit(visitor);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is AssignmentStatement assign &&
                assign.Name.Equals(Name) &&
                assign.Expression.Equals(Expression);
@@ -248,7 +248,7 @@ namespace SharpPascal
             CallExpression.Visit(visitor);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is ProcedureStatement proc &&
                proc.CallExpression.Equals(CallExpression);
 
@@ -280,7 +280,7 @@ namespace SharpPascal
             visitor.VisitIntegerExpression(this);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is IntegerExpression @int &&
                @int.Value == Value;
 
@@ -303,7 +303,7 @@ namespace SharpPascal
             visitor.VisitStringExpression(this);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is StringExpression str &&
                str.Value == Value;
 
@@ -326,7 +326,7 @@ namespace SharpPascal
             visitor.VisitVarExpression(this);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is VarExpression @var &&
                @var.Name.Equals(Name);
 
@@ -373,7 +373,7 @@ namespace SharpPascal
             Right.Visit(visitor);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is BinaryExpression bin &&
                bin.Left.Equals(Left) &&
                bin.Operator == Operator &&
@@ -557,7 +557,7 @@ namespace SharpPascal
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is CallExpression call &&
                call.Name.Equals(Name) &&
                call.Arguments.SequenceEqual(Arguments);

@@ -13,7 +13,7 @@ namespace SharpPascal
             Name = name;
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
             => other is Type type &&
                type.Name == Name;
 
