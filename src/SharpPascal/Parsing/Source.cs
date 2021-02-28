@@ -1,5 +1,5 @@
+using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace SharpPascal.Parsing
 {
@@ -17,18 +17,64 @@ namespace SharpPascal.Parsing
             Location = location ?? new Location(0, 1);
         }
 
-        // Matches a regular expression
-        public ParseResult<string>? Match(Regex regex)
+        // Matches the character c
+        public ParseResult<char>? Match(char c)
         {
-            var match = regex.Match(Text, Location.Position);
-            if (!match.Success)
+            if (Location.Position < Text.Length &&
+                Text[Location.Position] == c)
             {
-                return null;
+                var position = Location.Position + 1;
+                var line = Location.Line + (Text[Location.Position] == '\n' ? 1 : 0);
+                return new ParseResult<char>(Text[Location.Position], new Source(Text, new Location(position, line)));
             }
 
-            var position = Location.Position + match.Length;
-            var line = Location.Line + match.Value.Count(c => c == '\n');
-            return new ParseResult<string>(match.Value, new Source(Text, new Location(position, line)));
+            return null;
+        }
+
+        // Matches a character between begin and end
+        public ParseResult<char>? Match(char begin, char end)
+        {
+            if (Location.Position < Text.Length &&
+                Text[Location.Position] >= begin &&
+                Text[Location.Position] <= end)
+            {
+                var position = Location.Position + 1;
+                var line = Location.Line + (Text[Location.Position] == '\n' ? 1 : 0);
+                return new ParseResult<char>(Text[Location.Position], new Source(Text, new Location(position, line)));
+            }
+
+            return null;
+        }
+
+        // Matches anything until last is found
+        public ParseResult<string>? MatchUntil(char last)
+        {
+            if (Location.Position < Text.Length)
+            {
+                var index = Text.IndexOf(last, Location.Position);
+                if (index > -1)
+                {
+                    var position = index + 1;
+                    var s = Text.Substring(Location.Position, position - Location.Position);
+                    var line = Location.Line + s.Count(c => c == '\n');
+                    return new ParseResult<string>(s, new Source(Text, new Location(position, line)));
+                }
+            }
+            return null;
+        }
+
+        // Matches the string s
+        public ParseResult<string>? Match(string s, bool ignoreCase)
+        {
+            if (Location.Position + s.Length <= Text.Length &&
+                Text.Substring(Location.Position, s.Length).Equals(s, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            {
+                var position = Location.Position + s.Length;
+                var line = Location.Line + s.Count(c => c == '\n');
+                return new ParseResult<string>(s, new Source(Text, new Location(position, line)));
+            }
+
+            return null;
         }
     }
 }
