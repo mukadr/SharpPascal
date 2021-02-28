@@ -74,9 +74,7 @@ namespace SharpPascal.Tests
                             new IntegerExpression(150))));
 
             Assert.Equal(expected, tree);
-
-            dynamic dt = tree;
-            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
+            Assert.Equal(3, ((CompoundStatement)tree.Main).Statements[0].Location.Line);
         }
 
         [Fact]
@@ -98,9 +96,7 @@ namespace SharpPascal.Tests
                             new StringExpression("Hello World!"))));
 
             Assert.Equal(expected, tree);
-
-            dynamic dt = tree;
-            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
+            Assert.Equal(3, ((CompoundStatement)tree.Main).Statements[0].Location.Line);
         }
 
         [Fact]
@@ -122,9 +118,7 @@ namespace SharpPascal.Tests
                             new VarExpression("beta"))));
 
             Assert.Equal(expected, tree);
-
-            dynamic dt = tree;
-            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
+            Assert.Equal(3, ((CompoundStatement)tree.Main).Statements[0].Location.Line);
         }
 
         [Fact]
@@ -144,13 +138,16 @@ namespace SharpPascal.Tests
 
             var tree = _parser.Parse(source);
 
-            dynamic dt = tree;
-            Assert.Equal(3, dt.Main.Statements[0].Location.Line);
-            Assert.Equal(6, dt.Main.Statements[0].Expression.Left.Location.Line);
-            Assert.Equal(5, dt.Main.Statements[0].Expression.Left.Left.Location.Line);
-            Assert.Equal(6, dt.Main.Statements[0].Expression.Left.Right.Location.Line);
-            Assert.Equal(8, dt.Main.Statements[0].Expression.Location.Line);
-            Assert.Equal(9, dt.Main.Statements[0].Expression.Right.Location.Line);
+            var assignment = (AssignmentStatement)((CompoundStatement)tree.Main).Statements[0];
+            var bin = (BinaryExpression)assignment.Expression;
+            var left = (BinaryExpression)bin.Left;
+
+            Assert.Equal(3, assignment.Location.Line);
+            Assert.Equal(6, bin.Left.Location.Line);
+            Assert.Equal(5, left.Left.Location.Line);
+            Assert.Equal(6, left.Right.Location.Line);
+            Assert.Equal(8, bin.Location.Line);
+            Assert.Equal(9, bin.Right.Location.Line);
         }
 
         [Fact]
