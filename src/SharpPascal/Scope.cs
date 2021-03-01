@@ -39,7 +39,7 @@ namespace SharpPascal
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Scope scope))
+            if (obj is not Scope scope)
             {
                 return false;
             }
