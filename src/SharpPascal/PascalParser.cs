@@ -65,8 +65,8 @@ namespace SharpPascal
 
             Parser<(string text, Location location)> Kw(string lexem) =>
                 Text(lexem, true).Bind((text, location) =>
-                    SNot(letter.Or(digit))
-                    .Map((_, location) => (text, location)))
+                    SNot(letter.Or(digit)).Map((_, location) =>
+                        (text, location)))
                 .Skip(blank);
 
             var begin = Kw("begin");
