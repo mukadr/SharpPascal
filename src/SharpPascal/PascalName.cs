@@ -19,7 +19,7 @@ namespace SharpPascal
             => Name.GetHashCode();
 
         public static implicit operator PascalName(string str) => new PascalName(str);
-        public static bool operator==(PascalName left, PascalName right) => left.Equals(right);
-        public static bool operator!=(PascalName left, PascalName right) => !(left == right);
+        public static bool operator ==(PascalName left, PascalName right) => left.Equals(right);
+        public static bool operator !=(PascalName left, PascalName right) => !(left == right);
     }
 }

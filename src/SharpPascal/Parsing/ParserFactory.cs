@@ -25,7 +25,7 @@ namespace SharpPascal.Parsing
         public static Parser<string> Until(char c)
             => new Parser<string>(source => source.MatchUntil(c));
 
-         // A Parser that matches a string
+        // A Parser that matches a string
         public static Parser<string> Text(string text, bool ignoreCase = false)
             => new Parser<string>(source => source.Match(text, ignoreCase));
 
@@ -68,35 +68,35 @@ namespace SharpPascal.Parsing
                 return new ParseResult<List<T>>(results, source);
             });
 
-            // A Parser that matches at least one occurence
-            public static Parser<string> OneOrMore(Parser<char> parser)
-                => new Parser<string>(source =>
+        // A Parser that matches at least one occurence
+        public static Parser<string> OneOrMore(Parser<char> parser)
+            => new Parser<string>(source =>
+            {
+                var result = parser.Parse(source);
+                if (result == null)
                 {
-                    var result = parser.Parse(source);
+                    return null;
+                }
+
+                var sb = new StringBuilder();
+
+                while (true)
+                {
+                    sb.Append(result.Value);
+                    source = result.Source;
+
+                    result = parser.Parse(source);
                     if (result == null)
                     {
-                        return null;
+                        break;
                     }
+                }
 
-                    var sb = new StringBuilder();
-
-                    while (true)
-                    {
-                        sb.Append(result.Value);
-                        source = result.Source;
-
-                        result = parser.Parse(source);
-                        if (result == null)
-                        {
-                            break;
-                        }
-                    }
-
-                    return new ParseResult<string>(sb.ToString(), source);
-                });
+                return new ParseResult<string>(sb.ToString(), source);
+            });
 
         // A Parser that returns a value only if the specified parser fails
-        public static Parser<T?> Not<T>(Parser<T> parser) where T: class
+        public static Parser<T?> Not<T>(Parser<T> parser) where T : class
             => new Parser<T?>(source =>
             {
                 var result = parser.Parse(source);
@@ -118,7 +118,7 @@ namespace SharpPascal.Parsing
             });
 
         // A Parser that optionally accept the rule
-        public static Parser<T?> Maybe<T>(Parser<T> parser) where T: class
+        public static Parser<T?> Maybe<T>(Parser<T> parser) where T : class
             => parser.Map(value => (T?)value).Or(Constant<T?>(null));
     }
 }
